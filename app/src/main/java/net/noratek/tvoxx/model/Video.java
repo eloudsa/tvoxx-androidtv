@@ -6,16 +6,16 @@ import java.net.URISyntaxException;
 /**
  * Created by eloudsa on 31/07/16.
  */
-public class Movie {
+public class Video {
 
-    private static final String TAG = Movie.class.getSimpleName();
+    private static final String TAG = Video.class.getSimpleName();
 
     private long id;
     private String title;
     private String studio;
     private String cardImageUrl;
 
-    public Movie() {
+    public Video() {
     }
 
     public long getId() {
@@ -60,7 +60,7 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie{" +
+        return "Video{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 '}';

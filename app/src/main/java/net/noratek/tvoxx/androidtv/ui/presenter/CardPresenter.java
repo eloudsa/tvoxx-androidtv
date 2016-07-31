@@ -1,18 +1,17 @@
 package net.noratek.tvoxx.androidtv.ui.presenter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
-import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.model.Movie;
+import com.bumptech.glide.Glide;
 
-import java.net.URI;
+import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.model.Video;
 
 /**
  * Created by eloudsa on 31/07/16.
@@ -23,76 +22,76 @@ public class CardPresenter extends Presenter {
 
     private static Context mContext;
 
-    static class ViewHolder extends Presenter.ViewHolder {
-        private Movie mMovie;
-        private ImageCardView mCardView;
-        private Drawable mDefaultCardImage;
+    private int mSelectedBackgroundColor = -1;
+    private int mDefaultBackgroundColor = -1;
+    private Drawable mDefaultCardImage;
 
-        public ViewHolder(View view) {
-            super(view);
-            mCardView = (ImageCardView) view;
-            mDefaultCardImage = ContextCompat.getDrawable(mContext,R.drawable.movie);
-        }
-
-        protected void updateCardViewImage(URI uri) {
-            /*
-            Picasso.with(mContext)
-                    .load(uri.toString())
-                    .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
-                            Utils.convertDpToPixel(mContext, CARD_HEIGHT))
-                    .error(mDefaultCardImage)
-                    .into(mImageCardViewTarget);
-                    */
-
-
-        }
-
-
-        public void setMovie(Movie m) {
-            mMovie = m;
-        }
-
-        public Movie getMovie() {
-            return mMovie;
-        }
-
-        public ImageCardView getCardView() {
-            return mCardView;
-        }
-
-        public Drawable getDefaultCardImage() {
-            return mDefaultCardImage;
-        }
-
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        Log.d(TAG, "onCreateViewHolder");
         mContext = parent.getContext();
 
-        ImageCardView cardView = new ImageCardView(mContext);
+        mDefaultBackgroundColor = ContextCompat.getColor(mContext,R.color.default_background);
+        mSelectedBackgroundColor = ContextCompat.getColor(mContext, R.color.selected_background);
+        mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie, null);
+
+
+        ImageCardView cardView = new ImageCardView(mContext) {
+            @Override
+            public void setSelected(boolean selected) {
+                updateCardBackgroundColor(this, selected);
+                super.setSelected(selected);
+            }
+        };
+
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
-        cardView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.fastlane_background));
+        updateCardBackgroundColor(cardView, false);
         return new ViewHolder(cardView);
     }
 
+
+    private void updateCardBackgroundColor(ImageCardView view, boolean selected) {
+        int color = selected ? mSelectedBackgroundColor : mDefaultBackgroundColor;
+
+        // Both background colors should be set because the view's
+        // background is temporarily visible during animations.
+        view.setBackgroundColor(color);
+        view.findViewById(R.id.info_field).setBackgroundColor(color);
+    }
+
+
+
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
-        ((ViewHolder) viewHolder).setMovie(movie);
+        Video video = (Video) item;
 
-        Log.d(TAG, "onBindViewHolder");
-        ((ViewHolder) viewHolder).mCardView.setTitleText(movie.getTitle());
-        ((ViewHolder) viewHolder).mCardView.setContentText(movie.getStudio());
-        ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(mContext.getResources().getDimensionPixelSize(R.dimen.card_width), mContext.getResources().getDimensionPixelSize(R.dimen.card_height));
-        ((ViewHolder) viewHolder).mCardView.setMainImage(((ViewHolder) viewHolder).getDefaultCardImage());
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
+        cardView.setTitleText(video.getTitle());
+        cardView.setContentText(video.getStudio());
+
+        if (video.getCardImageUrl() != null) {
+            // Set card size from dimension resources.
+            Resources res = cardView.getResources();
+            int width = res.getDimensionPixelSize(R.dimen.card_width);
+            int height = res.getDimensionPixelSize(R.dimen.card_height);
+            cardView.setMainImageDimensions(width, height);
+
+            Glide.with(cardView.getContext())
+                    .load(video.getCardImageUrl())
+                    .error(mDefaultCardImage)
+                    .into(cardView.getMainImageView());
+        }
+
     }
 
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        Log.d(TAG, "onUnbindViewHolder");
+        ImageCardView cardView = (ImageCardView) viewHolder.view;
+
+        // Free up memory.
+        cardView.setBadgeImage(null);
+        cardView.setMainImage(null);
     }
 
     @Override

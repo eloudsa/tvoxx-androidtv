@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
-import net.noratek.tvoxx.model.Movie;
+import net.noratek.tvoxx.model.Video;
 
 
 public class MainFragment extends BrowseFragment {
@@ -68,14 +68,14 @@ public class MainFragment extends BrowseFragment {
         ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
 
         for(int i=0; i<10; i++) {
-            Movie movie = new Movie();
-            movie.setTitle("title" + i);
-            movie.setStudio("studio" + i);
-            cardRowAdapter.add(movie);
+            Video video = new Video();
+            video.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
+            video.setTitle("title" + i);
+            video.setStudio("studio" + i);
+            cardRowAdapter.add(video);
         }
         mRowsAdapter.add(new ListRow(cardPresenterHeader, cardRowAdapter));
 
-        /* set */
         setAdapter(mRowsAdapter);
     }
 
