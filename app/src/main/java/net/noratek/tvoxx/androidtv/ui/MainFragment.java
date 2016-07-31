@@ -82,8 +82,9 @@ public class MainFragment extends BrowseFragment {
     private class GridItemPresenter extends Presenter {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
+
             TextView view = new TextView(parent.getContext());
-            view.setLayoutParams(new ViewGroup.LayoutParams(getResources().getInteger(R.integer.grid_item_width), getResources().getInteger(R.integer.grid_item_height)));
+            view.setLayoutParams(new ViewGroup.LayoutParams(getResources().getDimensionPixelSize(R.dimen.grid_item_width), getResources().getDimensionPixelSize(R.dimen.grid_item_height)));
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.default_background));

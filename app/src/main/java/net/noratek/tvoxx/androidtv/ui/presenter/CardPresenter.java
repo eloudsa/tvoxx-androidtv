@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.model.Movie;
 
+import java.net.URI;
+
 /**
  * Created by eloudsa on 31/07/16.
  */
@@ -31,6 +33,20 @@ public class CardPresenter extends Presenter {
             mCardView = (ImageCardView) view;
             mDefaultCardImage = ContextCompat.getDrawable(mContext,R.drawable.movie);
         }
+
+        protected void updateCardViewImage(URI uri) {
+            /*
+            Picasso.with(mContext)
+                    .load(uri.toString())
+                    .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
+                            Utils.convertDpToPixel(mContext, CARD_HEIGHT))
+                    .error(mDefaultCardImage)
+                    .into(mImageCardViewTarget);
+                    */
+
+
+        }
+
 
         public void setMovie(Movie m) {
             mMovie = m;
@@ -70,7 +86,7 @@ public class CardPresenter extends Presenter {
         Log.d(TAG, "onBindViewHolder");
         ((ViewHolder) viewHolder).mCardView.setTitleText(movie.getTitle());
         ((ViewHolder) viewHolder).mCardView.setContentText(movie.getStudio());
-        ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(mContext.getResources().getInteger(R.integer.card_width), mContext.getResources().getInteger(R.integer.card_height));
+        ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(mContext.getResources().getDimensionPixelSize(R.dimen.card_width), mContext.getResources().getDimensionPixelSize(R.dimen.card_height));
         ((ViewHolder) viewHolder).mCardView.setMainImage(((ViewHolder) viewHolder).getDefaultCardImage());
     }
 
