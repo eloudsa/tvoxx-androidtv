@@ -3,6 +3,7 @@ package net.noratek.tvoxx.androidtv.ui.presenter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v4.content.ContextCompat;
@@ -45,6 +46,9 @@ public class SpeakerPresenter extends Presenter {
             }
         };
 
+
+        cardView.setCardType(BaseCardView.CARD_TYPE_INFO_UNDER_WITH_EXTRA);
+        cardView.setInfoVisibility(BaseCardView.CARD_REGION_VISIBLE_ALWAYS);
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         updateCardBackgroundColor(cardView, false);

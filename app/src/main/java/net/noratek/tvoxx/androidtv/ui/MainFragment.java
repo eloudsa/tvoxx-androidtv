@@ -89,13 +89,17 @@ public class MainFragment extends BrowseFragment {
         mRowsAdapter.add(new ListRow(cardPresenterHeader, cardRowAdapter));
 
         /* Speakers */
-        displaySpeakers();
+        HeaderItem speakerHeaderPresenter = new HeaderItem(Constants.HEADER_SPEAKER, getString(R.string.speakers));
+        SpeakerPresenter speakerPresenter = new SpeakerPresenter();
+        ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
+        mRowsAdapter.add(new ListRow(speakerHeaderPresenter, speakersRowAdapter));
+        displaySpeakers(speakerHeaderPresenter, speakersRowAdapter);
 
         setAdapter(mRowsAdapter);
     }
 
 
-    private void displaySpeakers() {
+    private void displaySpeakers(final HeaderItem speakerHeaderPresenter, final ArrayObjectAdapter speakersRowAdapter) {
 
         TvoxxApi methods = Utils.getRestClient(Constants.TVOXX_API_URL, TvoxxApi.class);
         if (methods == null) {
@@ -115,12 +119,6 @@ public class MainFragment extends BrowseFragment {
                         return;
                     }
 
-                    HeaderItem speakerHeaderPresenter = new HeaderItem(2, "Speakers");
-                    SpeakerPresenter speakerPresenter = new SpeakerPresenter();
-                    ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
-
-                    ArrayObjectAdapter adapter = (ArrayObjectAdapter) getAdapter();
-
                     // load list of Devoxx speakers
                     for (Speaker speaker : speakers ) {
                         Card card = new Card();
@@ -130,9 +128,7 @@ public class MainFragment extends BrowseFragment {
                         speakersRowAdapter.add(card);
                     }
 
-                    mRowsAdapter.add(new ListRow(speakerHeaderPresenter, speakersRowAdapter));
-
-                    adapter.notifyArrayItemRangeChanged(0, adapter.size());
+                    mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(speakerHeaderPresenter, speakersRowAdapter));
 
                 } else {
                     Log.e(TAG, response.message());
