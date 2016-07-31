@@ -17,9 +17,9 @@ import net.noratek.tvoxx.androidtv.model.Card;
 /**
  * Created by eloudsa on 31/07/16.
  */
-public class CardPresenter extends Presenter {
+public class SpeakerPresenter extends Presenter {
 
-    private static final String TAG = CardPresenter.class.getSimpleName();
+    private static final String TAG = SpeakerPresenter.class.getSimpleName();
 
     private static Context mContext;
 
@@ -34,7 +34,7 @@ public class CardPresenter extends Presenter {
 
         mDefaultBackgroundColor = ContextCompat.getColor(mContext,R.color.default_background);
         mSelectedBackgroundColor = ContextCompat.getColor(mContext, R.color.selected_background);
-        mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie, null);
+        mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.ic_anonymous, null);
 
 
         ImageCardView cardView = new ImageCardView(mContext) {
@@ -64,7 +64,7 @@ public class CardPresenter extends Presenter {
 
 
     @Override
-    public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+    public void onBindViewHolder(ViewHolder viewHolder, Object item) {
         Card card = (Card) item;
 
         ImageCardView cardView = (ImageCardView) viewHolder.view;
@@ -87,7 +87,7 @@ public class CardPresenter extends Presenter {
     }
 
     @Override
-    public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
+    public void onUnbindViewHolder(ViewHolder viewHolder) {
         ImageCardView cardView = (ImageCardView) viewHolder.view;
 
         // Free up memory.
@@ -96,7 +96,7 @@ public class CardPresenter extends Presenter {
     }
 
     @Override
-    public void onViewAttachedToWindow(Presenter.ViewHolder viewHolder) {
+    public void onViewAttachedToWindow(ViewHolder viewHolder) {
         // TO DO
     }
 }

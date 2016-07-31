@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.noratek.tvoxx.androitv.util;
+package net.noratek.tvoxx.androidtv.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,6 +28,11 @@ import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A collection of utility methods, all static.
@@ -48,6 +53,34 @@ public class Utils {
      */
     private Utils() {
     }
+
+
+    //
+    // REST Client
+    //
+
+    public static <T> T getRestClient(String url, Class<T> service) {
+
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+
+        if (retrofit == null) {
+            return null;
+        }
+
+        return retrofit.create(service);
+    }
+
+
 
     /**
      * Returns the screen/display size.

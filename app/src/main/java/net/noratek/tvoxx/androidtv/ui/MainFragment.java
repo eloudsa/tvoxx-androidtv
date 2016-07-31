@@ -9,13 +9,25 @@ import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.connection.TvoxxApi;
+import net.noratek.tvoxx.androidtv.model.Card;
+import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
-import net.noratek.tvoxx.model.Video;
+import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
+import net.noratek.tvoxx.androidtv.util.Constants;
+import net.noratek.tvoxx.androidtv.util.Utils;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainFragment extends BrowseFragment {
@@ -68,16 +80,73 @@ public class MainFragment extends BrowseFragment {
         ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
 
         for(int i=0; i<10; i++) {
-            Video video = new Video();
-            video.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
-            video.setTitle("title" + i);
-            video.setStudio("studio" + i);
-            cardRowAdapter.add(video);
+            Card card = new Card();
+            card.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
+            card.setTitle("title" + i);
+            card.setContent("studio" + i);
+            cardRowAdapter.add(card);
         }
         mRowsAdapter.add(new ListRow(cardPresenterHeader, cardRowAdapter));
 
+        /* Speakers */
+        displaySpeakers();
+
         setAdapter(mRowsAdapter);
     }
+
+
+    private void displaySpeakers() {
+
+        TvoxxApi methods = Utils.getRestClient(Constants.TVOXX_API_URL, TvoxxApi.class);
+        if (methods == null) {
+            return;
+        }
+
+        // retrieve the schedules list from the server
+        Call<List<Speaker>> call = methods.getSpeakers();
+        call.enqueue(new Callback<List<Speaker>>() {
+            @Override
+            public void onResponse(Call<List<Speaker>> call, Response<List<Speaker>> response) {
+                if (response.isSuccessful()) {
+                    List<Speaker> speakers = response.body();
+
+                    if (speakers == null) {
+                        Log.d(TAG, "No speakers!");
+                        return;
+                    }
+
+                    HeaderItem speakerHeaderPresenter = new HeaderItem(2, "Speakers");
+                    SpeakerPresenter speakerPresenter = new SpeakerPresenter();
+                    ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
+
+                    ArrayObjectAdapter adapter = (ArrayObjectAdapter) getAdapter();
+
+                    // load list of Devoxx speakers
+                    for (Speaker speaker : speakers ) {
+                        Card card = new Card();
+                        card.setCardImageUrl(speaker.getAvatarUrl());
+                        card.setTitle(speaker.getFirstName() + " " + speaker.getLastName());
+                        card.setContent(speaker.getCompany());
+                        speakersRowAdapter.add(card);
+                    }
+
+                    mRowsAdapter.add(new ListRow(speakerHeaderPresenter, speakersRowAdapter));
+
+                    adapter.notifyArrayItemRangeChanged(0, adapter.size());
+
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Speaker>> call, Throwable t) {
+                Log.e(TAG, "On Failure");
+            }
+        });
+
+    }
+
 
     private class GridItemPresenter extends Presenter {
         @Override

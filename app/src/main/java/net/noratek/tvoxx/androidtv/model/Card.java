@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.model;
+package net.noratek.tvoxx.androidtv.model;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -6,16 +6,16 @@ import java.net.URISyntaxException;
 /**
  * Created by eloudsa on 31/07/16.
  */
-public class Video {
+public class Card {
 
-    private static final String TAG = Video.class.getSimpleName();
+    private static final String TAG = Card.class.getSimpleName();
 
     private long id;
     private String title;
-    private String studio;
+    private String content;
     private String cardImageUrl;
 
-    public Video() {
+    public Card() {
     }
 
     public long getId() {
@@ -34,12 +34,12 @@ public class Video {
         this.title = title;
     }
 
-    public String getStudio() {
-        return studio;
+    public String getContent() {
+        return content;
     }
 
-    public void setStudio(String studio) {
-        this.studio = studio;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getCardImageUrl() {
@@ -60,7 +60,7 @@ public class Video {
 
     @Override
     public String toString() {
-        return "Video{" +
+        return "Card{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 '}';
