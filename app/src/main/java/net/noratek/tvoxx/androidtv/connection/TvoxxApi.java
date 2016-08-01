@@ -1,6 +1,6 @@
 package net.noratek.tvoxx.androidtv.connection;
 
-import net.noratek.tvoxx.androidtv.model.Speaker;
+import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 
 import java.util.List;
 
@@ -13,6 +13,6 @@ import retrofit2.http.GET;
 public interface TvoxxApi {
 
     @GET("speakers")
-    Call<List<Speaker>> getSpeakers();
+    Call<List<SpeakerModel>> getSpeakers();
 
 }

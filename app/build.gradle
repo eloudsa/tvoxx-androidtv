@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 
 android {
@@ -33,5 +34,10 @@ dependencies {
         exclude module: 'okhttp'
     }
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    apt 'org.androidannotations:androidannotations:4.0.0'
+    compile 'org.androidannotations:androidannotations-api:4.0.0'
+
+
 
 }

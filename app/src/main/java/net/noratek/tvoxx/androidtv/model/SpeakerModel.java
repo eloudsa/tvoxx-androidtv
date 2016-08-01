@@ -1,6 +1,6 @@
 package net.noratek.tvoxx.androidtv.model;
 
-public class Speaker {
+public class SpeakerModel {
 
     private String uuid;
     private String lastName;
@@ -10,17 +10,17 @@ public class Speaker {
     private String avatarUrl;
 
 
-    public Speaker() {
+    public SpeakerModel() {
     }
 
-    public Speaker(String uuid, String lastName, String firstName) {
+    public SpeakerModel(String uuid, String lastName, String firstName) {
         this.uuid = uuid;
         this.lastName = lastName;
         this.firstName = firstName;
     }
 
 
-    public Speaker(String uuid, String lastName, String firstName, String lang, String company, String avatarUrl) {
+    public SpeakerModel(String uuid, String lastName, String firstName, String lang, String company, String avatarUrl) {
         this.uuid = uuid;
         this.lastName = lastName;
         this.firstName = firstName;

@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.util;
+package net.noratek.tvoxx.androidtv.utils;
 
 /**
  * Created by eloudsa on 31/07/16.

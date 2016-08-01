@@ -6,16 +6,16 @@ import java.net.URISyntaxException;
 /**
  * Created by eloudsa on 31/07/16.
  */
-public class Card {
+public class CardModel {
 
-    private static final String TAG = Card.class.getSimpleName();
+    private static final String TAG = CardModel.class.getSimpleName();
 
     private long id;
     private String title;
     private String content;
     private String cardImageUrl;
 
-    public Card() {
+    public CardModel() {
     }
 
     public long getId() {

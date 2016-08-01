@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.noratek.tvoxx.androidtv.util;
+package net.noratek.tvoxx.androidtv.utils;
 
 import android.app.Activity;
 import android.content.Context;
