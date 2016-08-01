@@ -101,7 +101,7 @@ public class MainFragment extends BrowseFragment {
 
     private void displaySpeakers(final HeaderItem speakerHeaderPresenter, final ArrayObjectAdapter speakersRowAdapter) {
 
-        TvoxxApi methods = Utils.getRestClient(Constants.TVOXX_API_URL, TvoxxApi.class);
+        TvoxxApi methods = Utils.getRestClient(getActivity(), Constants.TVOXX_API_URL, TvoxxApi.class);
         if (methods == null) {
             return;
         }

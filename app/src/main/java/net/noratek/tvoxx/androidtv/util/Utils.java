@@ -30,6 +30,7 @@ import android.widget.VideoView;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -59,9 +60,12 @@ public class Utils {
     // REST Client
     //
 
-    public static <T> T getRestClient(String url, Class<T> service) {
+    public static <T> T getRestClient(Context context, String url, Class<T> service) {
+
+        Cache responseCache = new Cache(context.getCacheDir(), Constants.SIZE_OF_CACHE);
 
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .cache(responseCache)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)

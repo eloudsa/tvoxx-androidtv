@@ -5,6 +5,10 @@ package net.noratek.tvoxx.androidtv.util;
  */
 public class Constants {
 
+    // CACHE
+    public static final int SIZE_OF_CACHE = 128 * 1024 * 1024;
+
+
     // Header position
     public static final int HEADER_SPEAKER = 2;
 
