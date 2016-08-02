@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'realm-android'
 
 
 android {
@@ -37,6 +38,9 @@ dependencies {
 
     apt 'org.androidannotations:androidannotations:4.0.0'
     compile 'org.androidannotations:androidannotations-api:4.0.0'
+
+    compile 'com.annimon:stream:1.1.1'
+
 
 
 
