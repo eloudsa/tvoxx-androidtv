@@ -11,6 +11,10 @@ public final class Configuration {
 	public static final String DATABASE_NAME = "tvoxx_db";
 	public static final int DATABASE_VERSION = 1;
 
+	// REST timeout
+	public static final int CONNECTION_TIMEOUT = 60;
+
+
 	// CACHE
 	public static final int SIZE_OF_CACHE = 128 * 1024 * 1024;
 

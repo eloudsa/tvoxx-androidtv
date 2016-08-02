@@ -41,6 +41,8 @@ dependencies {
 
     compile 'com.annimon:stream:1.1.1'
 
+    compile 'org.greenrobot:eventbus:3.0.0'
+
 
 
 

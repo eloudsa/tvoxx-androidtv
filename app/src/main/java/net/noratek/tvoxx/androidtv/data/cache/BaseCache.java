@@ -67,7 +67,7 @@ public class BaseCache implements QueryAwareRawCache {
 				.equalTo(CacheObject.Contract.QUERY, query)
 				.findAll();
 		realm.beginTransaction();
-		object.clear();
+		object.deleteAllFromRealm();
 		realm.commitTransaction();
 		realm.close();
 	}

@@ -1,80 +1,77 @@
 package net.noratek.tvoxx.androidtv.data.downloader;
 
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.HeaderItem;
+import android.util.Log;
 
+import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
+import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by eloudsa on 01/08/16.
  */
 @EBean
 public class SpeakersDownloader {
+    private static final String TAG = SpeakersDownloader.class.getSimpleName();
+
+    @Bean
+    Connection connection;
 
     @Bean
     SpeakersCache speakersCache;
 
 
-    public void downloadSpeakers(final HeaderItem speakerHeaderPresenter, final ArrayObjectAdapter speakersRowAdapter) {
+    public void initWitStaticData() {
+        speakersCache.initWithFallbackData();
+    }
 
 
-        List<SpeakerModel> speakersModel = speakersCache.getData();
-        if (speakersModel != null) {
+    public void fetchAllSpeakers() throws IOException {
 
-
-
-        }
-
-        /*
-
-        TvoxxApi methods = Utils.getRestClient(getActivity(), Constants.TVOXX_API_URL, TvoxxApi.class);
-        if (methods == null) {
+        if (speakersCache.isValid()) {
+            EventBus.getDefault().post(new SpeakersEvent());
             return;
         }
 
         // retrieve the schedules list from the server
-        Call<List<SpeakerModel>> call = methods.getSpeakers();
+        Call<List<SpeakerModel>> call =connection.getTvoxxApi().getSpeakers();
         call.enqueue(new Callback<List<SpeakerModel>>() {
             @Override
             public void onResponse(Call<List<SpeakerModel>> call, Response<List<SpeakerModel>> response) {
                 if (response.isSuccessful()) {
                     List<SpeakerModel> speakersModel = response.body();
-
                     if (speakersModel == null) {
                         Log.d(TAG, "No speakers!");
-                        return;
+                        speakersCache.initWithFallbackData();
+                    } else {
+                        speakersCache.upsert(speakersModel);
                     }
-
-                    // load list of Devoxx speakers
-                    for (SpeakerModel speakerModel : speakersModel) {
-                        CardModel cardModel = new CardModel();
-                        cardModel.setCardImageUrl(speakerModel.getAvatarUrl());
-                        cardModel.setTitle(speakerModel.getFirstName() + " " + speakerModel.getLastName());
-                        cardModel.setContent(speakerModel.getCompany());
-                        speakersRowAdapter.add(cardModel);
-                    }
-
-                    mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(speakerHeaderPresenter, speakersRowAdapter));
-
                 } else {
                     Log.e(TAG, response.message());
+                    speakersCache.initWithFallbackData();
                 }
+
+                EventBus.getDefault().post(new SpeakersEvent());
             }
 
             @Override
             public void onFailure(Call<List<SpeakerModel>> call, Throwable t) {
                 Log.e(TAG, "On Failure");
+                speakersCache.initWithFallbackData();
+                EventBus.getDefault().post(new SpeakersEvent());
             }
         });
-        */
-
     }
-
 
 }

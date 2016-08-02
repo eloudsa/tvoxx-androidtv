@@ -12,7 +12,7 @@ import retrofit2.http.GET;
  */
 public interface TvoxxApi {
 
-    @GET("speakers")
+    @GET("speakers.json")
     Call<List<SpeakerModel>> getSpeakers();
 
 }

@@ -28,12 +28,6 @@ import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A collection of utility methods, all static.
@@ -54,36 +48,6 @@ public class Utils {
      */
     private Utils() {
     }
-
-
-    //
-    // REST Client
-    //
-
-    public static <T> T getRestClient(Context context, String url, Class<T> service) {
-
-        Cache responseCache = new Cache(context.getCacheDir(), Constants.SIZE_OF_CACHE);
-
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                .cache(responseCache)
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        if (retrofit == null) {
-            return null;
-        }
-
-        return retrofit.create(service);
-    }
-
 
 
     /**

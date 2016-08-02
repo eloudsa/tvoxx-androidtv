@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
+import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
@@ -23,7 +25,10 @@ import net.noratek.tvoxx.androidtv.utils.Constants;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.List;
 
 @EFragment
@@ -33,13 +38,23 @@ public class MainFragment extends BrowseFragment {
     @Bean
     SpeakersCache speakersCache;
 
+    @Bean
+    SpeakerManager speakerManager;
+
     private ArrayObjectAdapter mRowsAdapter;
+
+    // Headers
+    HeaderItem mSpeakerHeaderPresenter;
+
+
 
     @AfterViews
     protected void afterViews() {
+        EventBus.getDefault().register(this);
         setupUIElements();
         loadRows();
     }
+
 
     /*
     @Override
@@ -97,79 +112,18 @@ public class MainFragment extends BrowseFragment {
         mRowsAdapter.add(new ListRow(cardPresenterHeader, cardRowAdapter));
 
         /* Speakers */
-        HeaderItem speakerHeaderPresenter = new HeaderItem(Constants.HEADER_SPEAKER, getString(R.string.speakers));
+        mSpeakerHeaderPresenter = new HeaderItem(Constants.HEADER_SPEAKER, getString(R.string.speakers));
         SpeakerPresenter speakerPresenter = new SpeakerPresenter();
         ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
-        mRowsAdapter.add(new ListRow(speakerHeaderPresenter, speakersRowAdapter));
-        downloadSpeakers(speakerHeaderPresenter, speakersRowAdapter);
+        mRowsAdapter.add(new ListRow(mSpeakerHeaderPresenter, speakersRowAdapter));
+
+        try {
+            speakerManager.fetchSpeakersASync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setAdapter(mRowsAdapter);
-    }
-
-
-    private void downloadSpeakers(final HeaderItem speakerHeaderPresenter, final ArrayObjectAdapter speakersRowAdapter) {
-
-
-        List<SpeakerModel> speakersModel = speakersCache.getData();
-        if (speakersModel == null) {
-            return;
-        }
-
-        // load list of Devoxx speakers
-        for (SpeakerModel speakerModel : speakersModel) {
-            CardModel cardModel = new CardModel();
-            cardModel.setCardImageUrl(speakerModel.getAvatarUrl());
-            cardModel.setTitle(speakerModel.getFirstName() + " " + speakerModel.getLastName());
-            cardModel.setContent(speakerModel.getCompany());
-            speakersRowAdapter.add(cardModel);
-        }
-
-        mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(speakerHeaderPresenter, speakersRowAdapter));
-
-
-/*
-        TvoxxApi methods = Utils.getRestClient(getActivity(), Constants.TVOXX_API_URL, TvoxxApi.class);
-        if (methods == null) {
-            return;
-        }
-
-        // retrieve the schedules list from the server
-        Call<List<SpeakerModel>> call = methods.getSpeakers();
-        call.enqueue(new Callback<List<SpeakerModel>>() {
-            @Override
-            public void onResponse(Call<List<SpeakerModel>> call, Response<List<SpeakerModel>> response) {
-                if (response.isSuccessful()) {
-                    List<SpeakerModel> speakersModel = response.body();
-
-                    if (speakersModel == null) {
-                        Log.d(TAG, "No speakers!");
-                        return;
-                    }
-
-                    // load list of Devoxx speakers
-                    for (SpeakerModel speakerModel : speakersModel) {
-                        CardModel cardModel = new CardModel();
-                        cardModel.setCardImageUrl(speakerModel.getAvatarUrl());
-                        cardModel.setTitle(speakerModel.getFirstName() + " " + speakerModel.getLastName());
-                        cardModel.setContent(speakerModel.getCompany());
-                        speakersRowAdapter.add(cardModel);
-                    }
-
-                    mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(speakerHeaderPresenter, speakersRowAdapter));
-
-                } else {
-                    Log.e(TAG, response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<SpeakerModel>> call, Throwable t) {
-                Log.e(TAG, "On Failure");
-            }
-        });
-
-        */
-
     }
 
 
@@ -196,5 +150,31 @@ public class MainFragment extends BrowseFragment {
         public void onUnbindViewHolder(ViewHolder viewHolder) {
 
         }
+    }
+
+
+    // Events
+
+    @Subscribe
+    public void onMessageEvent(SpeakersEvent speakersEvent) {
+
+        List<SpeakerModel> speakersModel = speakersCache.getData();
+        if (speakersModel == null) {
+            return;
+        }
+
+        SpeakerPresenter speakerPresenter = new SpeakerPresenter();
+        ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
+
+        // display speakers
+        for (SpeakerModel speakerModel : speakersModel) {
+            CardModel cardModel = new CardModel();
+            cardModel.setCardImageUrl(speakerModel.getAvatarUrl());
+            cardModel.setTitle(speakerModel.getFirstName() + " " + speakerModel.getLastName());
+            cardModel.setContent(speakerModel.getCompany());
+            speakersRowAdapter.add(cardModel);
+        }
+
+        mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(mSpeakerHeaderPresenter, speakersRowAdapter));
     }
 }
