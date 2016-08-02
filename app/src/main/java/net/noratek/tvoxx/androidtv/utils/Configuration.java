@@ -14,9 +14,6 @@ public final class Configuration {
 	// REST timeout
 	public static final int CONNECTION_TIMEOUT = 60;
 
-
-	// CACHE
-	public static final int SIZE_OF_CACHE = 128 * 1024 * 1024;
-
-	public static final int SPEAKERS_CACHE_LIFE_TIME_MINS = 60;
+	// Lifetime of data
+	public static final int SPEAKERS_CACHE_LIFE_TIME_MINS = 5;
 }

@@ -22,7 +22,6 @@ import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.greenrobot.eventbus.EventBus;
@@ -46,27 +45,19 @@ public class MainFragment extends BrowseFragment {
     // Headers
     HeaderItem mSpeakerHeaderPresenter;
 
-
-
-    @AfterViews
-    protected void afterViews() {
+    @Override
+    public void onStart() {
+        super.onStart();
         EventBus.getDefault().register(this);
         setupUIElements();
         loadRows();
     }
 
-
-    /*
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setupUIElements();
-
-        loadRows();
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
-    */
-
 
     private void setupUIElements() {
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
