@@ -118,9 +118,19 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof CardModel) {
-                mBackgroundURI = Uri.parse(((CardModel) item).getCardImageUrl());
 
+            String imageUrl = null;
+
+            if (item instanceof CardModel) {
+                imageUrl = ((CardModel) item).getCardImageUrl();
+
+            } else if (item instanceof SpeakerModel) {
+                imageUrl = ((SpeakerModel) item).getAvatarUrl();
+
+            }
+
+            if (imageUrl != null) {
+                mBackgroundURI = Uri.parse(imageUrl);
             } else {
                 mBackgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
             }
@@ -184,6 +194,11 @@ public class MainFragment extends BrowseFragment {
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
                             glideAnimation) {
                         mBackgroundManager.setBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        mBackgroundManager.setDrawable(mDefaultBackground);
                     }
                 });
         mBackgroundTimer.cancel();
@@ -273,12 +288,8 @@ public class MainFragment extends BrowseFragment {
         ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
 
         // display speakers
-        for (SpeakerModel speakerModel : speakersModel) {
-            CardModel cardModel = new CardModel();
-            cardModel.setCardImageUrl(speakerModel.getAvatarUrl());
-            cardModel.setTitle(speakerModel.getFirstName() + " " + speakerModel.getLastName());
-            cardModel.setContent(speakerModel.getCompany());
-            speakersRowAdapter.add(cardModel);
+        for (SpeakerModel speaker : speakersModel) {
+            speakersRowAdapter.add(speaker);
         }
 
         mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(mSpeakerHeaderPresenter, speakersRowAdapter));

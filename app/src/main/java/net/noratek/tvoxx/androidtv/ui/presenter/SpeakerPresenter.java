@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.androidtv.model.CardModel;
+import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 
 
 /**
@@ -69,13 +69,13 @@ public class SpeakerPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        CardModel cardModel = (CardModel) item;
+        SpeakerModel speaker = (SpeakerModel) item;
 
         ImageCardView cardView = (ImageCardView) viewHolder.view;
-        cardView.setTitleText(cardModel.getTitle());
-        cardView.setContentText(cardModel.getContent());
+        cardView.setTitleText(speaker.getFirstName() + " " + speaker.getLastName());
+        cardView.setContentText(speaker.getCompany());
 
-        if (cardModel.getCardImageUrl() != null) {
+        if (speaker.getAvatarUrl() != null) {
             // Set card size from dimension resources.
             Resources res = cardView.getResources();
             int width = res.getDimensionPixelSize(R.dimen.card_width);
@@ -83,7 +83,7 @@ public class SpeakerPresenter extends Presenter {
             cardView.setMainImageDimensions(width, height);
 
             Glide.with(cardView.getContext())
-                    .load(cardModel.getCardImageUrl())
+                    .load(speaker.getAvatarUrl())
                     .error(mDefaultCardImage)
                     .into(cardView.getMainImageView());
         }
