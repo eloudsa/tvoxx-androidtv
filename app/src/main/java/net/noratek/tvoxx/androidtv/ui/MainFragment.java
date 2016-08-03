@@ -1,11 +1,7 @@
 package net.noratek.tvoxx.androidtv.ui;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Handler;
-import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -16,14 +12,9 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
@@ -31,6 +22,7 @@ import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -43,8 +35,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @EFragment
 public class MainFragment extends BrowseFragment {
@@ -62,13 +52,7 @@ public class MainFragment extends BrowseFragment {
     HeaderItem mSpeakerHeaderPresenter;
 
     // Background image
-    private BackgroundManager mBackgroundManager;
-    private DisplayMetrics mMetrics;
-    private Drawable mDefaultBackground;
-    private Uri mBackgroundURI;
-    private Timer mBackgroundTimer;
-    private final Handler mHandler = new Handler();
-
+    private BackgroundImageManager mBackgroundImageManager;
 
 
 
@@ -78,7 +62,7 @@ public class MainFragment extends BrowseFragment {
         EventBus.getDefault().register(this);
 
         // Prepare the manager that maintains the same background image between activities.
-        prepareBackgroundManager();
+        mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         setupUIElements();
         setupEventListeners();
@@ -129,80 +113,18 @@ public class MainFragment extends BrowseFragment {
 
             }
 
+            Uri backgroundURI;
+
             if (imageUrl != null) {
-                mBackgroundURI = Uri.parse(imageUrl);
+                backgroundURI = Uri.parse(imageUrl);
             } else {
-                mBackgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
+                backgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
             }
 
-            startBackgroundTimer();
-
+            mBackgroundImageManager.updateBackgroundWithDelay(backgroundURI);
         }
     }
 
-
-    /*
-
-        Background
-
-     */
-
-
-    private void prepareBackgroundManager() {
-        mBackgroundManager = BackgroundManager.getInstance(getActivity());
-        mBackgroundManager.attach(getActivity().getWindow());
-        mDefaultBackground = getResources().getDrawable(R.drawable.default_background, null);
-        mMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
-    }
-
-
-    private void startBackgroundTimer() {
-        if (null != mBackgroundTimer) {
-            mBackgroundTimer.cancel();
-        }
-        mBackgroundTimer = new Timer();
-        mBackgroundTimer.schedule(new UpdateBackgroundTask(), Constants.BACKGROUND_UPDATE_DELAY);
-    }
-
-
-    private class UpdateBackgroundTask extends TimerTask {
-
-        @Override
-        public void run() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mBackgroundURI != null) {
-                        updateBackground(mBackgroundURI.toString());
-                    }
-                }
-            });
-        }
-    }
-
-    private void updateBackground(String uri) {
-        int width = mMetrics.widthPixels;
-        int height = mMetrics.heightPixels;
-        Glide.with(this)
-                .load(uri)
-                .asBitmap()
-                .centerCrop()
-                .error(mDefaultBackground)
-                .into(new SimpleTarget<Bitmap>(width, height) {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
-                            glideAnimation) {
-                        mBackgroundManager.setBitmap(resource);
-                    }
-
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        mBackgroundManager.setDrawable(mDefaultBackground);
-                    }
-                });
-        mBackgroundTimer.cancel();
-    }
 
 
     private void loadRows() {
