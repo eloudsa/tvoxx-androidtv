@@ -17,9 +17,11 @@
 package net.noratek.tvoxx.androidtv.utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Point;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -49,6 +51,16 @@ public class Utils {
     private Utils() {
     }
 
+
+    /**
+     * Get an URI from a drawable
+     */
+    public static Uri getUri(Context context, int resId) {
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + context.getResources().getResourcePackageName(resId)
+                + '/' + context.getResources().getResourceTypeName(resId)
+                + '/' + context.getResources().getResourceEntryName(resId) );
+    }
 
     /**
      * Returns the screen/display size.
