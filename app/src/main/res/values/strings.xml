@@ -4,7 +4,11 @@
     <string name="app_title">Welcome on TVoxx</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
     <string name="speakers">Speakers</string>
+    <string name="conferences">Conferences</string>
+    <string name="favorites">Favorites</string>
+    <string name="about">About</string>
 
 
 </resources>

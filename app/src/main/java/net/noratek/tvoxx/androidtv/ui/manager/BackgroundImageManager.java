@@ -34,15 +34,12 @@ public class BackgroundImageManager {
 
 
     public BackgroundImageManager(Activity activity) {
-
         mActivity = activity;
-
         mBackgroundManager = BackgroundManager.getInstance(mActivity);
         mBackgroundManager.attach(mActivity.getWindow());
         mDefaultBackground = mActivity.getResources().getDrawable(R.drawable.default_background, null);
         mMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
-
     }
 
 
@@ -62,7 +59,6 @@ public class BackgroundImageManager {
 
 
     private class UpdateBackgroundTask extends TimerTask {
-
         @Override
         public void run() {
             mHandler.post(new Runnable() {
