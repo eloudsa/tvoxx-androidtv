@@ -14,6 +14,7 @@ public class CardModel {
     private String title;
     private String content;
     private String cardImageUrl;
+    private int type;
 
     public CardModel() {
     }
@@ -44,6 +45,14 @@ public class CardModel {
 
     public String getCardImageUrl() {
         return cardImageUrl;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public URI getCardImageURI() {

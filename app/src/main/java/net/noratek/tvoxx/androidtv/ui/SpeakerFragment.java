@@ -14,20 +14,35 @@ import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.support.v4.content.ContextCompat;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
+import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
-import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
-import net.noratek.tvoxx.androidtv.utils.Constants;
+import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.IOException;
+import java.util.List;
 
 @EFragment
-public class HomeFragment extends VerticalGridFragment {
-    private static final String TAG = HomeFragment.class.getSimpleName();
+public class SpeakerFragment extends VerticalGridFragment {
+    private static final String TAG = SpeakerFragment.class.getSimpleName();
 
     private static final int NUM_COLUMNS = 4;
+
+    @Bean
+    SpeakersCache speakersCache;
+
+    @Bean
+    SpeakerManager speakerManager;
+
 
     private ArrayObjectAdapter mAdapter;
 
@@ -39,50 +54,48 @@ public class HomeFragment extends VerticalGridFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        EventBus.getDefault().register(this);
+
         // Prepare the manager that maintains the same background image between activities.
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
         setTitle(getString(R.string.app_title));
 
-        setupFragment();
+        setupUIElements();
         setupEventListeners();
+        loadRows();
     }
 
-    private void setupFragment() {
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
+    private void setupUIElements() {
+        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
+        setTitle(getString(R.string.app_title));
+    }
+
+
+    private void loadRows() {
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
 
-        mAdapter = new ArrayObjectAdapter(new CardPresenter());
+        mAdapter = new ArrayObjectAdapter(new SpeakerPresenter());
 
-        CardModel cardModel = new CardModel();
-        cardModel.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.conferences).toString());
-        cardModel.setTitle(getString(R.string.conferences));
-        cardModel.setType(Constants.CARD_TYPE_CONFERENCES);
-        mAdapter.add(cardModel);
-
-        cardModel = new CardModel();
-        cardModel.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.speakers).toString());
-        cardModel.setTitle(getString(R.string.speakers));
-        cardModel.setType(Constants.CARD_TYPE_SPEAKERS);
-        mAdapter.add(cardModel);
-
-        cardModel = new CardModel();
-        cardModel.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.favorite).toString());
-        cardModel.setTitle(getString(R.string.favorites));
-        cardModel.setType(Constants.CARD_TYPE_FAVORTIES);
-        mAdapter.add(cardModel);
-
-        cardModel = new CardModel();
-        cardModel.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.about).toString());
-        cardModel.setTitle(getString(R.string.about));
-        cardModel.setType(Constants.CARD_TYPE_ABOUT);
-        mAdapter.add(cardModel);
+        try {
+            speakerManager.fetchSpeakersASync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setAdapter(mAdapter);
     }
-
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
@@ -122,18 +135,29 @@ public class HomeFragment extends VerticalGridFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof CardModel) {
-
-                Intent intent;
-                if (((CardModel) item).getType() == Constants.CARD_TYPE_SPEAKERS) {
-                    intent = new Intent(getActivity(), SpeakerActivity_.class);
-                } else {
-                    intent = new Intent(getActivity(), MainActivity_.class);
-                }
-
+            if (item instanceof SpeakerModel) {
+                Intent intent = new Intent(getActivity(), MainActivity_.class);
                 getActivity().startActivity(intent);
             }
         }
     }
 
+
+    // Events
+
+    @Subscribe
+    public void onMessageEvent(SpeakersEvent speakersEvent) {
+
+        List<SpeakerModel> speakersModel = speakersCache.getData();
+        if (speakersModel == null) {
+            return;
+        }
+
+        mAdapter.clear();
+
+        // display speakers
+        for (SpeakerModel speaker : speakersModel) {
+            mAdapter.add(speaker);
+        }
+    }
 }

@@ -2,6 +2,8 @@ package net.noratek.tvoxx.androidtv.ui.presenter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
@@ -10,6 +12,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
@@ -71,21 +75,38 @@ public class SpeakerPresenter extends Presenter {
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
         SpeakerModel speaker = (SpeakerModel) item;
 
-        ImageCardView cardView = (ImageCardView) viewHolder.view;
+        final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(speaker.getFirstName() + " " + speaker.getLastName());
         cardView.setContentText(speaker.getCompany());
 
         if (speaker.getAvatarUrl() != null) {
             // Set card size from dimension resources.
             Resources res = cardView.getResources();
-            int width = res.getDimensionPixelSize(R.dimen.card_width);
-            int height = res.getDimensionPixelSize(R.dimen.card_height);
+            final int width = res.getDimensionPixelSize(R.dimen.card_width);
+            final int height = res.getDimensionPixelSize(R.dimen.card_height);
             cardView.setMainImageDimensions(width, height);
 
             Glide.with(cardView.getContext())
                     .load(speaker.getAvatarUrl())
+                    .asBitmap()
+                    .centerCrop()
                     .error(mDefaultCardImage)
-                    .into(cardView.getMainImageView());
+                    .into(new SimpleTarget<Bitmap>(width, height) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
+                                glideAnimation) {
+                            cardView.setMainImage(new BitmapDrawable(mContext.getResources(), resource));
+                        }
+
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            cardView.setMainImage(null);
+                            //cardView.setMainImageDimensions(width, height);
+
+                        }
+                    });
+        } else {
+            cardView.setMainImage(null);
         }
 
     }
