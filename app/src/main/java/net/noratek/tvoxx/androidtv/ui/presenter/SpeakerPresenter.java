@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v17.leanback.widget.BaseCardView;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
@@ -17,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.utils.Utils;
 
 
 /**
@@ -79,7 +81,16 @@ public class SpeakerPresenter extends Presenter {
         cardView.setTitleText(speaker.getFirstName() + " " + speaker.getLastName());
         cardView.setContentText(speaker.getCompany());
 
+
+        Uri uri;
         if (speaker.getAvatarUrl() != null) {
+            uri = Uri.parse(speaker.getAvatarUrl());
+        } else {
+            //speaker.setAvatarUrl("https://66.media.tumblr.com/dd515ee8631d01625b971dad4177c338/tumblr_o85gnvS3IW1snq8dno2_400.png");
+            uri = Utils.getUri(mContext, R.drawable.ic_anonymous);
+        }
+
+        //if (speaker.getAvatarUrl() != null) {
             // Set card size from dimension resources.
             Resources res = cardView.getResources();
             final int width = res.getDimensionPixelSize(R.dimen.card_width);
@@ -87,7 +98,7 @@ public class SpeakerPresenter extends Presenter {
             cardView.setMainImageDimensions(width, height);
 
             Glide.with(cardView.getContext())
-                    .load(speaker.getAvatarUrl())
+                    .load(uri)
                     .asBitmap()
                     .centerCrop()
                     .error(mDefaultCardImage)
@@ -105,9 +116,9 @@ public class SpeakerPresenter extends Presenter {
 
                         }
                     });
-        } else {
-            cardView.setMainImage(null);
-        }
+        //} else {
+        //    cardView.setMainImage(null);
+       // }
 
     }
 

@@ -7,4 +7,6 @@
 
     <color name="selected_background">#ffaa3f</color>
 
+    <color name="spinner_color">#f5af33</color>
+
 </resources>

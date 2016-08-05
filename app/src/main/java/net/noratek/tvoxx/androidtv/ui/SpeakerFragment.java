@@ -11,7 +11,6 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
-import android.support.v4.content.ContextCompat;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
@@ -50,6 +49,10 @@ public class SpeakerFragment extends VerticalGridFragment {
     private BackgroundImageManager mBackgroundImageManager;
 
 
+    private SpinnerFragment mSpinnerFragment;
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +62,7 @@ public class SpeakerFragment extends VerticalGridFragment {
         // Prepare the manager that maintains the same background image between activities.
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
-        setTitle(getString(R.string.app_title));
+        mSpinnerFragment = new SpinnerFragment();
 
         setupUIElements();
         setupEventListeners();
@@ -70,18 +72,22 @@ public class SpeakerFragment extends VerticalGridFragment {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
+        EventBus.getDefault().unregister(this);
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }
 
 
     private void setupUIElements() {
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
-        setTitle(getString(R.string.app_title));
+        setTitle(getString(R.string.speakers));
     }
 
 
     private void loadRows() {
+
+        // Display the spinner
+        getFragmentManager().beginTransaction().add(R.id.speaker_fragment, mSpinnerFragment).commit();
+
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
@@ -150,6 +156,7 @@ public class SpeakerFragment extends VerticalGridFragment {
 
         List<SpeakerModel> speakersModel = speakersCache.getData();
         if (speakersModel == null) {
+            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;
         }
 
@@ -159,5 +166,7 @@ public class SpeakerFragment extends VerticalGridFragment {
         for (SpeakerModel speaker : speakersModel) {
             mAdapter.add(speaker);
         }
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }
 }

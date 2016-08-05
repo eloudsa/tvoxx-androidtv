@@ -49,9 +49,7 @@
         <activity
             android:name=".ui.SpeakerActivity_"
             android:exported="true"
-            android:icon="@drawable/tvoxx_logo"
             android:label="@string/app_name"
-            android:logo="@drawable/tvoxx_logo"
             android:orientation="vertical"
             android:screenOrientation="landscape"
             android:parentActivityName=".ui.HomeActivity_"
