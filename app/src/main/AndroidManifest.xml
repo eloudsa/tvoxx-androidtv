@@ -20,6 +20,7 @@
         android:allowBackup="true"
         android:icon="@drawable/tvoxx_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/Theme.Leanback">
         <activity
             android:name=".ui.HomeActivity_"
@@ -36,7 +37,6 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.MainActivity_"
             android:icon="@drawable/tvoxx_logo"
@@ -45,18 +45,18 @@
             android:parentActivityName=".ui.HomeActivity_"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Leanback.Browse" />
-
         <activity
             android:name=".ui.SpeakerActivity_"
             android:exported="true"
             android:label="@string/app_name"
             android:orientation="vertical"
-            android:screenOrientation="landscape"
             android:parentActivityName=".ui.HomeActivity_"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.Leanback.VerticalGrid" />
-
-
-
+        <activity
+            android:name=".ui.SpeakerDetailActivity_"
+            android:exported="true"
+            android:theme="@style/Theme.Leanback.Details" />
     </application>
 
 </manifest>

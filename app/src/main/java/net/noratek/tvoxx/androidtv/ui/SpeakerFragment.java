@@ -52,7 +52,6 @@ public class SpeakerFragment extends VerticalGridFragment {
     private SpinnerFragment mSpinnerFragment;
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +71,9 @@ public class SpeakerFragment extends VerticalGridFragment {
 
     @Override
     public void onStop() {
-        super.onStop();
         EventBus.getDefault().unregister(this);
-        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+//        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+        super.onStop();
     }
 
 
@@ -108,6 +107,24 @@ public class SpeakerFragment extends VerticalGridFragment {
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
+    @Subscribe
+    public void onMessageEvent(SpeakersEvent speakersEvent) {
+
+        List<SpeakerModel> speakersModel = speakersCache.getData();
+        if (speakersModel == null) {
+            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+            return;
+        }
+
+        mAdapter.clear();
+
+        // display speakers
+        for (SpeakerModel speaker : speakersModel) {
+            mAdapter.add(speaker);
+        }
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+    }
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
         @Override
@@ -136,37 +153,22 @@ public class SpeakerFragment extends VerticalGridFragment {
     }
 
 
+    // Events
+
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
             if (item instanceof SpeakerModel) {
-                Intent intent = new Intent(getActivity(), MainActivity_.class);
+
+                SpeakerModel speakerModel = (SpeakerModel) item;
+
+                Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
+                intent.putExtra(SpeakerDetailActivity.MOVIE, speakerModel);
+
                 getActivity().startActivity(intent);
             }
         }
-    }
-
-
-    // Events
-
-    @Subscribe
-    public void onMessageEvent(SpeakersEvent speakersEvent) {
-
-        List<SpeakerModel> speakersModel = speakersCache.getData();
-        if (speakersModel == null) {
-            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
-            return;
-        }
-
-        mAdapter.clear();
-
-        // display speakers
-        for (SpeakerModel speaker : speakersModel) {
-            mAdapter.add(speaker);
-        }
-
-        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }
 }

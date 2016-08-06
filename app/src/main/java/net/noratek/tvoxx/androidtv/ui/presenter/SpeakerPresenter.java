@@ -39,7 +39,7 @@ public class SpeakerPresenter extends Presenter {
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         mContext = parent.getContext();
 
-        mDefaultBackgroundColor = ContextCompat.getColor(mContext,R.color.default_background);
+        mDefaultBackgroundColor = ContextCompat.getColor(mContext, R.color.default_background);
         mSelectedBackgroundColor = ContextCompat.getColor(mContext, R.color.selected_background);
         mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.ic_anonymous, null);
 
@@ -72,7 +72,6 @@ public class SpeakerPresenter extends Presenter {
     }
 
 
-
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
         SpeakerModel speaker = (SpeakerModel) item;
@@ -86,40 +85,34 @@ public class SpeakerPresenter extends Presenter {
         if (speaker.getAvatarUrl() != null) {
             uri = Uri.parse(speaker.getAvatarUrl());
         } else {
-            //speaker.setAvatarUrl("https://66.media.tumblr.com/dd515ee8631d01625b971dad4177c338/tumblr_o85gnvS3IW1snq8dno2_400.png");
             uri = Utils.getUri(mContext, R.drawable.ic_anonymous);
         }
 
-        //if (speaker.getAvatarUrl() != null) {
-            // Set card size from dimension resources.
-            Resources res = cardView.getResources();
-            final int width = res.getDimensionPixelSize(R.dimen.card_width);
-            final int height = res.getDimensionPixelSize(R.dimen.card_height);
-            cardView.setMainImageDimensions(width, height);
+        // Set card size from dimension resources.
+        Resources res = cardView.getResources();
+        final int width = res.getDimensionPixelSize(R.dimen.card_width);
+        final int height = res.getDimensionPixelSize(R.dimen.card_height);
+        cardView.setMainImageDimensions(width, height);
 
-            Glide.with(cardView.getContext())
-                    .load(uri)
-                    .asBitmap()
-                    .centerCrop()
-                    .error(mDefaultCardImage)
-                    .into(new SimpleTarget<Bitmap>(width, height) {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
-                                glideAnimation) {
-                            cardView.setMainImage(new BitmapDrawable(mContext.getResources(), resource));
-                        }
+        Glide.with(cardView.getContext())
+                .load(uri)
+                .asBitmap()
+                .centerCrop()
+                .error(mDefaultCardImage)
+                .into(new SimpleTarget<Bitmap>(width, height) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
+                            glideAnimation) {
+                        cardView.setMainImage(new BitmapDrawable(mContext.getResources(), resource));
+                    }
 
-                        @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                            cardView.setMainImage(null);
-                            //cardView.setMainImageDimensions(width, height);
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        cardView.setMainImage(null);
+                        //cardView.setMainImageDimensions(width, height);
 
-                        }
-                    });
-        //} else {
-        //    cardView.setMainImage(null);
-       // }
-
+                    }
+                });
     }
 
     @Override

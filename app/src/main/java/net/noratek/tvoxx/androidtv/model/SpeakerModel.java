@@ -1,6 +1,9 @@
 package net.noratek.tvoxx.androidtv.model;
 
-public class SpeakerModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class SpeakerModel implements Parcelable {
 
     private String uuid;
     private String lastName;
@@ -77,4 +80,36 @@ public class SpeakerModel {
     public void setLang(String lang) {
         this.lang = lang;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.uuid);
+        dest.writeString(this.firstName);
+        dest.writeString(this.lastName);
+        dest.writeString(this.company);
+        dest.writeString(this.avatarUrl);
+    }
+
+    protected SpeakerModel(Parcel in) {
+        this.uuid = in.readString();
+        this.firstName = in.readString();
+        this.lastName = in.readString();
+        this.company = in.readString();
+        this.avatarUrl= in.readString();
+    }
+
+    public static final Parcelable.Creator<SpeakerModel> CREATOR = new Parcelable.Creator<SpeakerModel>() {
+        public SpeakerModel createFromParcel(Parcel source) {
+            return new SpeakerModel(source);
+        }
+
+        public SpeakerModel[] newArray(int size) {
+            return new SpeakerModel[size];
+        }
+    };
 }
