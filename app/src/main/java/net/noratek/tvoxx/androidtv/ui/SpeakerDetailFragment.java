@@ -36,10 +36,9 @@ import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakerFullEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.TalkModel;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
-import net.noratek.tvoxx.androidtv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
@@ -66,20 +65,6 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     private SpinnerFragment mSpinnerFragment;
 
-
-    private static final String MOVIE = "Movie";
-
-
-
-
-    private CustomFullWidthDetailsOverviewRowPresenter mFullRowPresenter;
-
-    private SpeakerModel mSelectedSpeaker;
-    //private DetailsRowBuilderTask mDetailsRowBuilderTask;
-
-    // Background image
-    private BackgroundImageManager mBackgroundImageManager;
-
     private FullWidthDetailsOverviewSharedElementHelper mHelper;
     private ClassPresenterSelector mPresenterSelector;
     private ArrayObjectAdapter mAdapter;
@@ -93,37 +78,20 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
         mSpinnerFragment = new SpinnerFragment();
 
-        mFullRowPresenter = new CustomFullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()));
+        String uuid = getActivity().getIntent().getStringExtra(SpeakerDetailActivity.UUID);
 
-        mSelectedSpeaker = getActivity().getIntent().getParcelableExtra(MOVIE);
-
-        //mDetailsRowBuilderTask = (DetailsRowBuilderTask) new DetailsRowBuilderTask().execute(mSelectedSpeaker);
-
-        // Prepare the manager that maintains the same background image between activities.
-        mBackgroundImageManager = new BackgroundImageManager(getActivity());
-
-        if (mSelectedSpeaker != null) {
-            setupAdapter();
-            setupDetailsOverviewRow();
-            setupMovieListRow();
-
-            mBackgroundImageManager.updateBackgroundWithDelay(Uri.parse(mSelectedSpeaker.getAvatarUrl()));
-
-            loadSpeakerDetail();
-
-
-            // When a Related Video item is clicked.
-            //setOnItemViewClickedListener(new ItemViewClickedListener());
+        if (uuid != null) {
+            loadSpeakerDetail(uuid);
         }
     }
 
-    private void loadSpeakerDetail() {
+    private void loadSpeakerDetail(String uuid) {
 
         // Display the spinner
         getFragmentManager().beginTransaction().add(R.id.speaker_detail_fragment, mSpinnerFragment).commit();
 
         try {
-            speakerManager.fetchSpeakerFullASync(mSelectedSpeaker.getUuid());
+            speakerManager.fetchSpeakerFullASync(uuid);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,6 +101,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         //mDetailsRowBuilderTask.cancel(true);
         super.onStop();
     }
@@ -221,12 +190,18 @@ public class SpeakerDetailFragment extends DetailsFragment {
     }
 
 
-    private void setupDetailsOverviewRow() {
-        final DetailsOverviewRow row = new DetailsOverviewRow(mSelectedSpeaker);
+    private void setupDetailsOverviewRow(SpeakerFullModel speakerFullModel) {
+
+        // change the background image
+        BackgroundImageManager backgroundImageManager = new BackgroundImageManager(getActivity());
+        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(speakerFullModel.getAvatarUrl()));
+
+
+        final DetailsOverviewRow row = new DetailsOverviewRow(speakerFullModel);
 
         Uri uri;
-        if (mSelectedSpeaker.getAvatarUrl() != null) {
-            uri = Uri.parse(mSelectedSpeaker.getAvatarUrl());
+        if (speakerFullModel.getAvatarUrl() != null) {
+            uri = Uri.parse(speakerFullModel.getAvatarUrl());
         } else {
             uri = Utils.getUri(getActivity(), R.drawable.ic_anonymous);
         }
@@ -255,6 +230,12 @@ public class SpeakerDetailFragment extends DetailsFragment {
                         row.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_anonymous));
                         startEntranceTransition();
                     }
+
+                    @Override
+                    public void onDestroy() {
+                        Glide.get(getActivity()).clearMemory();
+                        super.onDestroy();
+                    }
                 });
 
 
@@ -270,32 +251,21 @@ public class SpeakerDetailFragment extends DetailsFragment {
     }
 
 
-    private void setupMovieListRow() {
+    private void setupMovieListRow(SpeakerFullModel speakerFullModel) {
         String subcategories[] = {getString(R.string.related_talks)};
 
-        /*
-        // Generating related video list.
-        String category = mSelectedVideo.category;
-
-        Bundle args = new Bundle();
-        args.putString(VideoContract.VideoEntry.COLUMN_CATEGORY, category);
-        getLoaderManager().initLoader(RELATED_VIDEO_LOADER, args, this);
-        */
-
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-        for (int i = 0; i < 10; i++) {
-            CardModel cardModel = new CardModel();
-            if (i % 3 == 0) {
-                cardModel.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02580.jpg");
-            } else if (i % 3 == 1) {
-                cardModel.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02630.jpg");
-            } else {
-                cardModel.setCardImageUrl("http://heimkehrend.raindrop.jp/kl-hacker/wp-content/uploads/2014/08/DSC02529.jpg");
+
+        if (speakerFullModel.getTalks() != null) {
+
+            for (TalkModel talkModel : speakerFullModel.getTalks()) {
+                CardModel cardModel = new CardModel();
+                cardModel.setCardImageUrl(talkModel.getThumbnailUrl());
+                cardModel.setTitle(talkModel.getTitle());
+                listRowAdapter.add(cardModel);
             }
-            cardModel.setTitle("title" + i);
-            cardModel.setContent("studio" + i);
-            listRowAdapter.add(cardModel);
         }
+
 
         HeaderItem header = new HeaderItem(0, subcategories[0]);
         mAdapter.add(new ListRow(header, listRowAdapter));
@@ -305,27 +275,16 @@ public class SpeakerDetailFragment extends DetailsFragment {
     @Subscribe
     public void onMessageEvent(SpeakerFullEvent speakerFullEvent) {
 
-        SpeakerFullModel speakerFullModel = speakerFullCache.getData(mSelectedSpeaker.getUuid());
+        SpeakerFullModel speakerFullModel = speakerFullCache.getData(speakerFullEvent.getUuid());
         if (speakerFullModel == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;
         }
 
-        /*
-        mAdapter.clear();
-
-        // display speakers
-        for (SpeakerModel speaker : speakersModel) {
-            mAdapter.add(speaker);
-        }
-        */
-
-        mAdapter.clear();
 
         setupAdapter();
-        setupDetailsOverviewRow();
-        setupMovieListRow();
-
+        setupDetailsOverviewRow(speakerFullModel);
+        setupMovieListRow(speakerFullModel);
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }

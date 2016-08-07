@@ -165,7 +165,7 @@ public class SpeakerFragment extends VerticalGridFragment {
                 SpeakerModel speakerModel = (SpeakerModel) item;
 
                 Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
-                intent.putExtra(SpeakerDetailActivity.MOVIE, speakerModel);
+                intent.putExtra(SpeakerDetailActivity.UUID, speakerModel.getUuid());
 
                 getActivity().startActivity(intent);
             }

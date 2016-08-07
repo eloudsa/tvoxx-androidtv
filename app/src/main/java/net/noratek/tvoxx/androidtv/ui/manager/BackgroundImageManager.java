@@ -45,6 +45,7 @@ public class BackgroundImageManager {
 
     public void updateBackgroundWithDelay(Uri uri) {
         mBackgroundURI = uri;
+        //cancel();
         startBackgroundTimer();
     }
 
@@ -77,6 +78,11 @@ public class BackgroundImageManager {
     private void updateBackground(String uri) {
         int width = mMetrics.widthPixels;
         int height = mMetrics.heightPixels;
+
+        if (mActivity == null) {
+            return;
+        }
+
         Glide.with(mActivity)
                 .load(uri)
                 .asBitmap()
@@ -93,9 +99,25 @@ public class BackgroundImageManager {
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         mBackgroundManager.setDrawable(mDefaultBackground);
                     }
+
+                    @Override
+                    public void onDestroy() {
+                        Glide.get(mActivity).clearMemory();
+                        super.onDestroy();
+                    }
                 });
         mBackgroundTimer.cancel();
     }
+
+    public void cancel() {
+        if (null != mBackgroundTimer) {
+            mBackgroundTimer.cancel();
+        }
+
+        Glide.get(mActivity).clearMemory();
+    }
+
+
 
 
 }

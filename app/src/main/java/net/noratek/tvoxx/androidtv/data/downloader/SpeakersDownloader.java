@@ -91,7 +91,7 @@ public class SpeakersDownloader {
     public void fetchSpeaker(final String uuid) throws IOException {
 
         if (speakerFullCache.isValid(uuid)) {
-            EventBus.getDefault().post(new SpeakerFullEvent());
+            EventBus.getDefault().post(new SpeakerFullEvent(uuid));
             return;
         }
 
@@ -114,7 +114,7 @@ public class SpeakersDownloader {
                         realm.commitTransaction();
                         realm.close();
 
-                        EventBus.getDefault().post(new SpeakerFullEvent());
+                        EventBus.getDefault().post(new SpeakerFullEvent(speakerFullModel.getUuid()));
                     }
                 } else {
                     Log.e(TAG, response.message());
