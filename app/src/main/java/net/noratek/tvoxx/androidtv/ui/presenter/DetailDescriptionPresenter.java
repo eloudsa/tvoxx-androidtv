@@ -18,6 +18,7 @@ import android.content.Context;
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
 import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
+import net.noratek.tvoxx.androidtv.model.TalkFullModel;
 
 public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
@@ -43,6 +44,13 @@ public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresen
             viewHolder.getTitle().setText(speaker.getFirstName() + " " + speaker.getLastName());
             viewHolder.getSubtitle().setText(speaker.getCompany());
             viewHolder.getBody().setText(speaker.getBio());
+        } else if (item instanceof TalkFullModel) {
+
+            TalkFullModel talk = (TalkFullModel) item;
+
+            viewHolder.getTitle().setText(talk.getTitle());
+            viewHolder.getSubtitle().setText(talk.getConferenceLabel());
+            viewHolder.getBody().setText(talk.getSummary());
         }
 
     }

@@ -1,6 +1,5 @@
 package net.noratek.tvoxx.androidtv.data.manager;
 
-import net.noratek.tvoxx.androidtv.data.RealmProvider;
 import net.noratek.tvoxx.androidtv.data.downloader.SpeakersDownloader;
 
 import org.androidannotations.annotations.Bean;
@@ -16,9 +15,6 @@ public class SpeakerManager {
 
     @Bean
     SpeakersDownloader speakersDownloader;
-
-    @Bean
-    RealmProvider realmProvider;
 
     public void fetchSpeakersASync() throws IOException {
         speakersDownloader.fetchAllSpeakers();

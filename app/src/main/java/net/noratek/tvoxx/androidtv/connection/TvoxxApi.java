@@ -2,6 +2,7 @@ package net.noratek.tvoxx.androidtv.connection;
 
 import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.TalkFullModel;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public interface TvoxxApi {
     Call<List<SpeakerModel>> getSpeakers();
 
     @GET("speakers/{uuid}") Call<SpeakerFullModel> getSpeakerFull(@Path("uuid") String uuid);
+
+    @GET("talks/{talkid}") Call<TalkFullModel> getTalkFull(@Path("talkid") String talkId);
 
 
 }

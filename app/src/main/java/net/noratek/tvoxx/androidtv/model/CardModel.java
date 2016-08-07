@@ -10,7 +10,7 @@ public class CardModel {
 
     private static final String TAG = CardModel.class.getSimpleName();
 
-    private long id;
+    private String id;
     private String title;
     private String content;
     private String cardImageUrl;
@@ -19,11 +19,11 @@ public class CardModel {
     public CardModel() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

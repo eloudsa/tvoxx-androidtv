@@ -33,10 +33,6 @@ dependencies {
     apt 'org.androidannotations:androidannotations:4.0.0'
 
 
-
-
-
-
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.android.support:leanback-v17:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'

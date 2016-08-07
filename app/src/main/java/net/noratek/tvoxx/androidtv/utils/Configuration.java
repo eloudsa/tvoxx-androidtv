@@ -15,5 +15,5 @@ public final class Configuration {
 	public static final int CONNECTION_TIMEOUT = 60;
 
 	// Lifetime of data
-	public static final int SPEAKERS_CACHE_LIFE_TIME_MINS = 60;
+	public static final int CACHE_LIFE_TIME_MINS = 60;
 }

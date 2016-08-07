@@ -11,9 +11,7 @@ import org.androidannotations.annotations.EActivity;
 public class SpeakerDetailActivity extends Activity {
 
     public static final String UUID = "UUID";
-    public static final String MOVIE = "Movie";
     public static final String SHARED_ELEMENT_NAME = "hero";
-    public static final String NOTIFICATION_ID = "ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

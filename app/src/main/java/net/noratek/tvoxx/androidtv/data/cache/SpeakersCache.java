@@ -24,7 +24,7 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
     private static final String SPEAKERS_CACHE_KEY = "speakers_cache_key";
 
     public static final long CACHE_LIFE_TIME_MS =
-            TimeUnit.MINUTES.toMillis(Configuration.SPEAKERS_CACHE_LIFE_TIME_MINS);
+            TimeUnit.MINUTES.toMillis(Configuration.CACHE_LIFE_TIME_MINS);
 
     @Bean
     BaseCache baseCache;

@@ -22,7 +22,6 @@ import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
-import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -52,7 +51,7 @@ public class MainFragment extends BrowseFragment {
     HeaderItem mSpeakerHeaderPresenter;
 
     // Background image
-    private BackgroundImageManager mBackgroundImageManager;
+    //private BackgroundImageManager mBackgroundImageManager;
 
 
 
@@ -62,7 +61,7 @@ public class MainFragment extends BrowseFragment {
         EventBus.getDefault().register(this);
 
         // Prepare the manager that maintains the same background image between activities.
-        mBackgroundImageManager = new BackgroundImageManager(getActivity());
+        //mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         setupUIElements();
         setupEventListeners();
@@ -121,7 +120,7 @@ public class MainFragment extends BrowseFragment {
                 backgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
             }
 
-            mBackgroundImageManager.updateBackgroundWithDelay(backgroundURI);
+            //mBackgroundImageManager.updateBackgroundWithDelay(backgroundURI);
         }
     }
 

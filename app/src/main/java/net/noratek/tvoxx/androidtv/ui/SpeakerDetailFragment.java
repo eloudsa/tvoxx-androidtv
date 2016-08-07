@@ -102,7 +102,6 @@ public class SpeakerDetailFragment extends DetailsFragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        //mDetailsRowBuilderTask.cancel(true);
         super.onStop();
     }
 
