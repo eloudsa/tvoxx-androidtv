@@ -24,6 +24,11 @@ public class SpeakerManager {
         speakersDownloader.fetchAllSpeakers();
     }
 
+    public void fetchSpeakerFullASync(String uuid) throws IOException {
+        speakersDownloader.fetchSpeaker(uuid);
+    }
+
+
 
     public void initWitStaticData() {
         speakersDownloader.initWitStaticData();

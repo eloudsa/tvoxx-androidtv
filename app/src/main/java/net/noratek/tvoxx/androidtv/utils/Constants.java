@@ -17,6 +17,9 @@ public class Constants {
     public static final int CARD_TYPE_FAVORTIES = 3;
     public static final int CARD_TYPE_ABOUT = 4;
 
+    // Details: Header actions
+    public static final int SPEAKER_DETAIL_ACTION_ADD_FAVORITIES = 1;
+
 
 
 }

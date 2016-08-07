@@ -12,7 +12,10 @@
 
     <string name="lorem_ipsum_1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at lectus egestas, volutpat ipsum vitae, dignissim felis. Fusce scelerisque erat nec sapien facilisis gravida. Curabitur congue quis nisl sit amet gravida. Morbi sed pretium magna. Ut vel feugiat ante. Etiam venenatis, nisl interdum faucibus sollicitudin, arcu dui gravida dolor, vel placerat felis tellus eget est. Sed sagittis eget magna quis scelerisque.</string>
 
-    <string name="related_movies">Related Videos</string>
+    <string name="related_talks">Related talks</string>
+
+    <string name="detail_header_action_add_Favorite">ADD TO FAVORITES</string>
+
 
     <string name="watch_trailer_1">Watch trailer</string>
     <string name="watch_trailer_2">FREE</string>

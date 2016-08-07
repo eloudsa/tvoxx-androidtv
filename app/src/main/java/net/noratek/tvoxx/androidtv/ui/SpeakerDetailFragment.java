@@ -31,28 +31,45 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.data.cache.SpeakerFullCache;
+import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.event.SpeakerFullEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
+import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.IOException;
 
 
 @EFragment
 public class SpeakerDetailFragment extends DetailsFragment {
 
-
     private static final String TAG = SpeakerDetailFragment.class.getSimpleName();
+
+
+    @Bean
+    SpeakerFullCache speakerFullCache;
+
+    @Bean
+    SpeakerManager speakerManager;
+
+    private SpinnerFragment mSpinnerFragment;
+
 
     private static final String MOVIE = "Movie";
 
-    private static final int ACTION_WATCH_TRAILER = 1;
-    private static final int ACTION_RENT = 2;
-    private static final int ACTION_BUY = 3;
+
 
 
     private CustomFullWidthDetailsOverviewRowPresenter mFullRowPresenter;
@@ -68,16 +85,17 @@ public class SpeakerDetailFragment extends DetailsFragment {
     private ArrayObjectAdapter mAdapter;
 
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        EventBus.getDefault().register(this);
+
+        mSpinnerFragment = new SpinnerFragment();
+
         mFullRowPresenter = new CustomFullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()));
 
-        mSelectedSpeaker = (SpeakerModel) getActivity().getIntent().getParcelableExtra(MOVIE);
+        mSelectedSpeaker = getActivity().getIntent().getParcelableExtra(MOVIE);
 
         //mDetailsRowBuilderTask = (DetailsRowBuilderTask) new DetailsRowBuilderTask().execute(mSelectedSpeaker);
 
@@ -91,12 +109,27 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
             mBackgroundImageManager.updateBackgroundWithDelay(Uri.parse(mSelectedSpeaker.getAvatarUrl()));
 
+            loadSpeakerDetail();
+
+
             // When a Related Video item is clicked.
             //setOnItemViewClickedListener(new ItemViewClickedListener());
         }
-
-        ;
     }
+
+    private void loadSpeakerDetail() {
+
+        // Display the spinner
+        getFragmentManager().beginTransaction().add(R.id.speaker_detail_fragment, mSpinnerFragment).commit();
+
+        try {
+            speakerManager.fetchSpeakerFullASync(mSelectedSpeaker.getUuid());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @Override
     public void onStop() {
@@ -126,7 +159,8 @@ public class SpeakerDetailFragment extends DetailsFragment {
         detailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
             public void onActionClicked(Action action) {
-                if (action.getId() == ACTION_WATCH_TRAILER) {
+
+                if (action.getId() == 0) {
                     //Intent intent = new Intent(getActivity(), PlaybackOverlayActivity.class);
                     //intent.putExtra(VideoDetailsActivity.VIDEO, mSelectedVideo);
                     //startActivity(intent);
@@ -226,13 +260,10 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
         SparseArrayObjectAdapter adapter = new SparseArrayObjectAdapter();
 
-        adapter.set(ACTION_WATCH_TRAILER, new Action(ACTION_WATCH_TRAILER, getResources()
-                .getString(R.string.watch_trailer_1),
-                getResources().getString(R.string.watch_trailer_2)));
-        adapter.set(ACTION_RENT, new Action(ACTION_RENT, getResources().getString(R.string.rent_1),
-                getResources().getString(R.string.rent_2)));
-        adapter.set(ACTION_BUY, new Action(ACTION_BUY, getResources().getString(R.string.buy_1),
-                getResources().getString(R.string.buy_2)));
+        adapter.set(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES,
+                new Action(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES, getResources()
+                        .getString(R.string.detail_header_action_add_Favorite)));
+
         row.setActionsAdapter(adapter);
 
         mAdapter.add(row);
@@ -240,7 +271,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
 
     private void setupMovieListRow() {
-        String subcategories[] = {getString(R.string.related_movies)};
+        String subcategories[] = {getString(R.string.related_talks)};
 
         /*
         // Generating related video list.
@@ -270,5 +301,33 @@ public class SpeakerDetailFragment extends DetailsFragment {
         mAdapter.add(new ListRow(header, listRowAdapter));
     }
 
+
+    @Subscribe
+    public void onMessageEvent(SpeakerFullEvent speakerFullEvent) {
+
+        SpeakerFullModel speakerFullModel = speakerFullCache.getData(mSelectedSpeaker.getUuid());
+        if (speakerFullModel == null) {
+            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+            return;
+        }
+
+        /*
+        mAdapter.clear();
+
+        // display speakers
+        for (SpeakerModel speaker : speakersModel) {
+            mAdapter.add(speaker);
+        }
+        */
+
+        mAdapter.clear();
+
+        setupAdapter();
+        setupDetailsOverviewRow();
+        setupMovieListRow();
+
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+    }
 
 }

@@ -3,8 +3,13 @@ package net.noratek.tvoxx.androidtv.data.downloader;
 import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
+import net.noratek.tvoxx.androidtv.data.RealmProvider;
+import net.noratek.tvoxx.androidtv.data.cache.SpeakerFullCache;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
+import net.noratek.tvoxx.androidtv.event.SpeakerFullEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
+import net.noratek.tvoxx.androidtv.model.RealmSpeaker;
+import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 
 import org.androidannotations.annotations.Bean;
@@ -14,6 +19,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.util.List;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +33,12 @@ public class SpeakersDownloader {
 
     @Bean
     Connection connection;
+
+    @Bean
+    RealmProvider realmProvider;
+
+    @Bean
+    SpeakerFullCache speakerFullCache;
 
     @Bean
     SpeakersCache speakersCache;
@@ -73,5 +85,49 @@ public class SpeakersDownloader {
             }
         });
     }
+
+
+
+    public void fetchSpeaker(final String uuid) throws IOException {
+
+        if (speakerFullCache.isValid(uuid)) {
+            EventBus.getDefault().post(new SpeakerFullEvent());
+            return;
+        }
+
+        // retrieve the speaker information from the server
+        Call<SpeakerFullModel> call =connection.getTvoxxApi().getSpeakerFull(uuid);
+        call.enqueue(new Callback<SpeakerFullModel>() {
+            @Override
+            public void onResponse(Call<SpeakerFullModel> call, Response<SpeakerFullModel> response) {
+
+                if (response.isSuccessful()) {
+                    SpeakerFullModel speakerFullModel = response.body();
+                    if (speakerFullModel == null) {
+                        Log.d(TAG, "No speakers!");
+                    } else {
+                        String speakerJSON = speakerFullCache.upsert(speakerFullModel);
+
+                        Realm realm = realmProvider.getRealm();
+                        realm.beginTransaction();
+                        realm.createOrUpdateObjectFromJson(RealmSpeaker.class, speakerJSON);
+                        realm.commitTransaction();
+                        realm.close();
+
+                        EventBus.getDefault().post(new SpeakerFullEvent());
+                    }
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SpeakerFullModel> call, Throwable t) {
+                Log.e(TAG, "On Failure");
+            }
+        });
+
+    }
+
 
 }

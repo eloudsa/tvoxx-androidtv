@@ -44,7 +44,22 @@ public class RealmProvider {
 
         @Override
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-            return;
+
+            /*
+            final RealmSchema schema = realm.getSchema();
+
+            if (oldVersion == 1) {
+
+                if (!schema.contains("RealmSpeaker")) {
+                    schema.create("RealmSpeaker");
+                }
+
+                if (!schema.contains("RealmTalk")) {
+                    schema.create("RealmTalk");
+                }
+                oldVersion++;
+            }
+            */
         }
     }
 }

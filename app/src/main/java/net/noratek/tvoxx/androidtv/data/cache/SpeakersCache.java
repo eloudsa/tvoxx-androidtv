@@ -34,8 +34,10 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
 
 
     @Override
-    public void upsert(List<SpeakerModel> rawData) {
-        baseCache.upsert(serializeData(rawData), SPEAKERS_CACHE_KEY);
+    public String upsert(List<SpeakerModel> speakersModel) {
+        String speakersJSON = serializeData(speakersModel);
+        baseCache.upsert(serializeData(speakersModel), SPEAKERS_CACHE_KEY);
+        return speakersJSON;
     }
 
     @Override

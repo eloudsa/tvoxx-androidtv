@@ -4,7 +4,7 @@ public interface DataCache<DataType, StorageType> {
 
 	void upsert(StorageType rawData, String query);
 
-	void upsert(DataType rawData);
+	String upsert(DataType rawData);
 
 	DataType getData();
 
