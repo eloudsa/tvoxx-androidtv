@@ -5,7 +5,6 @@ import android.util.Log;
 import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.data.RealmProvider;
 import net.noratek.tvoxx.androidtv.data.cache.TalkFullCache;
-import net.noratek.tvoxx.androidtv.event.SpeakerFullEvent;
 import net.noratek.tvoxx.androidtv.event.TalkFullEvent;
 import net.noratek.tvoxx.androidtv.model.RealmFullTalk;
 import net.noratek.tvoxx.androidtv.model.TalkFullModel;
@@ -42,7 +41,7 @@ public class TalksDownloader {
     public void fetchTalk(final String talkId) throws IOException {
 
         if (talkFullCache.isValid(talkId)) {
-            EventBus.getDefault().post(new SpeakerFullEvent(talkId));
+            EventBus.getDefault().post(new TalkFullEvent(talkId));
             return;
         }
 

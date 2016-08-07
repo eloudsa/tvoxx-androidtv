@@ -1,5 +1,6 @@
 package net.noratek.tvoxx.androidtv.ui;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -17,7 +18,10 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnActionClickedListener;
+import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
+import android.support.v17.leanback.widget.Row;
+import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -83,6 +87,9 @@ public class SpeakerDetailFragment extends DetailsFragment {
         if (uuid != null) {
             loadSpeakerDetail(uuid);
         }
+
+        // When a Related item is clicked.
+        setOnItemViewClickedListener(new ItemViewClickedListener());
     }
 
     private void loadSpeakerDetail(String uuid) {
@@ -105,6 +112,21 @@ public class SpeakerDetailFragment extends DetailsFragment {
         super.onStop();
     }
 
+
+    private final class ItemViewClickedListener implements OnItemViewClickedListener {
+        @Override
+        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
+                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
+
+            if (item instanceof CardModel) {
+                CardModel cardModel = (CardModel) item;
+
+                Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
+                intent.putExtra(TalkDetailActivity.TALK_ID, cardModel.getId());
+                getActivity().startActivity(intent);
+            }
+        }
+    }
 
     private void setupAdapter() {
         // Set detail background and style.
@@ -259,6 +281,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
             for (TalkModel talkModel : speakerFullModel.getTalks()) {
                 CardModel cardModel = new CardModel();
+                cardModel.setId(talkModel.getTalkId());
                 cardModel.setCardImageUrl(talkModel.getThumbnailUrl());
                 cardModel.setTitle(talkModel.getTitle());
                 listRowAdapter.add(cardModel);

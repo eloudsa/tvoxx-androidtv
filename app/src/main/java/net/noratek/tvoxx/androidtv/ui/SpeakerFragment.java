@@ -72,7 +72,6 @@ public class SpeakerFragment extends VerticalGridFragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-//        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
         super.onStop();
     }
 
@@ -165,13 +164,6 @@ public class SpeakerFragment extends VerticalGridFragment {
                 SpeakerModel speakerModel = (SpeakerModel) item;
 
                 mBackgroundImageManager.cancel();
-
-/*
-               Intent intent = new Intent(getActivity(), DetailActivity_.class);
-                intent.putExtra(SpeakerDetailActivity.UUID, speakerModel.getUuid());
-                intent.putExtra(DetailActivity.DETAIL_ID, speakerModel.getUuid());
-                intent.putExtra(DetailActivity.DETAIL_TYPE, DetailActivity.DETAIL_SPEAKER);
-*/
                 Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
                 intent.putExtra(SpeakerDetailActivity.UUID, speakerModel.getUuid());
                 getActivity().startActivity(intent);
