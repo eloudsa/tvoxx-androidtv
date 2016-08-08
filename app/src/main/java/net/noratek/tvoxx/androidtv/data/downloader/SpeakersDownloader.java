@@ -65,13 +65,13 @@ public class SpeakersDownloader {
                     List<SpeakerModel> speakersModel = response.body();
                     if (speakersModel == null) {
                         Log.d(TAG, "No speakers!");
-                        speakersCache.initWithFallbackData();
+                        //speakersCache.initWithFallbackData();
                     } else {
                         speakersCache.upsert(speakersModel);
                     }
                 } else {
                     Log.e(TAG, response.message());
-                    speakersCache.initWithFallbackData();
+                    //speakersCache.initWithFallbackData();
                 }
 
                 EventBus.getDefault().post(new SpeakersEvent());
@@ -80,7 +80,7 @@ public class SpeakersDownloader {
             @Override
             public void onFailure(Call<List<SpeakerModel>> call, Throwable t) {
                 Log.e(TAG, "On Failure");
-                speakersCache.initWithFallbackData();
+                //speakersCache.initWithFallbackData();
                 EventBus.getDefault().post(new SpeakersEvent());
             }
         });

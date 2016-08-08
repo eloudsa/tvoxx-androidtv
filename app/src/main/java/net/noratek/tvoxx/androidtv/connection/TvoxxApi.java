@@ -15,7 +15,7 @@ import retrofit2.http.Path;
  */
 public interface TvoxxApi {
 
-    @GET("speakers.json")
+    @GET("speakers.json?withVideo=true")
     Call<List<SpeakerModel>> getSpeakers();
 
     @GET("speakers/{uuid}") Call<SpeakerFullModel> getSpeakerFull(@Path("uuid") String uuid);

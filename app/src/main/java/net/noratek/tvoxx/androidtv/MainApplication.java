@@ -30,10 +30,12 @@ public class MainApplication extends Application {
         super.onCreate();
         realmProvider.init();
 
+        /*
         if (settings.isFirstStart().getOr(true)) {
             settings.edit().isFirstStart().put(false).apply();
             speakerManager.initWitStaticData();
         }
+        */
     }
 
 
