@@ -22,7 +22,8 @@ public class Constants {
     // Details: Header actions
     public static final int SPEAKER_DETAIL_ACTION_ADD_FAVORITIES = 1;
 
-    public static final int TALK_DETAIL_ACTION_ADD_FAVORITIES = 1;
+    public static final int TALK_DETAIL_ACTION_PLAY_VIDEO = 1;
+    public static final int TALK_DETAIL_ACTION_ADD_FAVORITIES = 2;
 
 
 

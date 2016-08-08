@@ -74,27 +74,13 @@ public class TalkDetailFragment extends DetailsFragment {
     private ClassPresenterSelector mPresenterSelector;
     private ArrayObjectAdapter mAdapter;
 
+    private String mTalkId;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
      }
-
-    private void loadDetail(String talkId) {
-
-        // Display the spinner
-        getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, mSpinnerFragment).commit();
-
-        try {
-            mTalkManager.fetchSpeakerFullASync(talkId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // When a Related item is clicked.
-        setOnItemViewClickedListener(new ItemViewClickedListener());
-    }
-
 
     @Override
     public void onStart() {
@@ -105,12 +91,30 @@ public class TalkDetailFragment extends DetailsFragment {
 
         mSpinnerFragment = new SpinnerFragment();
 
-        String talkId = getActivity().getIntent().getStringExtra(TalkDetailActivity.TALK_ID);
-
-        if (talkId != null) {
-            loadDetail(talkId);
+        mTalkId = getActivity().getIntent().getStringExtra(TalkDetailActivity.TALK_ID);
+        if (mTalkId != null) {
+            loadDetail();
         }
     }
+
+
+    private void loadDetail() {
+
+        // Display the spinner
+        getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, mSpinnerFragment).commit();
+
+        try {
+            mTalkManager.fetchSpeakerFullASync(mTalkId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // When a Related item is clicked.
+        setOnItemViewClickedListener(new ItemViewClickedListener());
+    }
+
+
+
 
     @Override
     public void onStop() {
@@ -140,7 +144,7 @@ public class TalkDetailFragment extends DetailsFragment {
     private void setupAdapter() {
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
-                new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()),
+                new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(),
                         new detailsOverviewLogoPresenter());
 
         detailsPresenter.setBackgroundColor(
@@ -159,10 +163,10 @@ public class TalkDetailFragment extends DetailsFragment {
             @Override
             public void onActionClicked(Action action) {
 
-                if (action.getId() == 0) {
-                    //Intent intent = new Intent(getActivity(), PlaybackOverlayActivity.class);
-                    //intent.putExtra(VideoDetailsActivity.VIDEO, mSelectedVideo);
-                    //startActivity(intent);
+                if (action.getId() == Constants.TALK_DETAIL_ACTION_PLAY_VIDEO) {
+                    Intent intent = new Intent(getActivity(), VideoPlaybackActivity_.class);
+                    intent.putExtra(TalkDetailActivity.TALK_ID, mTalkId);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -272,6 +276,10 @@ public class TalkDetailFragment extends DetailsFragment {
 
 
         SparseArrayObjectAdapter adapter = new SparseArrayObjectAdapter();
+
+        adapter.set(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO,
+                new Action(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO, getResources()
+                        .getString(R.string.detail_header_action_play_video)));
 
         adapter.set(Constants.TALK_DETAIL_ACTION_ADD_FAVORITIES,
                 new Action(Constants.TALK_DETAIL_ACTION_ADD_FAVORITIES, getResources()

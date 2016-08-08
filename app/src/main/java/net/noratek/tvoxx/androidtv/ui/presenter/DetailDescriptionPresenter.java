@@ -14,21 +14,12 @@
 
 package net.noratek.tvoxx.androidtv.ui.presenter;
 
-import android.content.Context;
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
 import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
 import net.noratek.tvoxx.androidtv.model.TalkFullModel;
 
 public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
-
-    private final Context mContext;
-
-    public DetailDescriptionPresenter(Context context) {
-        super();
-        this.mContext = context;
-    }
-
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {

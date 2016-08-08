@@ -167,7 +167,7 @@ public class DetailFragment extends DetailsFragment {
     private void setupAdapter() {
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
-                new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()),
+                new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(),
                         new SpeakerDetailsOverviewLogoPresenter());
 
         detailsPresenter.setBackgroundColor(

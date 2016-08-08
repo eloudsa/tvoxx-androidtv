@@ -65,6 +65,9 @@
             android:name=".ui.TalkDetailActivity_"
             android:exported="true"
             android:theme="@style/Theme.Leanback.Details" />
+        <activity android:name=".ui.VideoPlaybackActivity_"
+            android:exported="true"/>
+
     </application>
 
 </manifest>
