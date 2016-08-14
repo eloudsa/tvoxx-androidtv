@@ -65,7 +65,6 @@
             android:name=".ui.VideoPlaybackActivity_"
             android:exported="true" />
 
-
     </application>
 
 </manifest>

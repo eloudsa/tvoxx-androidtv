@@ -28,5 +28,12 @@
 
     <string name="should_start">shouldStart</string>
 
+    <string name="error_generic_message">An error has been detected!</string>
+    <string name="dismiss_error">DISMISS</string>
+
+    <string name="error_youtube_player_failed">Unable to play the video on the YouTube player application!</string>
+
+
+
 
 </resources>

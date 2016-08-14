@@ -47,6 +47,7 @@ public class Constants {
 
     // Used in intent parameters
     public static final String TALK_ID = "UUID";
+    public static final String ERROR_RESOURCE_ID = "ERR_RESOURCE_ID";
 
 
 

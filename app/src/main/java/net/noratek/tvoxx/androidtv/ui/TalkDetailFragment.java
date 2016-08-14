@@ -166,19 +166,17 @@ public class TalkDetailFragment extends DetailsFragment {
             public void onActionClicked(Action action) {
 
                 if (action.getId() == Constants.TALK_DETAIL_ACTION_PLAY_VIDEO) {
-                    /*
-                    Intent intent = new Intent(getActivity(), VideoPlaybackActivity_.class);
-                    intent.putExtra(TalkDetailActivity.TALK_ID, mTalkId);
-                    startActivity(intent);
-                    */
-                    /*
-                    Intent intent = new Intent(getActivity(), YouTubeActivity_.class);
-                    */
 
-                    // with these options, the YouTube video will open in fullscreen (with related
-                    // youtube videos) and will go back to the app if the back button is pressed
-                    Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getActivity(), mSelectedTalk.getYoutubeVideoId(), true, true);
-                    startActivity(intent);
+                    // Check if the Android TV device has a the YouTube capabilities
+                    if (YouTubeIntents.canResolvePlayVideoIntent(getActivity())) {
+                        // open the video in fullscreen in YouTube native application
+                        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getActivity(), mSelectedTalk.getYoutubeVideoId(), true, true);
+                        startActivity(intent);
+
+                    } else {
+                        // unable to view the application
+                        ((TalkDetailActivity) getActivity()).displayErrorMessage(R.string.error_youtube_player_failed);
+                    }
 
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();

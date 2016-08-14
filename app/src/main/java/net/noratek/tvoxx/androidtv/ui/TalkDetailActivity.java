@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.EActivity;
 
@@ -23,4 +24,20 @@ public class TalkDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
     }
+
+
+    public void displayErrorMessage(int errorId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.ERROR_RESOURCE_ID, errorId);
+
+        ErrorFragment errorFragment = new ErrorFragment();
+        errorFragment.setArguments(bundle);
+
+        getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, errorFragment).addToBackStack(null).commit();
+        //getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, errorFragment).commit();
+    }
+
+
+
+
 }
