@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
-import net.noratek.tvoxx.androidtv.utils.Configuration;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class SpeakerFullCache implements DataCache<SpeakerFullModel, String> {
 
     public static final long CACHE_LIFE_TIME_MS =
-            TimeUnit.MINUTES.toMillis(Configuration.CACHE_LIFE_TIME_MINS);
+            TimeUnit.MINUTES.toMillis(Constants.CACHE_LIFE_TIME_MINS);
 
     @Bean
     BaseCache baseCache;

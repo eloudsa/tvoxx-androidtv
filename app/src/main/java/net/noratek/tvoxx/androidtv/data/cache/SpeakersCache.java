@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.utils.AssetsUtil;
-import net.noratek.tvoxx.androidtv.utils.Configuration;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -24,7 +24,7 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
     private static final String SPEAKERS_CACHE_KEY = "speakers_cache_key";
 
     public static final long CACHE_LIFE_TIME_MS =
-            TimeUnit.MINUTES.toMillis(Configuration.CACHE_LIFE_TIME_MINS);
+            TimeUnit.MINUTES.toMillis(Constants.CACHE_LIFE_TIME_MINS);
 
     @Bean
     BaseCache baseCache;
@@ -77,7 +77,7 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
     }
 
     private String fallbackData() {
-        return assetsUtil.loadStringFromAssets(Configuration.SPEAKERS_JSON_DATA_FILE);
+        return assetsUtil.loadStringFromAssets(Constants.SPEAKERS_JSON_DATA_FILE);
     }
 
     private List<SpeakerModel> deserializeData(String fromCache) {

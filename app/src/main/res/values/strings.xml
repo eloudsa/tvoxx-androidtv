@@ -26,4 +26,7 @@
     <string name="buy_2">AT $9.99</string>
 
 
+    <string name="should_start">shouldStart</string>
+
+
 </resources>

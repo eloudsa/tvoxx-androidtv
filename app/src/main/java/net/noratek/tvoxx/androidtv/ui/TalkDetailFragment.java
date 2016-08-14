@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.android.youtube.player.YouTubeIntents;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkFullCache;
@@ -75,6 +76,7 @@ public class TalkDetailFragment extends DetailsFragment {
     private ArrayObjectAdapter mAdapter;
 
     private String mTalkId;
+    private TalkFullModel mSelectedTalk;
 
 
     @Override
@@ -164,9 +166,20 @@ public class TalkDetailFragment extends DetailsFragment {
             public void onActionClicked(Action action) {
 
                 if (action.getId() == Constants.TALK_DETAIL_ACTION_PLAY_VIDEO) {
+                    /*
                     Intent intent = new Intent(getActivity(), VideoPlaybackActivity_.class);
                     intent.putExtra(TalkDetailActivity.TALK_ID, mTalkId);
                     startActivity(intent);
+                    */
+                    /*
+                    Intent intent = new Intent(getActivity(), YouTubeActivity_.class);
+                    */
+
+                    // with these options, the YouTube video will open in fullscreen (with related
+                    // youtube videos) and will go back to the app if the back button is pressed
+                    Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getActivity(), mSelectedTalk.getYoutubeVideoId(), true, true);
+                    startActivity(intent);
+
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -321,16 +334,16 @@ public class TalkDetailFragment extends DetailsFragment {
 
         Log.d(TAG, "Into onMessageEvent->TalkFullEvent");
 
-        TalkFullModel talkFullModel = mTalkFullCache.getData(talkFullEvent.getTalkId());
-        if (talkFullModel == null) {
+        mSelectedTalk = mTalkFullCache.getData(talkFullEvent.getTalkId());
+        if (mSelectedTalk == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;
         }
 
 
         setupAdapter();
-        setupDetailsOverviewRow(talkFullModel);
-        setupRelatedListRow(talkFullModel);
+        setupDetailsOverviewRow(mSelectedTalk);
+        setupRelatedListRow(mSelectedTalk);
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }

@@ -2,7 +2,7 @@ package net.noratek.tvoxx.androidtv.data;
 
 import android.content.Context;
 
-import net.noratek.tvoxx.androidtv.utils.Configuration;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -23,8 +23,8 @@ public class RealmProvider {
     public void init() {
         final RealmConfiguration configuration =
                 new RealmConfiguration.Builder(context)
-                        .name(Configuration.DATABASE_NAME)
-                        .schemaVersion(Configuration.DATABASE_VERSION)
+                        .name(Constants.DATABASE_NAME)
+                        .schemaVersion(Constants.DATABASE_VERSION)
                         .migration(new SchemaMigration())
                         .build();
         Realm.setDefaultConfiguration(configuration);

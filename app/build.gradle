@@ -2,17 +2,26 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'realm-android'
 
+def keystorePropertiesFile = rootProject.file("tvoxx.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+def youTubeKey = keystoreProperties['youTubeKey']
+
+def PACKAGE_NAME = "net.noratek.tvoxx.androidtv"
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "net.noratek.tvoxx.androidtv"
+        applicationId PACKAGE_NAME
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "0.1"
+
+        manifestPlaceholders = [applicationLabel: "@string/app_name", youTubeKey: youTubeKey]
     }
     buildTypes {
         release {
@@ -42,4 +51,9 @@ dependencies {
     compile 'org.androidannotations:androidannotations-api:4.0.0'
     compile 'com.annimon:stream:1.1.1'
     compile 'org.greenrobot:eventbus:3.0.0'
+
+
+    // Youtube API
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+
 }

@@ -5,6 +5,25 @@ package net.noratek.tvoxx.androidtv.utils;
  */
 public class Constants {
 
+    // URL prefix for YouTube
+    public static final String YOUTUBE_URL_PREFIX = "https://www.youtube.com/watch?v=";
+
+    // location of the TVoxx Rest API server
+    public static final String TVOXX_API_URL = "http://devoxx-proxy.cfapps.io/api/";
+
+    // location of the fallback JSON data files
+    public static final String SPEAKERS_JSON_DATA_FILE = "data/speakers.json";
+
+    // Database
+    public static final String DATABASE_NAME = "tvoxx_db";
+    public static final int DATABASE_VERSION = 1;
+
+    // REST timeout
+    public static final int CONNECTION_TIMEOUT = 60;
+
+    // Lifetime of data
+    public static final int CACHE_LIFE_TIME_MINS = 60;
+
     // Header position
     public static final int HEADER_SPEAKER = 2;
 
@@ -24,6 +43,12 @@ public class Constants {
 
     public static final int TALK_DETAIL_ACTION_PLAY_VIDEO = 1;
     public static final int TALK_DETAIL_ACTION_ADD_FAVORITIES = 2;
+
+
+    // Used in intent parameters
+    public static final String TALK_ID = "UUID";
+
+
 
 
 

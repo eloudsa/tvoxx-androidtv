@@ -50,6 +50,11 @@ public class BackgroundImageManager {
     }
 
 
+    public void updateBackgroundWithDelay(String url) {
+       updateBackgroundWithDelay(Uri.parse(url));
+    }
+
+
     private void startBackgroundTimer() {
         if (null != mBackgroundTimer) {
             mBackgroundTimer.cancel();

@@ -3,7 +3,7 @@ package net.noratek.tvoxx.androidtv.connection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import net.noratek.tvoxx.androidtv.utils.Configuration;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -35,11 +35,11 @@ public class Connection {
 	private void initTvoxxApi() {
 		final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-		builder.connectTimeout(Configuration.CONNECTION_TIMEOUT, TimeUnit.SECONDS);
-		builder.readTimeout(Configuration.CONNECTION_TIMEOUT, TimeUnit.SECONDS);
+		builder.connectTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS);
+		builder.readTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS);
 
 		final Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl(Configuration.TVOXX_API_URL)
+				.baseUrl(Constants.TVOXX_API_URL)
 				.client(builder.build())
 				.addConverterFactory(GsonConverterFactory.create())
 				.build();

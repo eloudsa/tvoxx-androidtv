@@ -1,151 +1,214 @@
 package net.noratek.tvoxx.androidtv.ui;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.support.v17.leanback.app.PlaybackOverlayFragment;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ClassPresenterSelector;
-import android.support.v17.leanback.widget.ControlButtonPresenterSelector;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.PlaybackControlsRow;
-import android.support.v17.leanback.widget.PlaybackControlsRowPresenter;
 
-import net.noratek.tvoxx.androidtv.data.cache.TalkFullCache;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
-import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
-import net.noratek.tvoxx.androidtv.ui.presenter.VideoPresenter;
-
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 
 @EFragment
 public class VideoPlaybackFragment extends PlaybackOverlayFragment {
 
+    /*
     private static final String TAG = VideoPlaybackFragment.class.getSimpleName();
 
-    @Bean
-    TalkFullCache mTalkFullCache;
+    private static final int ACTION_PLAY_VIDEO = 1;
 
+    private static final int FULL_WIDTH_DETAIL_THUMB_WIDTH = 220;
+    private static final int FULL_WIDTH_DETAIL_THUMB_HEIGHT = 120;
 
-    private TalkFullModel mTalkFullModel;
+    private static final int DETAIL_THUMB_WIDTH = 274;
+    private static final int DETAIL_THUMB_HEIGHT = 274;
 
+    public static final String CATEGORY_FULL_WIDTH_DETAILS_OVERVIEW_ROW_PRESENTER = "FullWidthDetailsOverviewRowPresenter";
 
-    private PlaybackControlsRow mPlaybackControlsRow;
-    private ArrayObjectAdapter mPrimaryActionAdapter;
-    private ArrayObjectAdapter mSecondaryActionAdapter;
+    // Attribute 
+    private ArrayObjectAdapter mAdapter;
+    private CustomFullWidthDetailsOverviewRowPresenter mFwdorPresenter;
+    private ClassPresenterSelector mClassPresenterSelector;
+    private ListRow mRelatedVideoRow = null;
 
-    private PlaybackControlsRow.PlayPauseAction mPlayPauseAction;
-    private PlaybackControlsRow.RepeatAction mRepeatAction;
-    private PlaybackControlsRow.ThumbsUpAction mThumbsUpAction;
-    private PlaybackControlsRow.ThumbsDownAction mThumbsDownAction;
-    private PlaybackControlsRow.ShuffleAction mShuffleAction;
-    private PlaybackControlsRow.SkipNextAction mSkipNextAction;
-    private PlaybackControlsRow.SkipPreviousAction mSkipPreviousAction;
-    private PlaybackControlsRow.FastForwardAction mFastForwardAction;
-    private PlaybackControlsRow.RewindAction mRewindAction;
-    private PlaybackControlsRow.HighQualityAction mHighQualityAction;
-    private PlaybackControlsRow.ClosedCaptioningAction mClosedCaptioningAction;
-    private PlaybackControlsRow.MoreActions mMoreActions;
+    private DetailsRowBuilderTask mDetailsRowBuilderTask;
 
+    // Relation 
+    private TalkFullModel mSelectedTalk;
+    private LinkedHashMap<String, List<TalkFullModel>> mVideoLists = null;
+
+    // Background image
+    private BackgroundImageManager mBackgroundImageManager;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        String talkId = getActivity().getIntent().getStringExtra(TalkDetailActivity.TALK_ID);
-
-        mTalkFullModel = mTalkFullCache.getData(talkId);
-        if (mTalkFullModel == null) {
+        mSelectedTalk = ((VideoPlaybackActivity) getActivity()).getSelectedTalk();
+        if (mSelectedTalk == null) {
             getActivity().finish();
             return;
         }
 
-        setBackgroundType(VideoPlaybackFragment.BG_LIGHT);
-        setFadingEnabled(true);
 
-        setUpRows();
+        mFwdorPresenter = new CustomFullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter());
+
+        mDetailsRowBuilderTask = (DetailsRowBuilderTask) new DetailsRowBuilderTask().execute(mSelectedTalk);
+
+        setOnItemViewClickedListener(new ItemViewClickedListener());
+
+        mBackgroundImageManager.updateBackgroundWithDelay(Utils.getYouTubeUrl(mSelectedTalk.getYoutubeVideoId()));
     }
 
-    private ArrayObjectAdapter mRowsAdapter;
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    private void setUpRows() {
-        ClassPresenterSelector ps = new ClassPresenterSelector();
+        mClassPresenterSelector = new ClassPresenterSelector();
 
-        PlaybackControlsRowPresenter playbackControlsRowPresenter;
-        playbackControlsRowPresenter = new PlaybackControlsRowPresenter(new DetailDescriptionPresenter());
+        mClassPresenterSelector.addClassPresenter(DetailsOverviewRow.class, mFwdorPresenter);
 
-        ps.addClassPresenter(PlaybackControlsRow.class, playbackControlsRowPresenter);
-        ps.addClassPresenter(ListRow.class, new ListRowPresenter());
-        mRowsAdapter = new ArrayObjectAdapter(ps);
+        mClassPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
 
-        /*
-         * Add PlaybackControlsRow to mRowsAdapter, which makes video control UI.
-         * PlaybackControlsRow is supposed to be first Row of mRowsAdapter.
-         */
-        addPlaybackControlsRow();
-        /* add ListRow to second row of mRowsAdapter */
-        addOtherRows();
-
-        setAdapter(mRowsAdapter);
-
+        mAdapter = new ArrayObjectAdapter(mClassPresenterSelector);
+        setAdapter(mAdapter);
     }
 
-    private void addPlaybackControlsRow() {
-        mPlaybackControlsRow = new PlaybackControlsRow(mTalkFullModel);
-        mRowsAdapter.add(mPlaybackControlsRow);
-
-        ControlButtonPresenterSelector presenterSelector = new ControlButtonPresenterSelector();
-        mPrimaryActionAdapter = new ArrayObjectAdapter(presenterSelector);
-        mSecondaryActionAdapter = new ArrayObjectAdapter(presenterSelector);
-        mPlaybackControlsRow.setPrimaryActionsAdapter(mPrimaryActionAdapter);
-        mPlaybackControlsRow.setSecondaryActionsAdapter(mSecondaryActionAdapter);
-
-        Activity activity = getActivity();
-        mPlayPauseAction = new PlaybackControlsRow.PlayPauseAction(activity);
-        mRepeatAction = new PlaybackControlsRow.RepeatAction(activity);
-        mThumbsUpAction = new PlaybackControlsRow.ThumbsUpAction(activity);
-        mThumbsDownAction = new PlaybackControlsRow.ThumbsDownAction(activity);
-        mShuffleAction = new PlaybackControlsRow.ShuffleAction(activity);
-        mSkipNextAction = new PlaybackControlsRow.SkipNextAction(activity);
-        mSkipPreviousAction = new PlaybackControlsRow.SkipPreviousAction(activity);
-        mFastForwardAction = new PlaybackControlsRow.FastForwardAction(activity);
-        mRewindAction = new PlaybackControlsRow.RewindAction(activity);
-        mHighQualityAction = new PlaybackControlsRow.HighQualityAction(activity);
-        mClosedCaptioningAction = new PlaybackControlsRow.ClosedCaptioningAction(activity);
-        mMoreActions = new PlaybackControlsRow.MoreActions(activity);
-
-        /* PrimaryAction setting */
-        mPrimaryActionAdapter.add(mSkipPreviousAction);
-        mPrimaryActionAdapter.add(mRewindAction);
-        mPrimaryActionAdapter.add(mPlayPauseAction);
-        mPrimaryActionAdapter.add(mFastForwardAction);
-        mPrimaryActionAdapter.add(mSkipNextAction);
-
-        /* SecondaryAction setting */
-        mPrimaryActionAdapter.add(mThumbsUpAction);
-        mPrimaryActionAdapter.add(mThumbsDownAction);
-        mPrimaryActionAdapter.add(mRepeatAction);
-        mPrimaryActionAdapter.add(mShuffleAction);
-        mPrimaryActionAdapter.add(mHighQualityAction);
-        mPrimaryActionAdapter.add(mClosedCaptioningAction);
-        mPrimaryActionAdapter.add(mMoreActions);
+    @Override
+    public void onStop() {
+        mDetailsRowBuilderTask.cancel(true);
+        mBackgroundImageManager.cancel();
+        super.onStop();
     }
 
-    private void addOtherRows() {
-        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new VideoPresenter());
+    private final class ItemViewClickedListener implements OnItemViewClickedListener {
+        @Override
+        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
+                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-        listRowAdapter.add(mTalkFullModel);
-//        listRowAdapter.add(movie);
+            if (item instanceof TalkFullModel) {
+                TalkFullModel talk = (TalkFullModel) item;
+                Intent intent = new Intent(getActivity(), VideoPlaybackActivity.class);
+                intent.putExtra(Constants.TALK_ID, talk.getTalkId());
 
-        HeaderItem header = new HeaderItem(0, "OtherRows");
-        mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity(),
+                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
+                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
+                getActivity().startActivity(intent, bundle);
+            }
+        }
     }
+
+    private class DetailsRowBuilderTask extends AsyncTask<TalkFullModel, Integer, DetailsOverviewRow> {
+        @Override
+        protected DetailsOverviewRow doInBackground(TalkFullModel... params) {
+            Log.v(TAG, "DetailsRowBuilderTask doInBackground");
+            int width, height;
+            if(mSelectedTalk.getCategory().equals(CATEGORY_DETAILS_OVERVIEW_ROW_PRESENTER)) {
+                // If category name is "DetailsOverviewRowPresenter", show DetailsOverviewRowPresenter for demo purpose (this class is deprecated from API level 22) 
+                width = DETAIL_THUMB_WIDTH;
+                height = DETAIL_THUMB_HEIGHT;
+            } else {
+                // Default behavior, show FullWidthDetailsOverviewRowPresenter 
+                width = FULL_WIDTH_DETAIL_THUMB_WIDTH;
+                height = FULL_WIDTH_DETAIL_THUMB_HEIGHT;
+            }
+
+            DetailsOverviewRow row = new DetailsOverviewRow(mSelectedTalk);
+            try {
+                // Bitmap loading must be done in background thread in Android.
+                Bitmap poster = Picasso.with(getActivity())
+                        .load(mSelectedTalk.getCardImageUrl())
+                        .resize(Utils.convertDpToPixel(getActivity().getApplicationContext(), width),
+                                Utils.convertDpToPixel(getActivity().getApplicationContext(), height))
+                        .centerCrop()
+                        .get();
+                row.setImageBitmap(getActivity(), poster);
+
+                mVideoLists = VideoProvider.buildMedia(getActivity());
+            } catch (IOException e) {
+                Log.w(TAG, e.toString());
+            } catch (JSONException e) {
+                Log.e(TAG, e.toString());
+            }
+            return row;
+        }
+
+        @Override
+        protected void onPostExecute(DetailsOverviewRow row) {
+            Log.v(TAG, "DetailsRowBuilderTask onPostExecute");
+            // 1st row: DetailsOverviewRow 
+
+              // action setting
+            SparseArrayObjectAdapter sparseArrayObjectAdapter = new SparseArrayObjectAdapter();
+            sparseArrayObjectAdapter.set(0, new Action(ACTION_PLAY_VIDEO, "Play Video"));
+            sparseArrayObjectAdapter.set(1, new Action(1, "Action 2", "label"));
+            sparseArrayObjectAdapter.set(2, new Action(2, "Action 3", "label"));
+
+            row.setActionsAdapter(sparseArrayObjectAdapter);
+
+            mFwdorPresenter.setOnActionClickedListener(new DetailsOverviewRowActionClickedListener());
+
+            // 2nd row: ListRow CardPresenter 
+
+            if (mVideoLists == null) {
+                // Error occured while fetching videos
+                Log.i(TAG, "mVideoLists is null, skip creating mRelatedVideoRow");
+            } else {
+                CardPresenter cardPresenter = new CardPresenter();
+
+                for (Map.Entry<String, List<TalkFullModel>> entry : mVideoLists.entrySet()) {
+                    // Find only same category
+                    String categoryName = entry.getKey();
+                    if(!categoryName.equals(mSelectedTalk.getCategory())) {
+                        continue;
+                    }
+
+                    ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                    List<TalkFullModel> list = entry.getValue();
+
+                    for (int j = 0; j < list.size(); j++) {
+                        cardRowAdapter.add(list.get(j));
+                    }
+                    //HeaderItem header = new HeaderItem(index, entry.getKey());
+                    HeaderItem header = new HeaderItem(0, "Related Videos");
+                    mRelatedVideoRow = new ListRow(header, cardRowAdapter);
+                }
+            }
+
+            // 2nd row: ListRow 
+//            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
+
+            ArrayList<TalkFullModel> mItems = MovieProvider.getMovieItems();
+            for (TalkFullModel talk : mItems) {
+                listRowAdapter.add(talk);
+            }
+            HeaderItem headerItem = new HeaderItem(0, "Related Videos");
+
+
+            mAdapter = new ArrayObjectAdapter(mClassPresenterSelector);
+            // 1st row 
+            mAdapter.add(row);
+
+            // 2nd row 
+            if(mRelatedVideoRow != null){
+                mAdapter.add(mRelatedVideoRow);
+            }
+            //mAdapter.add(new ListRow(headerItem, listRowAdapter));
+
+            // 3rd row 
+            //adapter.add(new ListRow(headerItem, listRowAdapter));
+            setAdapter(mAdapter);
+        }
+    }
+
+    public class DetailsOverviewRowActionClickedListener implements OnActionClickedListener {
+        @Override
+        public void onActionClicked(Action action) {
+            if (action.getId() == ACTION_PLAY_VIDEO) {
+                Intent intent = new Intent(getActivity(), VideoPlaybackActivity.class);
+                intent.putExtra(Constants.TALK_ID., mSelectedTalk.getTalkId());
+                startActivity(intent);
+            }
+        }
+    }
+    */
 }
