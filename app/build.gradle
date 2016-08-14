@@ -2,11 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'realm-android'
 
-def keystorePropertiesFile = rootProject.file("tvoxx.properties");
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-def youTubeKey = keystoreProperties['youTubeKey']
 
 def PACKAGE_NAME = "net.noratek.tvoxx.androidtv"
 
@@ -20,8 +15,6 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "0.1"
-
-        manifestPlaceholders = [applicationLabel: "@string/app_name", youTubeKey: youTubeKey]
     }
     buildTypes {
         release {
