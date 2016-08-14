@@ -44,7 +44,7 @@ public class TalksDownloader {
 
     public void fetAllTalks() throws IOException {
 
-        if (talkFullCache.isValid()) {
+        if (talksCache.isValid()) {
             EventBus.getDefault().post(new TalksEvent());
             return;
         }

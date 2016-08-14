@@ -98,7 +98,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
         getFragmentManager().beginTransaction().add(R.id.speaker_detail_fragment, mSpinnerFragment).commit();
 
         try {
-            speakerManager.fetchSpeakerFullASync(uuid);
+            speakerManager.fetchSpeaker(uuid);
         } catch (IOException e) {
             e.printStackTrace();
         }

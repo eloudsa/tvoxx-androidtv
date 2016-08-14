@@ -106,7 +106,7 @@ public class TalkDetailFragment extends DetailsFragment {
         getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, mSpinnerFragment).commit();
 
         try {
-            mTalkManager.fetchSpeakerFullASync(mTalkId);
+            mTalkManager.fetchTalk(mTalkId);
         } catch (IOException e) {
             e.printStackTrace();
         }

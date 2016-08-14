@@ -136,7 +136,7 @@ public class DetailFragment extends DetailsFragment {
         //getFragmentManager().beginTransaction().add(R.id.detail_fragment, mSpinnerFragment).commit();
 
         try {
-            mSpeakerManager.fetchSpeakerFullASync(uuid);
+            mSpeakerManager.fetchSpeaker(uuid);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -150,7 +150,7 @@ public class DetailFragment extends DetailsFragment {
         getFragmentManager().beginTransaction().add(R.id.detail_fragment, mSpinnerFragment).commit();
 
         try {
-            mTalkManager.fetchSpeakerFullASync(talkId);
+            mTalkManager.fetchTalk(talkId);
         } catch (IOException e) {
             e.printStackTrace();
         }

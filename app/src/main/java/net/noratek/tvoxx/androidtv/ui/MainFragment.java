@@ -12,16 +12,21 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
+import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
+import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.TalkFullModel;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -44,6 +49,14 @@ public class MainFragment extends BrowseFragment {
 
     @Bean
     SpeakerManager speakerManager;
+
+    @Bean
+    TalksCache talksCache;
+
+    @Bean
+    TalkManager talkManager;
+
+
 
     private ArrayObjectAdapter mRowsAdapter;
 
@@ -160,10 +173,18 @@ public class MainFragment extends BrowseFragment {
         mRowsAdapter.add(new ListRow(mSpeakerHeaderPresenter, speakersRowAdapter));
 
         try {
-            speakerManager.fetchSpeakersASync();
+            speakerManager.fetchAllSpeakers();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        try {
+            talkManager.fetchAllTalks();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         setAdapter(mRowsAdapter);
     }
@@ -215,4 +236,30 @@ public class MainFragment extends BrowseFragment {
 
         mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(mSpeakerHeaderPresenter, speakersRowAdapter));
     }
+
+
+    @Subscribe
+    public void onMessageEvent(TalksEvent talksEvent) {
+
+        List<TalkFullModel> talks = talksCache.getData();
+        if (talks == null) {
+            return;
+        }
+
+        Log.d(TAG, "Talks received: " + talks.size());
+
+        /*
+        SpeakerPresenter speakerPresenter = new SpeakerPresenter();
+        ArrayObjectAdapter speakersRowAdapter = new ArrayObjectAdapter(speakerPresenter);
+
+        // display speakers
+        for (SpeakerModel speaker : speakersModel) {
+            speakersRowAdapter.add(speaker);
+        }
+
+        mRowsAdapter.replace(Constants.HEADER_SPEAKER, new ListRow(mSpeakerHeaderPresenter, speakersRowAdapter));
+        */
+    }
+
+
 }

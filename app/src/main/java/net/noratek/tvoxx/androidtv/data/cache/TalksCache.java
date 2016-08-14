@@ -4,7 +4,6 @@ import com.annimon.stream.Optional;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.model.TalkFullModel;
 import net.noratek.tvoxx.androidtv.utils.AssetsUtil;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -43,8 +42,8 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
 
     @Override
     public List<TalkFullModel> getData() {
-        final Optional<String> optionalCache = baseCache.getData(TALKS_CACHE_KEY);
-        return deserializeData(optionalCache.orElse(fallbackData()));
+        final Optional<String> optionalData = baseCache.getData(TALKS_CACHE_KEY);
+        return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
     }
 
     @Override
@@ -90,7 +89,7 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
     }
 
     private Type getType() {
-        return new TypeToken<List<SpeakerModel>>() {
+        return new TypeToken<List<TalkFullModel>>() {
         }.getType();
     }
 

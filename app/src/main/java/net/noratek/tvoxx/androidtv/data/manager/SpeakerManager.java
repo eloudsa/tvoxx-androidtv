@@ -16,11 +16,11 @@ public class SpeakerManager {
     @Bean
     SpeakersDownloader speakersDownloader;
 
-    public void fetchSpeakersASync() throws IOException {
+    public void fetchAllSpeakers() throws IOException {
         speakersDownloader.fetchAllSpeakers();
     }
 
-    public void fetchSpeakerFullASync(String uuid) throws IOException {
+    public void fetchSpeaker(String uuid) throws IOException {
         speakersDownloader.fetchSpeaker(uuid);
     }
 

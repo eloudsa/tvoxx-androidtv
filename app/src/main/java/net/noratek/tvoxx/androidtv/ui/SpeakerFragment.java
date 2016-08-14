@@ -93,7 +93,7 @@ public class SpeakerFragment extends VerticalGridFragment {
         mAdapter = new ArrayObjectAdapter(new SpeakerPresenter());
 
         try {
-            speakerManager.fetchSpeakersASync();
+            speakerManager.fetchAllSpeakers();
         } catch (IOException e) {
             e.printStackTrace();
         }

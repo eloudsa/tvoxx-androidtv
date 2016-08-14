@@ -17,7 +17,12 @@ public class TalkManager {
     TalksDownloader talksDownloader;
 
 
-    public void fetchSpeakerFullASync(String talkId) throws IOException {
+    public void fetchAllTalks() throws IOException {
+        talksDownloader.fetAllTalks();
+    }
+
+
+    public void fetchTalk(String talkId) throws IOException {
         talksDownloader.fetchTalk(talkId);
     }
 
