@@ -58,8 +58,8 @@ public class HomeFragment extends VerticalGridFragment {
 
         CardModel cardModel = new CardModel();
         cardModel.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.conferences).toString());
-        cardModel.setTitle(getString(R.string.conferences));
-        cardModel.setType(Constants.CARD_TYPE_CONFERENCES);
+        cardModel.setTitle(getString(R.string.talks));
+        cardModel.setType(Constants.CARD_TYPE_TALKS);
         mAdapter.add(cardModel);
 
         cardModel = new CardModel();
@@ -128,7 +128,7 @@ public class HomeFragment extends VerticalGridFragment {
                 if (((CardModel) item).getType() == Constants.CARD_TYPE_SPEAKERS) {
                     intent = new Intent(getActivity(), SpeakerActivity_.class);
                 } else {
-                    intent = new Intent(getActivity(), MainActivity_.class);
+                    intent = new Intent(getActivity(), TalksActivity_.class);
                 }
 
                 getActivity().startActivity(intent);

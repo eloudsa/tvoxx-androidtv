@@ -5,6 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <string name="talks">Talks</string>
     <string name="speakers">Speakers</string>
     <string name="conferences">Conferences</string>
     <string name="favorites">Favorites</string>

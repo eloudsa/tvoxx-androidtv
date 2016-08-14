@@ -32,8 +32,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @EFragment
-public class MainFragment extends BrowseFragment {
-    private static final String TAG = MainFragment.class.getSimpleName();
+public class TalksFragment extends BrowseFragment {
+    private static final String TAG = TalksFragment.class.getSimpleName();
 
     @Bean
     TalksCache talksCache;
@@ -122,7 +122,6 @@ public class MainFragment extends BrowseFragment {
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
         TalkPresenter talkPresenter = new TalkPresenter();
-
 
         Long headerId = 0L;
 

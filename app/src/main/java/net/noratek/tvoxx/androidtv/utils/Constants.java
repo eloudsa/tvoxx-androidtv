@@ -29,7 +29,7 @@ public class Constants {
     public static final int BACKGROUND_UPDATE_DELAY = 300;
 
     // Card types
-    public static final int CARD_TYPE_CONFERENCES = 1;
+    public static final int CARD_TYPE_TALKS = 1;
     public static final int CARD_TYPE_SPEAKERS = 2;
     public static final int CARD_TYPE_FAVORTIES = 3;
     public static final int CARD_TYPE_ABOUT = 4;
