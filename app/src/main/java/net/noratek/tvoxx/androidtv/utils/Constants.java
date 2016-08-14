@@ -20,7 +20,7 @@ public class Constants {
     public static final int CONNECTION_TIMEOUT = 60;
 
     // Lifetime of data
-    public static final int CACHE_LIFE_TIME_MINS = 60;
+    public static final int CACHE_LIFE_TIME_MINS = 60 * 8;
 
     // Header position
     public static final int HEADER_SPEAKER = 2;

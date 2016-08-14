@@ -12,7 +12,10 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,6 +23,8 @@ import java.util.concurrent.TimeUnit;
  */
 @EBean
 public class TalksCache implements DataCache<List<TalkFullModel>, String> {
+
+    private static final String TAG = TalksCache.class.getSimpleName();
 
     private static final String TALKS_CACHE_KEY = "talks_cache_key";
 
@@ -46,6 +51,35 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
         return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
     }
 
+
+    public TreeMap<String, List<TalkFullModel>> getDataByTrack() {
+        HashMap<String, List<TalkFullModel>> tracks = new HashMap<>();
+
+        List<TalkFullModel> allTalks = getData();
+        if (allTalks == null) {
+            return null;
+        }
+
+        for (TalkFullModel currentTalk : allTalks) {
+
+            // at this stage, we ignore unknown tracks
+            if (currentTalk.getTrackTitle() != null) {
+
+                List<TalkFullModel> talks = tracks.get(currentTalk.getTrackTitle().toUpperCase());
+                if (talks != null) {
+                    talks.add(currentTalk);
+                } else {
+                    talks = new ArrayList<>();
+                    talks.add(currentTalk);
+
+                    tracks.put(currentTalk.getTrackTitle().toUpperCase(), talks);
+                }
+            }
+        }
+
+        return new TreeMap(tracks);
+    }
+
     @Override
     public boolean isValid() {
         return baseCache.isValid(TALKS_CACHE_KEY, CACHE_LIFE_TIME_MS);
@@ -54,11 +88,6 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
     @Override
     public void clearCache(String query) {
         baseCache.clearCache(TALKS_CACHE_KEY);
-    }
-
-    public void initWithFallbackData() {
-        clearCache(null);
-        upsert(deserializeData(fallbackData()));
     }
 
     @Override
@@ -76,9 +105,12 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
         throw new IllegalStateException("Not needed here!");
     }
 
-    private String fallbackData() {
-        return assetsUtil.loadStringFromAssets(Constants.TALKS_JSON_DATA_FILE);
-    }
+
+
+
+
+
+
 
     private List<TalkFullModel> deserializeData(String fromCache) {
         return new Gson().fromJson(fromCache, getType());

@@ -12,7 +12,6 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,6 +28,7 @@ import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.model.TalkFullModel;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
+import net.noratek.tvoxx.androidtv.ui.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
@@ -39,6 +39,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @EFragment
 public class MainFragment extends BrowseFragment {
@@ -78,7 +80,15 @@ public class MainFragment extends BrowseFragment {
 
         setupUIElements();
         setupEventListeners();
-        loadRows();
+
+        try {
+            talkManager.fetchAllTalks();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //loadRows();
     }
 
     @Override
@@ -241,12 +251,42 @@ public class MainFragment extends BrowseFragment {
     @Subscribe
     public void onMessageEvent(TalksEvent talksEvent) {
 
-        List<TalkFullModel> talks = talksCache.getData();
-        if (talks == null) {
+        TreeMap<String, List<TalkFullModel>> tracks = talksCache.getDataByTrack();
+        if (tracks == null) {
+            getActivity().finish();
             return;
         }
 
-        Log.d(TAG, "Talks received: " + talks.size());
+        HeaderItem trackHeaderPresenter;
+        ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+
+        TalkPresenter talkPresenter = new TalkPresenter();
+
+
+        Long headerId = 0L;
+
+        for(Map.Entry<String,List<TalkFullModel>> track : tracks.entrySet()) {
+
+            //String trackTitle = track.getKey();
+            List<TalkFullModel> talks = track.getValue();
+
+            if ((talks != null) && (talks.size() > 0)) {
+                String trackTitle = talks.get(0).getTrackTitle();
+
+                trackHeaderPresenter = new HeaderItem(headerId++, trackTitle);
+
+                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(talkPresenter);
+
+                for (TalkFullModel talk : talks) {
+                    trackRowAdapter.add(talk);
+                }
+
+                rowsAdapter.add(new ListRow(trackHeaderPresenter, trackRowAdapter));
+            }
+        }
+
+
+        setAdapter(rowsAdapter);
 
         /*
         SpeakerPresenter speakerPresenter = new SpeakerPresenter();
