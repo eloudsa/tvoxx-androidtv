@@ -1,12 +1,15 @@
 package net.noratek.tvoxx.androidtv.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
+import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
@@ -66,19 +69,20 @@ public class MainFragment extends BrowseFragment {
     HeaderItem mSpeakerHeaderPresenter;
 
     // Background image
-    //private BackgroundImageManager mBackgroundImageManager;
-
+   // private BackgroundImageManager mBackgroundImageManager;
 
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         EventBus.getDefault().register(this);
 
         // Prepare the manager that maintains the same background image between activities.
         //mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         setupUIElements();
+
         setupEventListeners();
 
         try {
@@ -88,12 +92,13 @@ public class MainFragment extends BrowseFragment {
         }
 
 
-        //loadRows();
     }
+
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        //mBackgroundImageManager.cancel();
         super.onStop();
     }
 
@@ -111,12 +116,18 @@ public class MainFragment extends BrowseFragment {
         // set search icon color
         setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.search_opaque));
 
+        /*
+        // change the background image
+        BackgroundManager backgroundManager = BackgroundManager.getInstance(getActivity());
+        backgroundManager.attach(getActivity().getWindow());
+        backgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.default_background));
+        */
     }
 
 
     private void setupEventListeners() {
-        //setOnItemViewClickedListener(new ItemViewClickedListener());
-        setOnItemViewSelectedListener(new ItemViewSelectedListener());
+        setOnItemViewClickedListener(new ItemViewClickedListener());
+        //setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
 
@@ -133,6 +144,8 @@ public class MainFragment extends BrowseFragment {
             } else if (item instanceof SpeakerModel) {
                 imageUrl = ((SpeakerModel) item).getAvatarUrl();
 
+            }  else if (item instanceof TalkFullModel) {
+                imageUrl = ((TalkFullModel) item).getThumbnailUrl();
             }
 
             Uri backgroundURI;
@@ -224,6 +237,23 @@ public class MainFragment extends BrowseFragment {
 
         }
     }
+
+
+    private final class ItemViewClickedListener implements OnItemViewClickedListener {
+        @Override
+        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
+                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
+
+            if (item instanceof TalkFullModel) {
+                TalkFullModel talk = (TalkFullModel) item;
+
+                Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
+                intent.putExtra(Constants.TALK_ID, talk.getTalkId());
+                getActivity().startActivity(intent);
+            }
+        }
+    }
+
 
 
     // Events
