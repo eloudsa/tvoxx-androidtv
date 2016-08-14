@@ -5,9 +5,6 @@ package net.noratek.tvoxx.androidtv.utils;
  */
 public class Constants {
 
-    // URL prefix for YouTube
-    public static final String YOUTUBE_URL_PREFIX = "https://www.youtube.com/watch?v=";
-
     // location of the TVoxx Rest API server
     public static final String TVOXX_API_URL = "http://devoxx-proxy.cfapps.io/api/";
 

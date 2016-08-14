@@ -60,10 +60,4 @@ public class Utils {
     }
 
 
-    public static String getYouTubeUrl(String youtubeId) {
-        return Constants.YOUTUBE_URL_PREFIX + youtubeId;
-
-    }
-
-
 }
