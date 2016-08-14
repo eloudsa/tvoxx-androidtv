@@ -3,14 +3,14 @@ package net.noratek.tvoxx.androidtv.event;
 /**
  * Created by eloudsa on 07/08/16.
  */
-public class TalkFullEvent {
+public class TalkEvent {
 
     private String talkId;
 
-    public TalkFullEvent() {
+    public TalkEvent() {
     }
 
-    public TalkFullEvent(String talkId) {
+    public TalkEvent(String talkId) {
         this.talkId = talkId;
     }
 

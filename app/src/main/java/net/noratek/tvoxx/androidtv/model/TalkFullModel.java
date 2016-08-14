@@ -12,8 +12,10 @@ public class TalkFullModel implements Parcelable {
 
     private String talkId;
     private String talkType;
+    private String trackId;
     private String trackTitle;
     private String title;
+    private String conferenceEventCode;
     private String conferenceLabel;
     private String summary;
     private String lang;
@@ -23,27 +25,13 @@ public class TalkFullModel implements Parcelable {
     private int numberOfRatings;
     private int durationInSeconds;
 
+    private List<String> speakerUuids;
+
+    private List<String> speakerNames;
+
     private List<SpeakerModel> speakers;
 
 
-    public TalkFullModel() {
-    }
-
-    public TalkFullModel(String talkId, String talkType, String trackTitle, String title, String conferenceLabel, String summary, String lang, String youtubeVideoId, String thumbnailUrl, float averageRating, int numberOfRatings, int durationInSeconds, List<SpeakerModel> speakers) {
-        this.talkId = talkId;
-        this.talkType = talkType;
-        this.trackTitle = trackTitle;
-        this.title = title;
-        this.conferenceLabel = conferenceLabel;
-        this.summary = summary;
-        this.lang = lang;
-        this.youtubeVideoId = youtubeVideoId;
-        this.thumbnailUrl = thumbnailUrl;
-        this.averageRating = averageRating;
-        this.numberOfRatings = numberOfRatings;
-        this.durationInSeconds = durationInSeconds;
-        this.speakers = speakers;
-    }
 
     public String getTalkId() {
         return talkId;
@@ -61,6 +49,14 @@ public class TalkFullModel implements Parcelable {
         this.talkType = talkType;
     }
 
+    public String getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(String trackId) {
+        this.trackId = trackId;
+    }
+
     public String getTrackTitle() {
         return trackTitle;
     }
@@ -75,6 +71,14 @@ public class TalkFullModel implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getConferenceEventCode() {
+        return conferenceEventCode;
+    }
+
+    public void setConferenceEventCode(String conferenceEventCode) {
+        this.conferenceEventCode = conferenceEventCode;
     }
 
     public String getConferenceLabel() {
@@ -141,6 +145,22 @@ public class TalkFullModel implements Parcelable {
         this.durationInSeconds = durationInSeconds;
     }
 
+    public List<String> getSpeakerUuids() {
+        return speakerUuids;
+    }
+
+    public void setSpeakerUuids(List<String> speakerUuids) {
+        this.speakerUuids = speakerUuids;
+    }
+
+    public List<String> getSpeakerNames() {
+        return speakerNames;
+    }
+
+    public void setSpeakerNames(List<String> speakerNames) {
+        this.speakerNames = speakerNames;
+    }
+
     public List<SpeakerModel> getSpeakers() {
         return speakers;
     }
@@ -159,8 +179,10 @@ public class TalkFullModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.talkId);
         dest.writeString(this.talkType);
+        dest.writeString(this.trackId);
         dest.writeString(this.trackTitle);
         dest.writeString(this.title);
+        dest.writeString(this.conferenceEventCode);
         dest.writeString(this.conferenceLabel);
         dest.writeString(this.summary);
         dest.writeString(this.lang);
@@ -170,14 +192,19 @@ public class TalkFullModel implements Parcelable {
         dest.writeInt(this.numberOfRatings);
         dest.writeInt(this.durationInSeconds);
 
+        dest.writeStringList(this.speakerUuids);
+        dest.writeStringList(this.speakerNames);
+
         dest.writeTypedList(this.speakers);
     }
 
     protected TalkFullModel(Parcel in) {
         this.talkId = in.readString();;
         this.talkType = in.readString();;
+        this.trackId = in.readString();;
         this.trackTitle = in.readString();;
         this.title = in.readString();;
+        this.conferenceEventCode = in.readString();;
         this.conferenceLabel = in.readString();;
         this.summary = in.readString();;
         this.lang = in.readString();;
@@ -186,6 +213,8 @@ public class TalkFullModel implements Parcelable {
         this.averageRating = in.readFloat();
         this.numberOfRatings = in.readInt();
         this.durationInSeconds = in.readInt();
+        in.readStringList(speakerUuids);
+        in.readStringList(speakerNames);
         in.readTypedList(speakers, SpeakerModel.CREATOR);
     }
 

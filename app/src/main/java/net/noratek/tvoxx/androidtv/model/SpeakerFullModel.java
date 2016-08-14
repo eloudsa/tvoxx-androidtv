@@ -18,7 +18,7 @@ public class SpeakerFullModel implements Parcelable {
     private String company;
     private String avatarUrl;
     private String bio;
-    private List<TalkModel> talks;
+    private List<TalkShortModel> talks;
 
 
     public SpeakerFullModel() {
@@ -31,7 +31,7 @@ public class SpeakerFullModel implements Parcelable {
     }
 
 
-    public SpeakerFullModel(String uuid, String lastName, String firstName, String lang, String company, String avatarUrl, String bio, List<TalkModel> talks) {
+    public SpeakerFullModel(String uuid, String lastName, String firstName, String lang, String company, String avatarUrl, String bio, List<TalkShortModel> talks) {
         this.uuid = uuid;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -99,11 +99,11 @@ public class SpeakerFullModel implements Parcelable {
         this.bio = bio;
     }
 
-    public List<TalkModel> getTalks() {
+    public List<TalkShortModel> getTalks() {
         return talks;
     }
 
-    public void setTalks(List<TalkModel> talks) {
+    public void setTalks(List<TalkShortModel> talks) {
         this.talks = talks;
     }
 
@@ -133,8 +133,8 @@ public class SpeakerFullModel implements Parcelable {
         this.company = in.readString();
         this.avatarUrl= in.readString();
         this.bio= in.readString();
-        this.talks = new ArrayList<TalkModel>();
-        in.readTypedList(talks, TalkModel.CREATOR);
+        this.talks = new ArrayList<TalkShortModel>();
+        in.readTypedList(talks, TalkShortModel.CREATOR);
     }
 
     public static final Parcelable.Creator<SpeakerFullModel> CREATOR = new Parcelable.Creator<SpeakerFullModel>() {

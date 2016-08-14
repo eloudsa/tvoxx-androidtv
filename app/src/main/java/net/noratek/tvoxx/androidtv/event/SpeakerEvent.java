@@ -3,14 +3,14 @@ package net.noratek.tvoxx.androidtv.event;
 /**
  * Created by eloudsa on 07/08/16.
  */
-public class SpeakerFullEvent {
+public class SpeakerEvent {
 
     private String uuid;
 
-    public SpeakerFullEvent() {
+    public SpeakerEvent() {
     }
 
-    public SpeakerFullEvent(String uuid) {
+    public SpeakerEvent(String uuid) {
         this.uuid = uuid;
     }
 

@@ -37,10 +37,10 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakerFullCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
-import net.noratek.tvoxx.androidtv.event.SpeakerFullEvent;
+import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
-import net.noratek.tvoxx.androidtv.model.TalkModel;
+import net.noratek.tvoxx.androidtv.model.TalkShortModel;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
@@ -279,11 +279,11 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
         if (speakerFullModel.getTalks() != null) {
 
-            for (TalkModel talkModel : speakerFullModel.getTalks()) {
+            for (TalkShortModel talkShortModel : speakerFullModel.getTalks()) {
                 CardModel cardModel = new CardModel();
-                cardModel.setId(talkModel.getTalkId());
-                cardModel.setCardImageUrl(talkModel.getThumbnailUrl());
-                cardModel.setTitle(talkModel.getTitle());
+                cardModel.setId(talkShortModel.getTalkId());
+                cardModel.setCardImageUrl(talkShortModel.getThumbnailUrl());
+                cardModel.setTitle(talkShortModel.getTitle());
                 listRowAdapter.add(cardModel);
             }
         }
@@ -295,9 +295,9 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
 
     @Subscribe
-    public void onMessageEvent(SpeakerFullEvent speakerFullEvent) {
+    public void onMessageEvent(SpeakerEvent speakerEvent) {
 
-        SpeakerFullModel speakerFullModel = speakerFullCache.getData(speakerFullEvent.getUuid());
+        SpeakerFullModel speakerFullModel = speakerFullCache.getData(speakerEvent.getUuid());
         if (speakerFullModel == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;

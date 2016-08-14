@@ -39,7 +39,7 @@ import com.google.android.youtube.player.YouTubeIntents;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkFullCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
-import net.noratek.tvoxx.androidtv.event.TalkFullEvent;
+import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
 import net.noratek.tvoxx.androidtv.model.SpeakerModel;
 import net.noratek.tvoxx.androidtv.model.TalkFullModel;
@@ -328,11 +328,11 @@ public class TalkDetailFragment extends DetailsFragment {
 
 
     @Subscribe
-    public void onMessageEvent(TalkFullEvent talkFullEvent) {
+    public void onMessageEvent(TalkEvent talkEvent) {
 
         Log.d(TAG, "Into onMessageEvent->TalkFullEvent");
 
-        mSelectedTalk = mTalkFullCache.getData(talkFullEvent.getTalkId());
+        mSelectedTalk = mTalkFullCache.getData(talkEvent.getTalkId());
         if (mSelectedTalk == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;

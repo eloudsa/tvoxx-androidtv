@@ -10,6 +10,7 @@ public class Constants {
 
     // location of the fallback JSON data files
     public static final String SPEAKERS_JSON_DATA_FILE = "data/speakers.json";
+    public static final String TALKS_JSON_DATA_FILE = "data/talks.json";
 
     // Database
     public static final String DATABASE_NAME = "tvoxx_db";

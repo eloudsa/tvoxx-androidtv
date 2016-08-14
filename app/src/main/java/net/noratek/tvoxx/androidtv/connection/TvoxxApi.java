@@ -16,11 +16,14 @@ import retrofit2.http.Path;
 public interface TvoxxApi {
 
     @GET("speakers.json?withVideo=true")
-    Call<List<SpeakerModel>> getSpeakers();
+    Call<List<SpeakerModel>> getAllSpeakers();
 
-    @GET("speakers/{uuid}") Call<SpeakerFullModel> getSpeakerFull(@Path("uuid") String uuid);
+    @GET("talks.json?withVideo=true")
+    Call<List<TalkFullModel>> getAllTalks();
 
-    @GET("talks/{talkid}") Call<TalkFullModel> getTalkFull(@Path("talkid") String talkId);
+    @GET("speakers/{uuid}") Call<SpeakerFullModel> getSpeaker(@Path("uuid") String uuid);
+
+    @GET("talks/{talkid}") Call<TalkFullModel> getTalk(@Path("talkid") String talkId);
 
 
 }

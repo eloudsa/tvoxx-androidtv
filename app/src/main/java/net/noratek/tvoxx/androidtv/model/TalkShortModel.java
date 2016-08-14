@@ -6,14 +6,14 @@ import android.os.Parcelable;
 /**
  * Created by eloudsa on 07/08/16.
  */
-public class TalkModel implements Parcelable {
+public class TalkShortModel implements Parcelable {
 
     private String talkId;
     private String title;
     private String thumbnailUrl;
 
 
-    public TalkModel() {
+    public TalkShortModel() {
     }
 
     public String getTalkId() {
@@ -53,19 +53,19 @@ public class TalkModel implements Parcelable {
         dest.writeString(this.thumbnailUrl);
     }
 
-    protected TalkModel(Parcel in) {
+    protected TalkShortModel(Parcel in) {
         this.talkId = in.readString();
         this.title = in.readString();
         this.thumbnailUrl = in.readString();
     }
 
-    public static final Parcelable.Creator<TalkModel> CREATOR = new Parcelable.Creator<TalkModel>() {
-        public TalkModel createFromParcel(Parcel source) {
-            return new TalkModel(source);
+    public static final Parcelable.Creator<TalkShortModel> CREATOR = new Parcelable.Creator<TalkShortModel>() {
+        public TalkShortModel createFromParcel(Parcel source) {
+            return new TalkShortModel(source);
         }
 
-        public TalkModel[] newArray(int size) {
-            return new TalkModel[size];
+        public TalkShortModel[] newArray(int size) {
+            return new TalkShortModel[size];
         }
     };
 }
