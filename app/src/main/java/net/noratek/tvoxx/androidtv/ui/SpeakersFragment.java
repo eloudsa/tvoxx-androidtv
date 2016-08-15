@@ -11,6 +11,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.view.View;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
@@ -31,8 +32,8 @@ import java.io.IOException;
 import java.util.List;
 
 @EFragment
-public class SpeakerFragment extends VerticalGridFragment {
-    private static final String TAG = SpeakerFragment.class.getSimpleName();
+public class SpeakersFragment extends VerticalGridFragment {
+    private static final String TAG = SpeakersFragment.class.getSimpleName();
 
     private static final int NUM_COLUMNS = 4;
 
@@ -84,7 +85,7 @@ public class SpeakerFragment extends VerticalGridFragment {
     private void loadRows() {
 
         // Display the spinner
-        getFragmentManager().beginTransaction().add(R.id.speaker_fragment, mSpinnerFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.speakers_fragment, mSpinnerFragment).commit();
 
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
@@ -104,6 +105,13 @@ public class SpeakerFragment extends VerticalGridFragment {
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
+
+        setOnSearchClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Subscribe

@@ -126,7 +126,7 @@ public class HomeFragment extends VerticalGridFragment {
 
                 Intent intent;
                 if (((CardModel) item).getType() == Constants.CARD_TYPE_SPEAKERS) {
-                    intent = new Intent(getActivity(), SpeakerActivity_.class);
+                    intent = new Intent(getActivity(), SpeakersActivity_.class);
                 } else {
                     intent = new Intent(getActivity(), TalksActivity_.class);
                 }

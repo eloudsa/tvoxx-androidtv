@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="net.noratek.tvoxx.androidtv.ui.SpeakerActivity_">
+    tools:context="net.noratek.tvoxx.androidtv.ui.SpeakersActivity_">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="net.noratek.tvoxx.androidtv.ui.SpeakerFragment_"
-        android:id="@+id/speaker_fragment"
+        android:name="net.noratek.tvoxx.androidtv.ui.SpeakersFragment_"
+        android:id="@+id/speakers_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

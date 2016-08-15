@@ -7,8 +7,8 @@ import net.noratek.tvoxx.androidtv.R;
 
 import org.androidannotations.annotations.EActivity;
 
-@EActivity(R.layout.activity_speaker)
-public class SpeakerActivity extends Activity {
+@EActivity(R.layout.activity_speakers)
+public class SpeakersActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

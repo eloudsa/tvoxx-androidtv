@@ -42,7 +42,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Leanback.Browse" />
         <activity
-            android:name=".ui.SpeakerActivity_"
+            android:name=".ui.SpeakersActivity_"
             android:exported="true"
             android:label="@string/app_name"
             android:orientation="vertical"
