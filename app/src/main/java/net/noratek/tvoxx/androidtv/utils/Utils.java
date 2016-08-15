@@ -18,11 +18,8 @@ package net.noratek.tvoxx.androidtv.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.media.MediaMetadataRetriever;
+import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
-
-import java.util.HashMap;
 
 /**
  * A collection of utility methods, all static.
@@ -47,16 +44,15 @@ public class Utils {
     }
 
 
-
-
-    public static long getDuration(String videoUrl) {
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            mmr.setDataSource(videoUrl, new HashMap<String, String>());
-        } else {
-            mmr.setDataSource(videoUrl);
-        }
-        return Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+    /**
+     * Check if a permission is granted
+     * @param context
+     * @param permission
+     * @return true if the permission is granted
+     */
+    public static boolean hasPermission(final Context context, final String permission) {
+        return PackageManager.PERMISSION_GRANTED == context.getPackageManager().checkPermission(
+                permission, context.getPackageName());
     }
 
 

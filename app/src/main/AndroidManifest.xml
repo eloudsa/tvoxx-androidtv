@@ -64,6 +64,10 @@
         <activity
             android:name=".ui.VideoPlaybackActivity_"
             android:exported="true" />
+        <activity
+            android:name=".ui.SearchActivity_"
+            android:exported="true" />
+
 
     </application>
 

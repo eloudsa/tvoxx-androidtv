@@ -91,7 +91,8 @@ public class TalksFragment extends BrowseFragment {
         setOnSearchClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), SearchActivity_.class);
+                startActivity(intent);
             }
         });
     }

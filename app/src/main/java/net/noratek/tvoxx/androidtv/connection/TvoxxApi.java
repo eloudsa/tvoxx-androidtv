@@ -9,6 +9,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by eloudsa on 31/07/16.
@@ -20,6 +21,10 @@ public interface TvoxxApi {
 
     @GET("talks.json?withVideo=true")
     Call<List<TalkFullModel>> getAllTalks();
+
+    @GET("talks/search?withVideo=true")
+    Call<List<TalkFullModel>> searchTalks(@Query("q") String query);
+
 
     @GET("speakers/{uuid}") Call<SpeakerFullModel> getSpeaker(@Path("uuid") String uuid);
 
