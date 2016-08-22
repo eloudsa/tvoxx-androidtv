@@ -54,10 +54,6 @@
             android:exported="true"
             android:theme="@style/Theme.Leanback.Details" />
         <activity
-            android:name=".ui.DetailActivity_"
-            android:exported="true"
-            android:theme="@style/Theme.Leanback.Details" />
-        <activity
             android:name=".ui.TalkDetailActivity_"
             android:exported="true"
             android:theme="@style/Theme.Leanback.Details" />

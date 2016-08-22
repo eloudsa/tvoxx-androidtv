@@ -6,7 +6,7 @@ import com.annimon.stream.Optional;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * Created by eloudsa on 01/08/16.
  */
 @EBean
-public class SpeakerFullCache implements DataCache<SpeakerFullModel, String> {
+public class TalkCache implements DataCache<Talk, String> {
 
     public static final long CACHE_LIFE_TIME_MS =
             TimeUnit.MINUTES.toMillis(Constants.CACHE_LIFE_TIME_MINS);
@@ -27,16 +27,17 @@ public class SpeakerFullCache implements DataCache<SpeakerFullModel, String> {
     @Bean
     BaseCache baseCache;
 
+
     @Override
-    public String upsert(SpeakerFullModel model) {
+    public String upsert(Talk model) {
 
         String speakerJSON = serializeData(model);
-        baseCache.upsert(speakerJSON, model.getUuid());
+        baseCache.upsert(speakerJSON, model.getTalkId());
         return speakerJSON;
     }
 
     @Override
-    public SpeakerFullModel getData(String query) {
+    public Talk getData(String query) {
         final Optional<String> optionalData = baseCache.getData(query);
         return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
     }
@@ -62,11 +63,11 @@ public class SpeakerFullCache implements DataCache<SpeakerFullModel, String> {
     }
 
     @Override
-    public SpeakerFullModel getData() {
+    public Talk getData() {
         throw new IllegalStateException("Not needed here!");
     }
 
-    private SpeakerFullModel deserializeData(String fromCache) {
+    private Talk deserializeData(String fromCache) {
         if (!TextUtils.isEmpty(fromCache)) {
             return new Gson().fromJson(fromCache, getType());
         } else {
@@ -74,12 +75,12 @@ public class SpeakerFullCache implements DataCache<SpeakerFullModel, String> {
         }
     }
 
-    private String serializeData(SpeakerFullModel data) {
+    private String serializeData(Talk data) {
         return new Gson().toJson(data);
     }
 
     private Type getType() {
-        return new TypeToken<SpeakerFullModel>() {
+        return new TypeToken<Talk>() {
         }.getType();
     }
 

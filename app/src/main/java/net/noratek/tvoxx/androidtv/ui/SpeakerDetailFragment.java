@@ -35,12 +35,12 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.androidtv.data.cache.SpeakerFullCache;
+import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
-import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
-import net.noratek.tvoxx.androidtv.model.TalkShortModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
@@ -62,7 +62,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
 
     @Bean
-    SpeakerFullCache speakerFullCache;
+    SpeakerCache speakerCache;
 
     @Bean
     SpeakerManager speakerManager;
@@ -211,18 +211,18 @@ public class SpeakerDetailFragment extends DetailsFragment {
     }
 
 
-    private void setupDetailsOverviewRow(SpeakerFullModel speakerFullModel) {
+    private void setupDetailsOverviewRow(Speaker speaker) {
 
         // change the background image
         BackgroundImageManager backgroundImageManager = new BackgroundImageManager(getActivity());
-        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(speakerFullModel.getAvatarUrl()));
+        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(speaker.getAvatarUrl()));
 
 
-        final DetailsOverviewRow row = new DetailsOverviewRow(speakerFullModel);
+        final DetailsOverviewRow row = new DetailsOverviewRow(speaker);
 
         Uri uri;
-        if (speakerFullModel.getAvatarUrl() != null) {
-            uri = Uri.parse(speakerFullModel.getAvatarUrl());
+        if (speaker.getAvatarUrl() != null) {
+            uri = Uri.parse(speaker.getAvatarUrl());
         } else {
             uri = Utils.getUri(getActivity(), R.drawable.ic_anonymous);
         }
@@ -272,18 +272,18 @@ public class SpeakerDetailFragment extends DetailsFragment {
     }
 
 
-    private void setupMovieListRow(SpeakerFullModel speakerFullModel) {
+    private void setupMovieListRow(Speaker speaker) {
         String subcategories[] = {getString(R.string.related_talks)};
 
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
 
-        if (speakerFullModel.getTalks() != null) {
+        if (speaker.getTalks() != null) {
 
-            for (TalkShortModel talkShortModel : speakerFullModel.getTalks()) {
+            for (Talk talk : speaker.getTalks()) {
                 CardModel cardModel = new CardModel();
-                cardModel.setId(talkShortModel.getTalkId());
-                cardModel.setCardImageUrl(talkShortModel.getThumbnailUrl());
-                cardModel.setTitle(talkShortModel.getTitle());
+                cardModel.setId(talk.getTalkId());
+                cardModel.setCardImageUrl(talk.getThumbnailUrl());
+                cardModel.setTitle(talk.getTitle());
                 listRowAdapter.add(cardModel);
             }
         }
@@ -297,16 +297,16 @@ public class SpeakerDetailFragment extends DetailsFragment {
     @Subscribe
     public void onMessageEvent(SpeakerEvent speakerEvent) {
 
-        SpeakerFullModel speakerFullModel = speakerFullCache.getData(speakerEvent.getUuid());
-        if (speakerFullModel == null) {
+        Speaker speaker = speakerCache.getData(speakerEvent.getUuid());
+        if (speaker == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;
         }
 
 
         setupAdapter();
-        setupDetailsOverviewRow(speakerFullModel);
-        setupMovieListRow(speakerFullModel);
+        setupDetailsOverviewRow(speaker);
+        setupMovieListRow(speaker);
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }

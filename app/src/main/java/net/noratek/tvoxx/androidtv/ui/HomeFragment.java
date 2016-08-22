@@ -15,7 +15,7 @@ import android.support.v4.content.ContextCompat;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.model.CardModel;
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -100,8 +100,8 @@ public class HomeFragment extends VerticalGridFragment {
             if (item instanceof CardModel) {
                 imageUrl = ((CardModel) item).getCardImageUrl();
 
-            } else if (item instanceof SpeakerModel) {
-                imageUrl = ((SpeakerModel) item).getAvatarUrl();
+            } else if (item instanceof Speaker) {
+                imageUrl = ((Speaker) item).getAvatarUrl();
             }
 
             Uri backgroundURI;

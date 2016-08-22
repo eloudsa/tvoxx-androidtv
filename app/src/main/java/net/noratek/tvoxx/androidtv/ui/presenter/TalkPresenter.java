@@ -17,7 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 
@@ -72,7 +72,7 @@ public class TalkPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        TalkFullModel talk = (TalkFullModel) item;
+        Talk talk = (Talk) item;
 
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(talk.getTitle());

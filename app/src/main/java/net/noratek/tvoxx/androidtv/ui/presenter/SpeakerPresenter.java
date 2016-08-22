@@ -17,7 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 
@@ -74,7 +74,7 @@ public class SpeakerPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        SpeakerModel speaker = (SpeakerModel) item;
+        Speaker speaker = (Speaker) item;
 
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(speaker.getFirstName() + " " + speaker.getLastName());

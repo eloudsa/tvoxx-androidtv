@@ -18,7 +18,7 @@ import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.ui.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
@@ -103,8 +103,8 @@ public class TalksFragment extends BrowseFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof TalkFullModel) {
-                TalkFullModel talk = (TalkFullModel) item;
+            if (item instanceof Talk) {
+                Talk talk = (Talk) item;
 
                 Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
                 intent.putExtra(Constants.TALK_ID, talk.getTalkId());
@@ -121,7 +121,7 @@ public class TalksFragment extends BrowseFragment {
     @Subscribe
     public void onMessageEvent(TalksEvent talksEvent) {
 
-        TreeMap<String, List<TalkFullModel>> tracks = talksCache.getDataByTrack();
+        TreeMap<String, List<Talk>> tracks = talksCache.getDataByTrack();
         if (tracks == null) {
             getActivity().finish();
             return;
@@ -134,9 +134,9 @@ public class TalksFragment extends BrowseFragment {
 
         Long headerId = 0L;
 
-        for(Map.Entry<String,List<TalkFullModel>> track : tracks.entrySet()) {
+        for(Map.Entry<String,List<Talk>> track : tracks.entrySet()) {
 
-            List<TalkFullModel> talks = track.getValue();
+            List<Talk> talks = track.getValue();
             if ((talks != null) && (talks.size() > 0)) {
                 // get the track title with its proper case
                 String trackTitle = talks.get(0).getTrackTitle();
@@ -145,7 +145,7 @@ public class TalksFragment extends BrowseFragment {
 
                 ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(talkPresenter);
 
-                for (TalkFullModel talk : talks) {
+                for (Talk talk : talks) {
                     trackRowAdapter.add(talk);
                 }
 

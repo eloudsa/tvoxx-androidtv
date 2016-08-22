@@ -18,18 +18,18 @@ package net.noratek.tvoxx.androidtv.ui.presenter;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Talk;
 
 public class VideoPresenter extends AbstractDetailsDescriptionPresenter {
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        TalkFullModel talkFullModel = (TalkFullModel) item;
+        Talk talk = (Talk) item;
 
-        if (talkFullModel != null) {
-            viewHolder.getTitle().setText(talkFullModel.getTitle());
-            viewHolder.getSubtitle().setText(talkFullModel.getConferenceLabel());
-            viewHolder.getBody().setText(talkFullModel.getSummary());
+        if (talk != null) {
+            viewHolder.getTitle().setText(talk.getTitle());
+            viewHolder.getSubtitle().setText(talk.getConferenceLabel());
+            viewHolder.getBody().setText(talk.getSummary());
         }
     }
 }

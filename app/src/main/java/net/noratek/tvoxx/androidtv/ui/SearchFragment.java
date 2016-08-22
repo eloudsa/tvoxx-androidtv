@@ -22,7 +22,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.ui.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
@@ -50,10 +50,10 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     private static final int REQUEST_SPEECH = 0x00000010;
     private static final long SEARCH_DELAY_MS = 1000L;
 
-    private Call<List<TalkFullModel>> mCall;
+    private Call<List<Talk>> mCall;
     private AsyncTask<Void, Void, ListRow> mLoadRowsAsync;
 
-    private List<TalkFullModel> mTalks;
+    private List<Talk> mTalks;
 
 
     private ArrayObjectAdapter mRowsAdapter;
@@ -157,9 +157,9 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
 
         // retrieve the list of talks from the server
         mCall = connection.getTvoxxApi().searchTalks(mQuery);
-        mCall.enqueue(new Callback<List<TalkFullModel>>() {
+        mCall.enqueue(new Callback<List<Talk>>() {
             @Override
-            public void onResponse(Call<List<TalkFullModel>> call, Response<List<TalkFullModel>> response) {
+            public void onResponse(Call<List<Talk>> call, Response<List<Talk>> response) {
                 if (response.isSuccessful()) {
                     mTalks = response.body();
                     loadRows();
@@ -167,7 +167,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
             }
 
             @Override
-            public void onFailure(Call<List<TalkFullModel>> call, Throwable t) {
+            public void onFailure(Call<List<Talk>> call, Throwable t) {
                 if (call.isCanceled()) {
                     Log.e(TAG, "request was cancelled");
                 }
@@ -224,8 +224,8 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof TalkFullModel) {
-                TalkFullModel talk = (TalkFullModel) item;
+            if (item instanceof Talk) {
+                Talk talk = (Talk) item;
 
                 Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
                 intent.putExtra(Constants.TALK_ID, talk.getTalkId());

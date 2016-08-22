@@ -16,8 +16,9 @@ package net.noratek.tvoxx.androidtv.ui.presenter;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
+import net.noratek.tvoxx.androidtv.model.Talk;
+
 
 public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
@@ -28,16 +29,16 @@ public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresen
             return;
         }
 
-        if (item instanceof SpeakerFullModel) {
+        if (item instanceof Speaker) {
 
-            SpeakerFullModel speaker = (SpeakerFullModel) item;
+            Speaker speaker = (Speaker) item;
 
             viewHolder.getTitle().setText(speaker.getFirstName() + " " + speaker.getLastName());
             viewHolder.getSubtitle().setText(speaker.getCompany());
             viewHolder.getBody().setText(speaker.getBio());
-        } else if (item instanceof TalkFullModel) {
+        } else if (item instanceof Talk) {
 
-            TalkFullModel talk = (TalkFullModel) item;
+            Talk talk = (Talk) item;
 
             viewHolder.getTitle().setText(talk.getTitle());
             viewHolder.getSubtitle().setText(talk.getConferenceLabel());

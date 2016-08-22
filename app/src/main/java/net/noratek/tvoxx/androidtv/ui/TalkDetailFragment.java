@@ -37,12 +37,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.youtube.player.YouTubeIntents;
 
 import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.androidtv.data.cache.TalkFullCache;
+import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
@@ -64,7 +64,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
 
     @Bean
-    TalkFullCache mTalkFullCache;
+    TalkCache mTalkCache;
 
     @Bean
     TalkManager mTalkManager;
@@ -76,7 +76,7 @@ public class TalkDetailFragment extends DetailsFragment {
     private ArrayObjectAdapter mAdapter;
 
     private String mTalkId;
-    private TalkFullModel mSelectedTalk;
+    private Talk mSelectedTalk;
 
 
     @Override
@@ -237,18 +237,18 @@ public class TalkDetailFragment extends DetailsFragment {
     }
 
 
-    private void setupDetailsOverviewRow(TalkFullModel talkFullModel) {
+    private void setupDetailsOverviewRow(Talk talk) {
 
         // change the background image
         BackgroundImageManager backgroundImageManager = new BackgroundImageManager(getActivity());
-        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(talkFullModel.getThumbnailUrl()));
+        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(talk.getThumbnailUrl()));
 
 
-        final DetailsOverviewRow row = new DetailsOverviewRow(talkFullModel);
+        final DetailsOverviewRow row = new DetailsOverviewRow(talk);
 
         Uri uri;
-        if (talkFullModel.getThumbnailUrl() != null) {
-            uri = Uri.parse(talkFullModel.getThumbnailUrl());
+        if (talk.getThumbnailUrl() != null) {
+            uri = Uri.parse(talk.getThumbnailUrl());
         } else {
             uri = Utils.getUri(getActivity(), R.drawable.conferences);
         }
@@ -303,19 +303,19 @@ public class TalkDetailFragment extends DetailsFragment {
     }
 
 
-    private void setupRelatedListRow(TalkFullModel talkFullModel) {
+    private void setupRelatedListRow(Talk talk) {
         String subcategories[] = {getString(R.string.speakers)};
 
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
 
-        if (talkFullModel.getSpeakers() != null) {
+        if (talk.getSpeakers() != null) {
 
-            for (SpeakerModel speakerModel : talkFullModel.getSpeakers()) {
+            for (Speaker speaker : talk.getSpeakers()) {
                 CardModel cardModel = new CardModel();
-                cardModel.setId(speakerModel.getUuid());
-                cardModel.setCardImageUrl(speakerModel.getAvatarUrl());
-                cardModel.setTitle(speakerModel.getFirstName() + " " + speakerModel.getLastName());
-                cardModel.setContent(speakerModel.getCompany());
+                cardModel.setId(speaker.getUuid());
+                cardModel.setCardImageUrl(speaker.getAvatarUrl());
+                cardModel.setTitle(speaker.getFirstName() + " " + speaker.getLastName());
+                cardModel.setContent(speaker.getCompany());
                 listRowAdapter.add(cardModel);
             }
         }
@@ -332,7 +332,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
         Log.d(TAG, "Into onMessageEvent->TalkFullEvent");
 
-        mSelectedTalk = mTalkFullCache.getData(talkEvent.getTalkId());
+        mSelectedTalk = mTalkCache.getData(talkEvent.getTalkId());
         if (mSelectedTalk == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;

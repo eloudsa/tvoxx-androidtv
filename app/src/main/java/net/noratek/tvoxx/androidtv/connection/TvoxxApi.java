@@ -1,8 +1,8 @@
 package net.noratek.tvoxx.androidtv.connection;
 
-import net.noratek.tvoxx.androidtv.model.SpeakerFullModel;
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+
+import net.noratek.tvoxx.androidtv.model.Speaker;
+import net.noratek.tvoxx.androidtv.model.Talk;
 
 import java.util.List;
 
@@ -17,18 +17,18 @@ import retrofit2.http.Query;
 public interface TvoxxApi {
 
     @GET("speakers.json?withVideo=true")
-    Call<List<SpeakerModel>> getAllSpeakers();
+    Call<List<Speaker>> getAllSpeakers();
 
     @GET("talks.json?withVideo=true")
-    Call<List<TalkFullModel>> getAllTalks();
+    Call<List<Talk>> getAllTalks();
 
     @GET("talks/search?withVideo=true")
-    Call<List<TalkFullModel>> searchTalks(@Query("q") String query);
+    Call<List<Talk>> searchTalks(@Query("q") String query);
 
 
-    @GET("speakers/{uuid}") Call<SpeakerFullModel> getSpeaker(@Path("uuid") String uuid);
+    @GET("speakers/{uuid}") Call<Speaker> getSpeaker(@Path("uuid") String uuid);
 
-    @GET("talks/{talkid}") Call<TalkFullModel> getTalk(@Path("talkid") String talkId);
+    @GET("talks/{talkid}") Call<Talk> getTalk(@Path("talkid") String talkId);
 
 
 }

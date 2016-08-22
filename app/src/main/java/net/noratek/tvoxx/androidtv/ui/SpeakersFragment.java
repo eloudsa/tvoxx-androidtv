@@ -18,7 +18,7 @@ import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Utils;
@@ -117,8 +117,8 @@ public class SpeakersFragment extends VerticalGridFragment {
     @Subscribe
     public void onMessageEvent(SpeakersEvent speakersEvent) {
 
-        List<SpeakerModel> speakersModel = speakersCache.getData();
-        if (speakersModel == null) {
+        List<Speaker> speakers = speakersCache.getData();
+        if (speakers == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;
         }
@@ -126,7 +126,7 @@ public class SpeakersFragment extends VerticalGridFragment {
         mAdapter.clear();
 
         // display speakers
-        for (SpeakerModel speaker : speakersModel) {
+        for (Speaker speaker : speakers) {
             mAdapter.add(speaker);
         }
 
@@ -143,8 +143,8 @@ public class SpeakersFragment extends VerticalGridFragment {
             if (item instanceof CardModel) {
                 imageUrl = ((CardModel) item).getCardImageUrl();
 
-            } else if (item instanceof SpeakerModel) {
-                imageUrl = ((SpeakerModel) item).getAvatarUrl();
+            } else if (item instanceof Speaker) {
+                imageUrl = ((Speaker) item).getAvatarUrl();
             }
 
             Uri backgroundURI;
@@ -167,13 +167,13 @@ public class SpeakersFragment extends VerticalGridFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof SpeakerModel) {
+            if (item instanceof Speaker) {
 
-                SpeakerModel speakerModel = (SpeakerModel) item;
+                Speaker speaker = (Speaker) item;
 
                 mBackgroundImageManager.cancel();
                 Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
-                intent.putExtra(SpeakerDetailActivity.UUID, speakerModel.getUuid());
+                intent.putExtra(SpeakerDetailActivity.UUID, speaker.getUuid());
                 getActivity().startActivity(intent);
             }
         }

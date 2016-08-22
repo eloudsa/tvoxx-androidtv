@@ -4,7 +4,7 @@ import com.annimon.stream.Optional;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.noratek.tvoxx.androidtv.model.SpeakerModel;
+import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.utils.AssetsUtil;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * Created by eloudsa on 01/08/16.
  */
 @EBean
-public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
+public class SpeakersCache implements DataCache<List<Speaker>, String> {
 
     private static final String SPEAKERS_CACHE_KEY = "speakers_cache_key";
 
@@ -34,14 +34,14 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
 
 
     @Override
-    public String upsert(List<SpeakerModel> speakersModel) {
-        String speakersJSON = serializeData(speakersModel);
-        baseCache.upsert(serializeData(speakersModel), SPEAKERS_CACHE_KEY);
+    public String upsert(List<Speaker> speakers) {
+        String speakersJSON = serializeData(speakers);
+        baseCache.upsert(serializeData(speakers), SPEAKERS_CACHE_KEY);
         return speakersJSON;
     }
 
     @Override
-    public List<SpeakerModel> getData() {
+    public List<Speaker> getData() {
         final Optional<String> optionalCache = baseCache.getData(SPEAKERS_CACHE_KEY);
         return deserializeData(optionalCache.orElse(fallbackData()));
     }
@@ -67,7 +67,7 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
     }
 
     @Override
-    public List<SpeakerModel> getData(String query) {
+    public List<Speaker> getData(String query) {
         throw new IllegalStateException("Not needed here!");
     }
 
@@ -80,16 +80,16 @@ public class SpeakersCache implements DataCache<List<SpeakerModel>, String> {
         return assetsUtil.loadStringFromAssets(Constants.SPEAKERS_JSON_DATA_FILE);
     }
 
-    private List<SpeakerModel> deserializeData(String fromCache) {
+    private List<Speaker> deserializeData(String fromCache) {
         return new Gson().fromJson(fromCache, getType());
     }
 
-    private String serializeData(List<SpeakerModel> data) {
+    private String serializeData(List<Speaker> data) {
         return new Gson().toJson(data);
     }
 
     private Type getType() {
-        return new TypeToken<List<SpeakerModel>>() {
+        return new TypeToken<List<Speaker>>() {
         }.getType();
     }
 

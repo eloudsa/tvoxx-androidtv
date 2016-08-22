@@ -4,7 +4,7 @@ import com.annimon.stream.Optional;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.noratek.tvoxx.androidtv.model.TalkFullModel;
+import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.utils.AssetsUtil;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Created by eloudsa on 01/08/16.
  */
 @EBean
-public class TalksCache implements DataCache<List<TalkFullModel>, String> {
+public class TalksCache implements DataCache<List<Talk>, String> {
 
     private static final String TAG = TalksCache.class.getSimpleName();
 
@@ -39,33 +39,33 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
 
 
     @Override
-    public String upsert(List<TalkFullModel> talksModel) {
-        String talkssJSON = serializeData(talksModel);
-        baseCache.upsert(serializeData(talksModel), TALKS_CACHE_KEY);
+    public String upsert(List<Talk> talks) {
+        String talkssJSON = serializeData(talks);
+        baseCache.upsert(serializeData(talks), TALKS_CACHE_KEY);
         return talkssJSON;
     }
 
     @Override
-    public List<TalkFullModel> getData() {
+    public List<Talk> getData() {
         final Optional<String> optionalData = baseCache.getData(TALKS_CACHE_KEY);
         return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
     }
 
 
-    public TreeMap<String, List<TalkFullModel>> getDataByTrack() {
-        HashMap<String, List<TalkFullModel>> tracks = new HashMap<>();
+    public TreeMap<String, List<Talk>> getDataByTrack() {
+        HashMap<String, List<Talk>> tracks = new HashMap<>();
 
-        List<TalkFullModel> allTalks = getData();
+        List<Talk> allTalks = getData();
         if (allTalks == null) {
             return null;
         }
 
-        for (TalkFullModel currentTalk : allTalks) {
+        for (Talk currentTalk : allTalks) {
 
             // at this stage, we ignore unknown tracks
             if (currentTalk.getTrackTitle() != null) {
 
-                List<TalkFullModel> talks = tracks.get(currentTalk.getTrackTitle().toUpperCase());
+                List<Talk> talks = tracks.get(currentTalk.getTrackTitle().toUpperCase());
                 if (talks != null) {
                     talks.add(currentTalk);
                 } else {
@@ -96,7 +96,7 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
     }
 
     @Override
-    public List<TalkFullModel> getData(String query) {
+    public List<Talk> getData(String query) {
         throw new IllegalStateException("Not needed here!");
     }
 
@@ -107,21 +107,16 @@ public class TalksCache implements DataCache<List<TalkFullModel>, String> {
 
 
 
-
-
-
-
-
-    private List<TalkFullModel> deserializeData(String fromCache) {
+    private List<Talk> deserializeData(String fromCache) {
         return new Gson().fromJson(fromCache, getType());
     }
 
-    private String serializeData(List<TalkFullModel> data) {
+    private String serializeData(List<Talk> data) {
         return new Gson().toJson(data);
     }
 
     private Type getType() {
-        return new TypeToken<List<TalkFullModel>>() {
+        return new TypeToken<List<Talk>>() {
         }.getType();
     }
 
