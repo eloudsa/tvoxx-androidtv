@@ -4,11 +4,14 @@ import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.data.RealmProvider;
+import net.noratek.tvoxx.androidtv.data.cache.EtagCache;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
 import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
+import net.noratek.tvoxx.androidtv.model.Etag;
 import net.noratek.tvoxx.androidtv.model.Speaker;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -38,6 +41,10 @@ public class SpeakersDownloader {
     SpeakerCache speakerCache;
 
     @Bean
+    EtagCache etagCache;
+
+
+    @Bean
     SpeakersCache speakersCache;
 
 
@@ -53,17 +60,29 @@ public class SpeakersDownloader {
             return;
         }
 
+        // Retrieve any previous etag
+        Etag etag = etagCache.getData(Constants.SPEAKERS_ID);
+
         // retrieve the list of speakers from the server
-        Call<List<Speaker>> call = connection.getTvoxxApi().getAllSpeakers();
+        Call<List<Speaker>> call = connection.getTvoxxApi().getAllSpeakers(etag != null ? etag.getEtag() : "");
+
         call.enqueue(new Callback<List<Speaker>>() {
             @Override
             public void onResponse(Call<List<Speaker>> call, Response<List<Speaker>> response) {
                 if (response.isSuccessful()) {
                     List<Speaker> speakers = response.body();
+
                     if (speakers == null) {
                         Log.d(TAG, "No speakers!");
                     } else {
+                        // Save the speaker information
                         speakersCache.upsert(speakers);
+
+                        // keep the Etag
+                        etagCache.upsert(new Etag(
+                                Constants.SPEAKERS_ID,
+                                response.headers().get("Etag"),
+                                call.request().url().toString()));
                     }
                 } else {
                     Log.e(TAG, response.message());

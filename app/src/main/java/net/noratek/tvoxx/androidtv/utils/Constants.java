@@ -20,7 +20,7 @@ public class Constants {
     public static final int CONNECTION_TIMEOUT = 60;
 
     // Lifetime of data
-    public static final int CACHE_LIFE_TIME_MINS = 480;
+    public static final int CACHE_LIFE_TIME_MINS = 1;
 
     // Header position
     public static final int HEADER_SPEAKER = 2;
@@ -46,6 +46,11 @@ public class Constants {
     // Used in intent parameters
     public static final String TALK_ID = "UUID";
     public static final String ERROR_RESOURCE_ID = "ERR_RESOURCE_ID";
+
+
+    // Data Id
+    public static final String SPEAKERS_ID = "SPEAKERS";
+
 
 
 

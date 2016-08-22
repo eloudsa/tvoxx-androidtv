@@ -8,6 +8,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -17,7 +18,7 @@ import retrofit2.http.Query;
 public interface TvoxxApi {
 
     @GET("speakers.json?withVideo=true")
-    Call<List<Speaker>> getAllSpeakers();
+    Call<List<Speaker>> getAllSpeakers(@Header("If-None-Match") String eTag);
 
     @GET("talks.json?withVideo=true")
     Call<List<Talk>> getAllTalks();
