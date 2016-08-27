@@ -16,8 +16,8 @@
     <string name="related_talks">Related talks</string>
 
     <string name="detail_header_action_play_video">PLAY</string>
-    <string name="detail_header_action_add_watchlist">ADD TO WATCHLIST</string>
-
+    <string name="detail_header_action_add_to">ADD TO</string>
+    <string name="detail_header_action_remove_from">REMOVE FROM</string>
 
     <string name="watch_trailer_1">Watch trailer</string>
     <string name="watch_trailer_2">FREE</string>

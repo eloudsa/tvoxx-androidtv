@@ -302,9 +302,13 @@ public class TalkDetailFragment extends DetailsFragment {
                 new Action(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO, getResources()
                         .getString(R.string.detail_header_action_play_video)));
 
+        Boolean isWatchlist = watchlistCache.isExist(mTalkId);
+
         adapter.set(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST,
-                new Action(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST, getResources()
-                        .getString(R.string.detail_header_action_add_watchlist)));
+                new Action(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST,
+                        getResources().getString(isWatchlist ? R.string.detail_header_action_remove_from : R.string.detail_header_action_add_to),
+                        getResources().getString(R.string.watchlist).toUpperCase(),
+                        ContextCompat.getDrawable(getActivity(), isWatchlist ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off)));
 
 
         row.setActionsAdapter(adapter);

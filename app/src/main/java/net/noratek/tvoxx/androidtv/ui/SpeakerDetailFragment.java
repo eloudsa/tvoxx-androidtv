@@ -263,8 +263,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
         SparseArrayObjectAdapter adapter = new SparseArrayObjectAdapter();
 
         adapter.set(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES,
-                new Action(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES, getResources()
-                        .getString(R.string.detail_header_action_add_watchlist)));
+                new Action(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES, "to remove"));
 
         row.setActionsAdapter(adapter);
 

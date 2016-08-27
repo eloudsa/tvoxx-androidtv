@@ -63,6 +63,16 @@ public class WatchlistCache implements DataCache<List<String>, String> {
         return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
     }
 
+
+    public Boolean isExist(String talkId) {
+        List<String> watchlist = getData(Constants.WATCHLIST_KEY);
+        if (watchlist == null) {
+            watchlist = new ArrayList<>();
+        }
+
+        return watchlist.contains(talkId);
+    }
+
     @Override
     public boolean isValid(String query) {
         return baseCache.isValid(query, CACHE_LIFE_TIME_MS);
