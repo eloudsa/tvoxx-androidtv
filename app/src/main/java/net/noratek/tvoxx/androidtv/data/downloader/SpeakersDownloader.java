@@ -41,16 +41,11 @@ public class SpeakersDownloader {
     SpeakerCache speakerCache;
 
     @Bean
-    EtagCache etagCache;
-
-
-    @Bean
     SpeakersCache speakersCache;
 
+    @Bean
+    EtagCache etagCache;
 
-    public void initWitStaticData() {
-        speakersCache.initWithFallbackData();
-    }
 
 
     public void fetchAllSpeakers() throws IOException {
@@ -61,7 +56,7 @@ public class SpeakersDownloader {
         }
 
         // Retrieve any previous etag
-        Etag etag = etagCache.getData(Constants.SPEAKERS_ID);
+        Etag etag = etagCache.getData(Constants.ETAG_SPEAKERS);
 
         // retrieve the list of speakers from the server
         Call<List<Speaker>> call = connection.getTvoxxApi().getAllSpeakers(etag != null ? etag.getEtag() : "");
@@ -80,11 +75,12 @@ public class SpeakersDownloader {
 
                         // keep the Etag
                         etagCache.upsert(new Etag(
-                                Constants.SPEAKERS_ID,
+                                Constants.ETAG_SPEAKERS,
                                 response.headers().get("Etag"),
                                 call.request().url().toString()));
                     }
                 } else {
+                    // this condition may be reached if the HTTP code is 304 (Not modified)
                     Log.e(TAG, response.message());
                 }
 
@@ -108,8 +104,11 @@ public class SpeakersDownloader {
             return;
         }
 
+        // Retrieve any previous etag
+        Etag etag = etagCache.getData(Constants.ETAG_SPEAKER + uuid);
+
         // retrieve the speaker information from the server
-        Call<Speaker> call = connection.getTvoxxApi().getSpeaker(uuid);
+        Call<Speaker> call = connection.getTvoxxApi().getSpeaker(etag != null ? etag.getEtag() : "", uuid);
         call.enqueue(new Callback<Speaker>() {
             @Override
             public void onResponse(Call<Speaker> call, Response<Speaker> response) {
@@ -118,14 +117,22 @@ public class SpeakersDownloader {
                     Speaker speaker = response.body();
                     if (speaker == null) {
                         Log.d(TAG, "No speakers!");
+
                     } else {
                         speakerCache.upsert(speaker);
 
-                        EventBus.getDefault().post(new SpeakerEvent(speaker.getUuid()));
+                        // keep the Etag
+                        etagCache.upsert(new Etag(
+                                Constants.ETAG_SPEAKER + uuid,
+                                response.headers().get("Etag"),
+                                call.request().url().toString()));
                     }
                 } else {
+                    // this condition may be reached if the HTTP code is 304 (Not modified)
                     Log.e(TAG, response.message());
                 }
+
+                EventBus.getDefault().post(new SpeakerEvent(uuid));
             }
 
             @Override

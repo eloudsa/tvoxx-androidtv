@@ -20,7 +20,8 @@ public class Constants {
     public static final int CONNECTION_TIMEOUT = 60;
 
     // Lifetime of data
-    public static final int CACHE_LIFE_TIME_MINS = 1;
+    public static final int CACHE_LIFE_TIME_MINS = 1440;
+
 
     // Header position
     public static final int HEADER_SPEAKER = 2;
@@ -49,10 +50,15 @@ public class Constants {
 
 
     // Data Id
-    public static final String SPEAKERS_ID = "SPEAKERS";
+    public static final String SPEAKERS_KEY = "SPEAKERS_KEY";
+    public static final String TALKS_KEY = "TALKS_KEY";
 
 
-
+    // Etag Id
+    public static final String ETAG_SPEAKERS = "ETAG_SPEAKERS";
+    public static final String ETAG_SPEAKER = "ETAG_SPEAKER";
+    public static final String ETAG_TALKS = "ETAG_TALKS";
+    public static final String ETAG_TALK = "ETAG_TALK";
 
 
 

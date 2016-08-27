@@ -21,15 +21,15 @@ public interface TvoxxApi {
     Call<List<Speaker>> getAllSpeakers(@Header("If-None-Match") String eTag);
 
     @GET("talks.json?withVideo=true")
-    Call<List<Talk>> getAllTalks();
+    Call<List<Talk>> getAllTalks(@Header("If-None-Match") String eTag);
 
     @GET("talks/search?withVideo=true")
     Call<List<Talk>> searchTalks(@Query("q") String query);
 
 
-    @GET("speakers/{uuid}") Call<Speaker> getSpeaker(@Path("uuid") String uuid);
+    @GET("speakers/{uuid}") Call<Speaker> getSpeaker(@Header("If-None-Match") String eTag, @Path("uuid") String uuid);
 
-    @GET("talks/{talkid}") Call<Talk> getTalk(@Path("talkid") String talkId);
+    @GET("talks/{talkid}") Call<Talk> getTalk(@Header("If-None-Match") String eTag, @Path("talkid") String talkId);
 
 
 }

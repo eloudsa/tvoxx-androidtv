@@ -25,10 +25,4 @@ public class SpeakerManager {
     }
 
 
-
-    public void initWitStaticData() {
-        speakersDownloader.initWitStaticData();
-    }
-
-
 }

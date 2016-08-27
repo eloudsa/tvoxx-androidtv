@@ -43,7 +43,7 @@ public class SpeakersCache implements DataCache<List<Speaker>, String> {
     @Override
     public List<Speaker> getData() {
         final Optional<String> optionalCache = baseCache.getData(SPEAKERS_CACHE_KEY);
-        return deserializeData(optionalCache.orElse(fallbackData()));
+        return deserializeData(optionalCache.orElse(null));
     }
 
     @Override
@@ -54,11 +54,6 @@ public class SpeakersCache implements DataCache<List<Speaker>, String> {
     @Override
     public void clearCache(String query) {
         baseCache.clearCache(SPEAKERS_CACHE_KEY);
-    }
-
-    public void initWithFallbackData() {
-        clearCache(null);
-        upsert(deserializeData(fallbackData()));
     }
 
     @Override
@@ -76,11 +71,7 @@ public class SpeakersCache implements DataCache<List<Speaker>, String> {
         throw new IllegalStateException("Not needed here!");
     }
 
-    private String fallbackData() {
-        return assetsUtil.loadStringFromAssets(Constants.SPEAKERS_JSON_DATA_FILE);
-    }
-
-    private List<Speaker> deserializeData(String fromCache) {
+     private List<Speaker> deserializeData(String fromCache) {
         return new Gson().fromJson(fromCache, getType());
     }
 

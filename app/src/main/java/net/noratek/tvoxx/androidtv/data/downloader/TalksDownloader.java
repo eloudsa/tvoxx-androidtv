@@ -4,11 +4,14 @@ import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.data.RealmProvider;
+import net.noratek.tvoxx.androidtv.data.cache.EtagCache;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
+import net.noratek.tvoxx.androidtv.model.Etag;
 import net.noratek.tvoxx.androidtv.model.Talk;
+import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -40,6 +43,10 @@ public class TalksDownloader {
     @Bean
     TalksCache talksCache;
 
+    @Bean
+    EtagCache etagCache;
+
+
     public void fetAllTalks() throws IOException {
 
         if (talksCache.isValid()) {
@@ -47,8 +54,12 @@ public class TalksDownloader {
             return;
         }
 
+
+        // Retrieve any previous etag
+        Etag etag = etagCache.getData(Constants.ETAG_TALKS);
+
         // retrieve the list of talks from the server
-        Call<List<Talk>> call = connection.getTvoxxApi().getAllTalks();
+        Call<List<Talk>> call = connection.getTvoxxApi().getAllTalks(etag != null ? etag.getEtag() : "");
         call.enqueue(new Callback<List<Talk>>() {
             @Override
             public void onResponse(Call<List<Talk>> call, Response<List<Talk>> response) {
@@ -58,8 +69,15 @@ public class TalksDownloader {
                         Log.d(TAG, "No talks!");
                     } else {
                         talksCache.upsert(talks);
+
+                        // keep the Etag
+                        etagCache.upsert(new Etag(
+                                Constants.ETAG_TALKS,
+                                response.headers().get("Etag"),
+                                call.request().url().toString()));
                     }
                 } else {
+                    // this condition may be reached if the HTTP code is 304 (Not modified)
                     Log.e(TAG, response.message());
                 }
 
@@ -83,8 +101,11 @@ public class TalksDownloader {
             return;
         }
 
+        // Retrieve any previous etag
+        Etag etag = etagCache.getData(Constants.ETAG_TALK + talkId);
+
         // retrieve the talk information from the server
-        Call<Talk> call = connection.getTvoxxApi().getTalk(talkId);
+        Call<Talk> call = connection.getTvoxxApi().getTalk(etag != null ? etag.getEtag() : "", talkId);
         call.enqueue(new Callback<Talk>() {
             @Override
             public void onResponse(Call<Talk> call, Response<Talk> response) {
@@ -96,11 +117,18 @@ public class TalksDownloader {
                     } else {
                         talkCache.upsert(talk);
 
-                        EventBus.getDefault().post(new TalkEvent(talk.getTalkId()));
+                        // keep the Etag
+                        etagCache.upsert(new Etag(
+                                Constants.ETAG_TALK + talkId,
+                                response.headers().get("Etag"),
+                                call.request().url().toString()));
                     }
                 } else {
+                    // this condition may be reached if the HTTP code is 304 (Not modified)
                     Log.e(TAG, response.message());
                 }
+
+                EventBus.getDefault().post(new TalkEvent(talkId));
             }
 
             @Override
