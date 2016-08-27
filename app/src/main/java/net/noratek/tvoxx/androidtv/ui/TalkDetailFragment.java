@@ -38,6 +38,7 @@ import com.google.android.youtube.player.YouTubeIntents;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
+import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.model.CardModel;
@@ -68,6 +69,10 @@ public class TalkDetailFragment extends DetailsFragment {
 
     @Bean
     TalkManager mTalkManager;
+
+    @Bean
+    WatchlistCache watchlistCache;
+
 
     private SpinnerFragment mSpinnerFragment;
 
@@ -166,7 +171,6 @@ public class TalkDetailFragment extends DetailsFragment {
             public void onActionClicked(Action action) {
 
                 if (action.getId() == Constants.TALK_DETAIL_ACTION_PLAY_VIDEO) {
-
                     // Check if the Android TV device has a the YouTube capabilities
                     if (YouTubeIntents.canResolvePlayVideoIntent(getActivity())) {
                         // open the video in fullscreen in YouTube native application
@@ -177,6 +181,12 @@ public class TalkDetailFragment extends DetailsFragment {
                         // unable to view the application
                         ((TalkDetailActivity) getActivity()).displayErrorMessage(R.string.error_youtube_player_failed);
                     }
+
+                } else if (action.getId() == Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST) {
+                    // add to the watchlist
+                    watchlistCache.upsert(mSelectedTalk.getTalkId());
+
+                    // TODO: if succeeded, change the icon
 
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
@@ -292,9 +302,9 @@ public class TalkDetailFragment extends DetailsFragment {
                 new Action(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO, getResources()
                         .getString(R.string.detail_header_action_play_video)));
 
-        adapter.set(Constants.TALK_DETAIL_ACTION_ADD_FAVORITIES,
-                new Action(Constants.TALK_DETAIL_ACTION_ADD_FAVORITIES, getResources()
-                        .getString(R.string.detail_header_action_add_Favorite)));
+        adapter.set(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST,
+                new Action(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST, getResources()
+                        .getString(R.string.detail_header_action_add_watchlist)));
 
 
         row.setActionsAdapter(adapter);

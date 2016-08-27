@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 @EBean
 public class SpeakersCache implements DataCache<List<Speaker>, String> {
 
-    private static final String SPEAKERS_CACHE_KEY = "speakers_cache_key";
-
     public static final long CACHE_LIFE_TIME_MS =
             TimeUnit.MINUTES.toMillis(Constants.CACHE_LIFE_TIME_MINS);
 
@@ -36,24 +34,24 @@ public class SpeakersCache implements DataCache<List<Speaker>, String> {
     @Override
     public String upsert(List<Speaker> speakers) {
         String speakersJSON = serializeData(speakers);
-        baseCache.upsert(serializeData(speakers), SPEAKERS_CACHE_KEY);
+        baseCache.upsert(serializeData(speakers), Constants.SPEAKERS_KEY);
         return speakersJSON;
     }
 
     @Override
     public List<Speaker> getData() {
-        final Optional<String> optionalCache = baseCache.getData(SPEAKERS_CACHE_KEY);
+        final Optional<String> optionalCache = baseCache.getData(Constants.SPEAKERS_KEY);
         return deserializeData(optionalCache.orElse(null));
     }
 
     @Override
     public boolean isValid() {
-        return baseCache.isValid(SPEAKERS_CACHE_KEY, CACHE_LIFE_TIME_MS);
+        return baseCache.isValid(Constants.SPEAKERS_KEY, CACHE_LIFE_TIME_MS);
     }
 
     @Override
     public void clearCache(String query) {
-        baseCache.clearCache(SPEAKERS_CACHE_KEY);
+        baseCache.clearCache(Constants.SPEAKERS_KEY);
     }
 
     @Override
@@ -71,7 +69,8 @@ public class SpeakersCache implements DataCache<List<Speaker>, String> {
         throw new IllegalStateException("Not needed here!");
     }
 
-     private List<Speaker> deserializeData(String fromCache) {
+
+    private List<Speaker> deserializeData(String fromCache) {
         return new Gson().fromJson(fromCache, getType());
     }
 

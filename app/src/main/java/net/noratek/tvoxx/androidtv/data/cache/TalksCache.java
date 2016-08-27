@@ -26,8 +26,6 @@ public class TalksCache implements DataCache<List<Talk>, String> {
 
     private static final String TAG = TalksCache.class.getSimpleName();
 
-    private static final String TALKS_CACHE_KEY = "talks_cache_key";
-
     public static final long CACHE_LIFE_TIME_MS =
             TimeUnit.MINUTES.toMillis(Constants.CACHE_LIFE_TIME_MINS);
 
@@ -41,13 +39,13 @@ public class TalksCache implements DataCache<List<Talk>, String> {
     @Override
     public String upsert(List<Talk> talks) {
         String talkssJSON = serializeData(talks);
-        baseCache.upsert(serializeData(talks), TALKS_CACHE_KEY);
+        baseCache.upsert(serializeData(talks), Constants.TALKS_KEY);
         return talkssJSON;
     }
 
     @Override
     public List<Talk> getData() {
-        final Optional<String> optionalData = baseCache.getData(TALKS_CACHE_KEY);
+        final Optional<String> optionalData = baseCache.getData(Constants.TALKS_KEY);
         return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
     }
 
@@ -82,12 +80,12 @@ public class TalksCache implements DataCache<List<Talk>, String> {
 
     @Override
     public boolean isValid() {
-        return baseCache.isValid(TALKS_CACHE_KEY, CACHE_LIFE_TIME_MS);
+        return baseCache.isValid(Constants.TALKS_KEY, CACHE_LIFE_TIME_MS);
     }
 
     @Override
     public void clearCache(String query) {
-        baseCache.clearCache(TALKS_CACHE_KEY);
+        baseCache.clearCache(Constants.TALKS_KEY);
     }
 
     @Override

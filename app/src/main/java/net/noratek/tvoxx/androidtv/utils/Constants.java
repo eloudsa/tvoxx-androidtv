@@ -32,7 +32,7 @@ public class Constants {
     // Card types
     public static final int CARD_TYPE_TALKS = 1;
     public static final int CARD_TYPE_SPEAKERS = 2;
-    public static final int CARD_TYPE_FAVORTIES = 3;
+    public static final int CARD_TYPE_WATCHLIST = 3;
     public static final int CARD_TYPE_ABOUT = 4;
     public static final int CARD_TYPE_RELATED_TALK = 5;
     public static final int CARD_TYPE_RELATED_SPEAKER = 6;
@@ -41,7 +41,7 @@ public class Constants {
     public static final int SPEAKER_DETAIL_ACTION_ADD_FAVORITIES = 1;
 
     public static final int TALK_DETAIL_ACTION_PLAY_VIDEO = 1;
-    public static final int TALK_DETAIL_ACTION_ADD_FAVORITIES = 2;
+    public static final int TALK_DETAIL_ACTION_ADD_WATCHLIST = 2;
 
 
     // Used in intent parameters
@@ -52,6 +52,7 @@ public class Constants {
     // Data Id
     public static final String SPEAKERS_KEY = "SPEAKERS_KEY";
     public static final String TALKS_KEY = "TALKS_KEY";
+    public static final String WATCHLIST_KEY = "WATCHLIST_KEY";
 
 
     // Etag Id
