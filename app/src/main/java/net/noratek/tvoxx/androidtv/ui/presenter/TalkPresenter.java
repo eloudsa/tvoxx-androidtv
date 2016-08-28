@@ -32,6 +32,31 @@ public class TalkPresenter extends Presenter {
     private int mDefaultBackgroundColor = -1;
     private Drawable mDefaultCardImage;
 
+    private int mWidth = -1;
+    private int mHeight = -1;
+
+
+/*
+
+
+    public TalkPresenter() {
+        mWidth = context.getDimensionPixelSize(R.dimen.talk_card_width);
+        mHeight = context.getDimensionPixelSize(R.dimen.talk_card_height);
+    }
+
+    public TalkPresenter(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+    */
+
+    public TalkPresenter(int width, int height) {
+        this.mWidth = width;
+        this.mHeight = height;
+    }
+
+    public TalkPresenter() {
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -86,8 +111,8 @@ public class TalkPresenter extends Presenter {
 
         // Set card size from dimension resources.
         Resources res = cardView.getResources();
-        final int width = res.getDimensionPixelSize(R.dimen.talk_card_width);
-        final int height = res.getDimensionPixelSize(R.dimen.talk_card_height);
+        final int width = mWidth != -1 ? mWidth : res.getDimensionPixelSize(R.dimen.talk_card_width);
+        final int height = mHeight != -1 ? mHeight :res.getDimensionPixelSize(R.dimen.talk_card_height);
         cardView.setMainImageDimensions(width, height);
 
         Glide.with(cardView.getContext())

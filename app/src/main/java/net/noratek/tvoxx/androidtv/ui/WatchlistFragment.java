@@ -11,7 +11,6 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
-import android.view.View;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
@@ -75,6 +74,7 @@ public class WatchlistFragment extends VerticalGridFragment {
 
     private void setupUIElements() {
         setTitle(getString(R.string.watchlist));
+        mBackgroundImageManager.updateBackgroundWithDelay(Utils.getUri(getActivity(), R.drawable.default_background));
     }
 
 
@@ -87,7 +87,10 @@ public class WatchlistFragment extends VerticalGridFragment {
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
 
-        mAdapter = new ArrayObjectAdapter(new TalkPresenter());
+        int width = getResources().getDimensionPixelSize(R.dimen.watchlist_width);
+        int height = getResources().getDimensionPixelSize(R.dimen.watchlist_height);
+
+        mAdapter = new ArrayObjectAdapter(new TalkPresenter(width, height));
 
         List<String> watchlist = watchlistCache.getData();
         if (watchlist == null) {
@@ -111,14 +114,7 @@ public class WatchlistFragment extends VerticalGridFragment {
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
-        setOnItemViewSelectedListener(new ItemViewSelectedListener());
-
-        setOnSearchClickedListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        //setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
 

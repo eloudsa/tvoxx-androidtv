@@ -183,10 +183,20 @@ public class TalkDetailFragment extends DetailsFragment {
                     }
 
                 } else if (action.getId() == Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST) {
-                    // add to the watchlist
-                    watchlistCache.upsert(mSelectedTalk.getTalkId());
 
-                    // TODO: if succeeded, change the icon
+                    Boolean isWatchlist = watchlistCache.isExist(mTalkId);
+
+                    if (isWatchlist) {
+                        // remove from the watchlist
+                        watchlistCache.remove(mTalkId);
+                    } else {
+                        // add to the watchlist
+                        watchlistCache.upsert(mTalkId);
+                    }
+
+                    updateWatchlistAction(action);
+
+                    mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
 
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
@@ -302,18 +312,24 @@ public class TalkDetailFragment extends DetailsFragment {
                 new Action(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO, getResources()
                         .getString(R.string.detail_header_action_play_video)));
 
-        Boolean isWatchlist = watchlistCache.isExist(mTalkId);
 
-        adapter.set(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST,
-                new Action(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST,
-                        getResources().getString(isWatchlist ? R.string.detail_header_action_remove_from : R.string.detail_header_action_add_to),
-                        getResources().getString(R.string.watchlist).toUpperCase(),
-                        ContextCompat.getDrawable(getActivity(), isWatchlist ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off)));
-
+        Action action = new Action(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST);
+        adapter.set(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST, updateWatchlistAction(action));
 
         row.setActionsAdapter(adapter);
 
         mAdapter.add(row);
+    }
+
+    private Action updateWatchlistAction(Action action){
+
+        Boolean isWatchlist = watchlistCache.isExist(mTalkId);
+
+        action.setLabel1(getResources().getString(isWatchlist ? R.string.detail_header_action_remove_from : R.string.detail_header_action_add_to));
+        action.setLabel2(getResources().getString(R.string.watchlist).toUpperCase());
+        action.setIcon(ContextCompat.getDrawable(getActivity(), isWatchlist ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off));
+
+        return action;
     }
 
 

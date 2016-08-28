@@ -42,6 +42,33 @@ public class WatchlistCache implements DataCache<List<String>, String> {
     }
 
 
+    public void remove(String talkId) {
+        List<String> watchlist = getData(Constants.WATCHLIST_KEY);
+        if (watchlist == null) {
+            return;
+        }
+
+        // search and remove the talk
+        int index = 0;
+        for (String currTalkId : watchlist) {
+            if (currTalkId.equalsIgnoreCase(talkId)) {
+                watchlist.remove(index);
+                break;
+            }
+            index++;
+        }
+
+        if (watchlist.size() == 0) {
+            // no more talks in wathclist -> remove the list
+            clearCache(Constants.WATCHLIST_KEY);
+        } else {
+            // save the new list
+            upsert(watchlist);
+        }
+    }
+
+
+
     @Override
     public String upsert(List<String> watchlist) {
         String speakersJSON = serializeData(watchlist);
