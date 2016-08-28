@@ -12,6 +12,6 @@ public class WatchlistActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
     }
 }

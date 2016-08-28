@@ -52,18 +52,28 @@ public class WatchlistFragment extends VerticalGridFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
 
         // Prepare the manager that maintains the same background image between activities.
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         mSpinnerFragment = new SpinnerFragment();
 
+        int width = getResources().getDimensionPixelSize(R.dimen.watchlist_width);
+        int height = getResources().getDimensionPixelSize(R.dimen.watchlist_height);
+
+        mAdapter = new ArrayObjectAdapter(new TalkPresenter(width, height));
+
         setupUIElements();
         setupEventListeners();
         loadRows();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadRows();
+    }
 
     @Override
     public void onStop() {
@@ -80,17 +90,14 @@ public class WatchlistFragment extends VerticalGridFragment {
 
     private void loadRows() {
 
+        mAdapter.clear();
+
         // Display the spinner
         getFragmentManager().beginTransaction().add(R.id.watchlist_fragment, mSpinnerFragment).commit();
 
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
-
-        int width = getResources().getDimensionPixelSize(R.dimen.watchlist_width);
-        int height = getResources().getDimensionPixelSize(R.dimen.watchlist_height);
-
-        mAdapter = new ArrayObjectAdapter(new TalkPresenter(width, height));
 
         List<String> watchlist = watchlistCache.getData();
         if (watchlist == null) {
