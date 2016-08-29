@@ -138,6 +138,8 @@ public class SpeakersFragment extends VerticalGridFragment {
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
 
+            mBackgroundImageManager.cancel();
+
             String imageUrl = null;
 
             if (item instanceof CardModel) {
