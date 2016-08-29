@@ -38,8 +38,6 @@ public class Constants {
     public static final int CARD_TYPE_RELATED_SPEAKER = 6;
 
     // Details: Header actions
-    public static final int SPEAKER_DETAIL_ACTION_ADD_FAVORITIES = 1;
-
     public static final int TALK_DETAIL_ACTION_PLAY_VIDEO = 1;
     public static final int TALK_DETAIL_ACTION_ADD_WATCHLIST = 2;
 

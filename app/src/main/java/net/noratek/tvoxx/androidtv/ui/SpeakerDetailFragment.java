@@ -44,7 +44,6 @@ import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
-import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.Bean;
@@ -261,11 +260,6 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
 
         SparseArrayObjectAdapter adapter = new SparseArrayObjectAdapter();
-
-        adapter.set(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES,
-                new Action(Constants.SPEAKER_DETAIL_ACTION_ADD_FAVORITIES, "to remove"));
-
-        row.setActionsAdapter(adapter);
 
         mAdapter.add(row);
     }
