@@ -3,6 +3,10 @@ package net.noratek.tvoxx.androidtv.ui.presenter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,7 +23,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.utils.Utils;
-
 
 
 public class TalkPresenter extends Presenter {
@@ -97,7 +100,7 @@ public class TalkPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
-        Talk talk = (Talk) item;
+        final Talk talk = (Talk) item;
 
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(talk.getTitle());
@@ -112,7 +115,7 @@ public class TalkPresenter extends Presenter {
         // Set card size from dimension resources.
         Resources res = cardView.getResources();
         final int width = mWidth != -1 ? mWidth : res.getDimensionPixelSize(R.dimen.talk_card_width);
-        final int height = mHeight != -1 ? mHeight :res.getDimensionPixelSize(R.dimen.talk_card_height);
+        final int height = mHeight != -1 ? mHeight : res.getDimensionPixelSize(R.dimen.talk_card_height);
         cardView.setMainImageDimensions(width, height);
 
         Glide.with(cardView.getContext())
@@ -124,7 +127,13 @@ public class TalkPresenter extends Presenter {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
                             glideAnimation) {
+
+
+                        // display the duration over the image
+                        showDuration(resource, cardView, talk.getDurationInSeconds());
+
                         cardView.setMainImage(new BitmapDrawable(mContext.getResources(), resource));
+
                     }
 
                     @Override
@@ -132,6 +141,44 @@ public class TalkPresenter extends Presenter {
                         cardView.setMainImage(null);
                     }
                 });
+    }
+
+
+    private void showDuration(Bitmap resource, ImageCardView cardView, int durationInSeconds) {
+
+        // format the duration
+        String text = Utils.formatVideoDuration(durationInSeconds);
+
+        // prepare the background
+        Paint rectPaint = new Paint();
+        rectPaint.setColor(Color.BLACK);
+        rectPaint.setStyle(Paint.Style.FILL);
+        rectPaint.setAlpha(100);
+
+        // prepare the text
+        Paint txtPaint = new Paint();
+        txtPaint.setColor(Color.WHITE);
+        txtPaint.setTextSize(30);  //set text size
+
+        // get the text size
+        Rect bounds = new Rect();
+        txtPaint.getTextBounds(text, 0, text.length(), bounds);
+        int width = bounds.left + bounds.width();
+
+        txtPaint.getTextBounds(text, 0, text.length(), bounds);
+        int height = bounds.bottom + bounds.height();
+
+        int margin = 10;
+
+        float top = cardView.getTop();
+        float right = cardView.getRight();
+
+        Canvas canvas = new Canvas(resource);
+
+        // draw the duration over the image
+        canvas.drawRect(right - width - margin, top, right, top + height + margin, rectPaint);
+        canvas.drawText(text, right - width - (margin / 2), top + height + (margin / 2), txtPaint);
+
     }
 
     @Override

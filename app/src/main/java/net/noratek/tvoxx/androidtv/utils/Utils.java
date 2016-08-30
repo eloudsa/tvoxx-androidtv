@@ -56,4 +56,22 @@ public class Utils {
     }
 
 
+    public static String formatVideoDuration(int seconds) {
+
+        String duration;
+
+        int hh = seconds / 3600;
+        int mm = (seconds / 60) % 60;
+        int ss = seconds % 60;
+
+        if (hh > 0) {
+            duration = String.format("%d:%02d:%02d", hh, mm, ss);
+        } else {
+            duration = String.format("%02d:%02d", mm, ss);
+        }
+
+        return duration;
+
+    }
+
 }
