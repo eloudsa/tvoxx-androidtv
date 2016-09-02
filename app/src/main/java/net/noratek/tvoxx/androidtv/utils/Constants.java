@@ -6,7 +6,8 @@ package net.noratek.tvoxx.androidtv.utils;
 public class Constants {
 
     // location of the TVoxx Rest API server
-    public static final String TVOXX_API_URL = "http://devoxx-proxy.cfapps.io/api/";
+    //public static final String TVOXX_API_URL = "http://devoxx-proxy.cfapps.io/api/";
+    public static final String TVOXX_API_URL = "http://192.168.1.39:8080/api/";
 
     // location of the fallback JSON data files
     public static final String SPEAKERS_JSON_DATA_FILE = "data/speakers.json";
@@ -20,7 +21,8 @@ public class Constants {
     public static final int CONNECTION_TIMEOUT = 60;
 
     // Lifetime of data
-    public static final int CACHE_LIFE_TIME_MINS = 1440;
+    //public static final int CACHE_LIFE_TIME_MINS = 1440;
+    public static final int CACHE_LIFE_TIME_MINS = 1;
 
 
     // Header position

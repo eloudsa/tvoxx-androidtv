@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -102,16 +103,16 @@ public class BackgroundImageManager {
 
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        Log.e(TAG, e.getMessage());
                         mBackgroundManager.setDrawable(mDefaultBackground);
                     }
 
                     @Override
                     public void onDestroy() {
-                        Glide.get(mActivity).clearMemory();
+                        cancel();
                         super.onDestroy();
                     }
                 });
-        mBackgroundTimer.cancel();
     }
 
     public void cancel() {

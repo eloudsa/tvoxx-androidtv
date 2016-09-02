@@ -23,6 +23,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.model.RealmString;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
@@ -88,10 +89,17 @@ public class TalkPresenter extends Presenter {
         updateCardBackgroundColor(cardView, false);
 
         // set a marquee on the title
-        TextView textView = (TextView) cardView.findViewById(R.id.title_text);
-        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        textView.setMarqueeRepeatLimit(-1);
-        textView.setSingleLine();
+        TextView titleView = (TextView) cardView.findViewById(R.id.title_text);
+        titleView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        titleView.setMarqueeRepeatLimit(-1);
+        titleView.setSingleLine();
+
+        // set a marquee on speakers
+        TextView contentView = (TextView) cardView.findViewById(R.id.content_text);
+        contentView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        contentView.setMarqueeRepeatLimit(-1);
+        contentView.setSingleLine();
+
 
         return new ViewHolder(cardView);
     }
@@ -113,6 +121,13 @@ public class TalkPresenter extends Presenter {
 
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(talk.getTitle());
+
+        String speakerNames = "";
+        for (RealmString speakerName : talk.getSpeakerNames()) {
+            speakerNames += speakerNames.length() > 0 ? " \u2022 " + speakerName.value : speakerName.value;
+        }
+        cardView.setContentText(speakerNames);
+
 
         Uri uri;
         if (talk.getThumbnailUrl() != null) {

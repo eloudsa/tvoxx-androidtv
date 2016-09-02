@@ -1,34 +1,43 @@
 package net.noratek.tvoxx.androidtv.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+
+import net.noratek.tvoxx.androidtv.model.converter.RealmListParcelConverter;
+
+import org.parceler.Parcel;
+import org.parceler.ParcelPropertyConverter;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.TalkRealmProxy;
 import io.realm.annotations.PrimaryKey;
 
-public class Talk extends RealmObject implements Parcelable {
+@Parcel(implementations = { TalkRealmProxy.class },
+		value = Parcel.Serialization.FIELD,
+		analyze = { Talk.class })
+public class Talk extends RealmObject  {
 	@PrimaryKey
-	private String talkId;
-	private String talkType;
-	private String trackId;
-	private String trackTitle;
-	private String title;
-	private String conferenceEventCode;
-	private String conferenceLabel;
-	private String summary;
-	private String lang;
-	private String youtubeVideoId;
-	private String thumbnailUrl;
-	private float averageRating;
-	private int numberOfRatings;
-	private int durationInSeconds;
+	public String talkId;
+	public String talkType;
+	public String trackId;
+	public String trackTitle;
+	public String title;
+	public String conferenceEventCode;
+	public String conferenceLabel;
+	public String summary;
+	public String lang;
+	public String youtubeVideoId;
+	public String thumbnailUrl;
+	public float averageRating;
+	public int numberOfRatings;
+	public int durationInSeconds;
 
-	private RealmList<Speaker> speakers;
+	@ParcelPropertyConverter(RealmListParcelConverter.class)
+	public RealmList<RealmString> speakerNames;
+
+	@ParcelPropertyConverter(RealmListParcelConverter.class)
+	public RealmList<Speaker> speakers;
 
 
-	public Talk() {
-	}
 
 	public String getTalkId() {
 		return talkId;
@@ -150,57 +159,11 @@ public class Talk extends RealmObject implements Parcelable {
 		this.speakers = speakers;
 	}
 
-	@Override
-	public int describeContents() {
-		return 0;
+	public RealmList<RealmString> getSpeakerNames() {
+		return speakerNames;
 	}
 
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.talkId);
-		dest.writeString(this.talkType);
-		dest.writeString(this.trackId);
-		dest.writeString(this.trackTitle);
-		dest.writeString(this.title);
-		dest.writeString(this.conferenceEventCode);
-		dest.writeString(this.conferenceLabel);
-		dest.writeString(this.summary);
-		dest.writeString(this.lang);
-		dest.writeString(this.youtubeVideoId);
-		dest.writeString(this.thumbnailUrl);
-		dest.writeFloat(this.averageRating);
-		dest.writeInt(this.numberOfRatings);
-		dest.writeInt(this.durationInSeconds);
-
-		dest.writeTypedList(this.speakers);
+	public void setSpeakerNames(RealmList<RealmString> speakerNames) {
+		this.speakerNames = speakerNames;
 	}
-
-	protected Talk(Parcel in) {
-		this.talkId = in.readString();;
-		this.talkType = in.readString();;
-		this.trackId = in.readString();;
-		this.trackTitle = in.readString();;
-		this.title = in.readString();;
-		this.conferenceEventCode = in.readString();;
-		this.conferenceLabel = in.readString();;
-		this.summary = in.readString();;
-		this.lang = in.readString();;
-		this.youtubeVideoId = in.readString();;
-		this.thumbnailUrl = in.readString();;
-		this.averageRating = in.readFloat();
-		this.numberOfRatings = in.readInt();
-		this.durationInSeconds = in.readInt();
-		in.readTypedList(speakers, Speaker.CREATOR);
-	}
-
-	public static final Creator<Talk> CREATOR = new Creator<Talk>() {
-		public Talk createFromParcel(Parcel source) {
-			return new Talk(source);
-		}
-
-		public Talk[] newArray(int size) {
-			return new Talk[size];
-		}
-	};
 }

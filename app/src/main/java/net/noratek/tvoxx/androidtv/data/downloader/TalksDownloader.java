@@ -58,6 +58,7 @@ public class TalksDownloader {
         // Retrieve any previous etag
         Etag etag = etagCache.getData(Constants.ETAG_TALKS);
 
+
         // retrieve the list of talks from the server
         Call<List<Talk>> call = connection.getTvoxxApi().getAllTalks(etag != null ? etag.getEtag() : "");
         call.enqueue(new Callback<List<Talk>>() {

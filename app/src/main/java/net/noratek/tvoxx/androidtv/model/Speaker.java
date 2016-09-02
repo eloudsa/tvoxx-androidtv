@@ -1,26 +1,32 @@
 package net.noratek.tvoxx.androidtv.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import net.noratek.tvoxx.androidtv.model.converter.RealmListParcelConverter;
+
+import org.parceler.Parcel;
+import org.parceler.ParcelPropertyConverter;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.SpeakerRealmProxy;
 import io.realm.annotations.PrimaryKey;
 
-public class Speaker extends RealmObject implements Parcelable {
+
+@Parcel(implementations = { SpeakerRealmProxy.class },
+		value = Parcel.Serialization.FIELD,
+		analyze = { Speaker.class })
+public class Speaker extends RealmObject {
 	@PrimaryKey
-	private String uuid;
-	private String firstName;
-	private String lastName;
-	private String lang;
-	private String company;
-	private String avatarUrl;
-	private String bio;
-	private RealmList<Talk> talks;
+	public String uuid;
+	public String firstName;
+	public String lastName;
+	public String lang;
+	public String company;
+	public String avatarUrl;
+	public String bio;
 
+	@ParcelPropertyConverter(RealmListParcelConverter.class)
+	public RealmList<Talk> talks;
 
-	public Speaker() {
-	}
 
 	public String getUuid() {
 		return uuid;
@@ -46,6 +52,22 @@ public class Speaker extends RealmObject implements Parcelable {
 		this.lastName = lastName;
 	}
 
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 	public String getAvatarUrl() {
 		return avatarUrl;
 	}
@@ -62,22 +84,6 @@ public class Speaker extends RealmObject implements Parcelable {
 		this.bio = bio;
 	}
 
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public String getLang() {
-		return lang;
-	}
-
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-
 	public RealmList<Talk> getTalks() {
 		return talks;
 	}
@@ -85,43 +91,4 @@ public class Speaker extends RealmObject implements Parcelable {
 	public void setTalks(RealmList<Talk> talks) {
 		this.talks = talks;
 	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.uuid);
-		dest.writeString(this.firstName);
-		dest.writeString(this.lastName);
-		dest.writeString(this.lang);
-		dest.writeString(this.company);
-		dest.writeString(this.avatarUrl);
-		dest.writeString(this.bio);
-		dest.writeTypedList(this.talks);
-	}
-
-	protected Speaker(Parcel in) {
-		this.uuid = in.readString();
-		this.firstName = in.readString();
-		this.lastName = in.readString();
-		this.lang = in.readString();
-		this.company = in.readString();
-		this.avatarUrl= in.readString();
-		this.bio= in.readString();
-		in.readTypedList(talks, Talk.CREATOR);
-	}
-
-	public static final Parcelable.Creator<Speaker> CREATOR = new Parcelable.Creator<Speaker>() {
-		public Speaker createFromParcel(Parcel source) {
-			return new Speaker(source);
-		}
-
-		public Speaker[] newArray(int size) {
-			return new Speaker[size];
-		}
-	};
 }

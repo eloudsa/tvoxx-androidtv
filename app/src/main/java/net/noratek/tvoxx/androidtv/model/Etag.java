@@ -1,15 +1,12 @@
 package net.noratek.tvoxx.androidtv.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by eloudsa on 22/08/16.
  */
-public class Etag extends RealmObject implements Parcelable {
+public class Etag extends RealmObject {
 
     @PrimaryKey
     private String id;
@@ -50,33 +47,5 @@ public class Etag extends RealmObject implements Parcelable {
     public void setUrl(String url) {
         this.url = url;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.eTag);
-        dest.writeString(this.url);
-    }
-
-    protected Etag(Parcel in) {
-        this.eTag = in.readString();
-        this.url = in.readString();
-    }
-
-    public static final Parcelable.Creator<Etag> CREATOR = new Parcelable.Creator<Etag>() {
-        public Etag createFromParcel(Parcel source) {
-            return new Etag(source);
-        }
-
-        public Etag[] newArray(int size) {
-            return new Etag[size];
-        }
-    };
-
 
 }

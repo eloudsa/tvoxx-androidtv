@@ -73,6 +73,7 @@ public class SpeakersFragment extends VerticalGridFragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        mBackgroundImageManager.cancel();
         super.onStop();
     }
 

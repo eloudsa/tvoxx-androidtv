@@ -83,10 +83,17 @@ public class TalkDetailFragment extends DetailsFragment {
     private String mTalkId;
     private Talk mSelectedTalk;
 
+    // Background image
+    private BackgroundImageManager mBackgroundImageManager;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Prepare the manager that maintains the same background image between activities.
+        mBackgroundImageManager = new BackgroundImageManager(getActivity());
      }
 
     @Override
@@ -127,6 +134,7 @@ public class TalkDetailFragment extends DetailsFragment {
     public void onStop() {
         Log.d(TAG, "----- UNregister eventbus");
         EventBus.getDefault().unregister(TalkDetailFragment.this);
+        mBackgroundImageManager.cancel();
         super.onStop();
     }
 
@@ -260,8 +268,17 @@ public class TalkDetailFragment extends DetailsFragment {
     private void setupDetailsOverviewRow(Talk talk) {
 
         // change the background image
-        BackgroundImageManager backgroundImageManager = new BackgroundImageManager(getActivity());
-        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(talk.getThumbnailUrl()));
+        //mBackgroundImageManager.cancel();
+
+        /*
+        Log.d(TAG, "Before updateBackgroundWithDelay");
+        Log.d(TAG, "Thumbnail: " + Uri.parse(talk.getThumbnailUrl().toString()));
+        mBackgroundImageManager.updateBackgroundWithDelay(talk.getThumbnailUrl());
+        Log.d(TAG, "After updateBackgroundWithDelay");
+*/
+
+        // Following code doesn't crash the app
+        // /mBackgroundImageManager.updateBackgroundWithDelay(Utils.getUri(getActivity(), R.drawable.conferences));
 
 
         final DetailsOverviewRow row = new DetailsOverviewRow(talk);
@@ -277,7 +294,7 @@ public class TalkDetailFragment extends DetailsFragment {
         final int width = getResources().getDimensionPixelSize(R.dimen.detail_thumb_width);
         final int height = getResources().getDimensionPixelSize(R.dimen.detail_thumb_heigth);
 
-        Glide.with(this)
+       Glide.with(this)
                 .load(uri)
                 .asBitmap()
                 .dontAnimate()
@@ -294,6 +311,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        Log.e(TAG, e.getMessage());
                         row.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.conferences));
                         startEntranceTransition();
                     }
@@ -304,7 +322,6 @@ public class TalkDetailFragment extends DetailsFragment {
                         super.onDestroy();
                     }
                 });
-
 
         SparseArrayObjectAdapter adapter = new SparseArrayObjectAdapter();
 
