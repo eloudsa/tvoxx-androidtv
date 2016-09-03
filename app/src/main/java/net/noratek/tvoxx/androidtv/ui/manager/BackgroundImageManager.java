@@ -55,7 +55,6 @@ public class BackgroundImageManager {
        updateBackgroundWithDelay(Uri.parse(url));
     }
 
-
     private void startBackgroundTimer() {
         if (null != mBackgroundTimer) {
             mBackgroundTimer.cancel();
@@ -75,6 +74,7 @@ public class BackgroundImageManager {
                         updateBackground(mBackgroundURI.toString());
                     } else {
                         mBackgroundManager.setDrawable(mDefaultBackground);
+                        mBackgroundTimer.cancel();
                     }
                 }
             });
@@ -113,14 +113,19 @@ public class BackgroundImageManager {
                         super.onDestroy();
                     }
                 });
+
+        mBackgroundTimer.cancel();
     }
 
     public void cancel() {
         if (null != mBackgroundTimer) {
             mBackgroundTimer.cancel();
+            mBackgroundTimer = null;
         }
 
-        Glide.get(mActivity).clearMemory();
+        mBackgroundManager.release();
+
+        //Glide.get(mActivity).clearMemory();
     }
 
 

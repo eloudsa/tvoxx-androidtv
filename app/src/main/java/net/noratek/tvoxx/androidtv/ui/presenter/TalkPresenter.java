@@ -82,6 +82,14 @@ public class TalkPresenter extends Presenter {
         };
 
 
+        customizeCarView(cardView);
+
+        return new ViewHolder(cardView);
+    }
+
+
+    private void customizeCarView(ImageCardView cardView) {
+
         cardView.setCardType(BaseCardView.CARD_TYPE_INFO_UNDER_WITH_EXTRA);
         cardView.setInfoVisibility(BaseCardView.CARD_REGION_VISIBLE_ALWAYS);
         cardView.setFocusable(true);
@@ -100,8 +108,6 @@ public class TalkPresenter extends Presenter {
         contentView.setMarqueeRepeatLimit(-1);
         contentView.setSingleLine();
 
-
-        return new ViewHolder(cardView);
     }
 
 

@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -89,14 +88,6 @@ public class TalkDetailFragment extends DetailsFragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Prepare the manager that maintains the same background image between activities.
-        mBackgroundImageManager = new BackgroundImageManager(getActivity());
-     }
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -128,11 +119,15 @@ public class TalkDetailFragment extends DetailsFragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        mBackgroundImageManager = null;
+        super.onDestroy();
+    }
 
 
     @Override
     public void onStop() {
-        Log.d(TAG, "----- UNregister eventbus");
         EventBus.getDefault().unregister(TalkDetailFragment.this);
         mBackgroundImageManager.cancel();
         super.onStop();
@@ -157,6 +152,14 @@ public class TalkDetailFragment extends DetailsFragment {
 
 
     private void setupAdapter() {
+
+        // Prepare the manager that maintains the same background image between activities.
+        if (mBackgroundImageManager != null) {
+            mBackgroundImageManager.cancel();
+            mBackgroundImageManager = null;
+        }
+        mBackgroundImageManager = new BackgroundImageManager(getActivity());
+
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
                 new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(),
@@ -268,14 +271,7 @@ public class TalkDetailFragment extends DetailsFragment {
     private void setupDetailsOverviewRow(Talk talk) {
 
         // change the background image
-        //mBackgroundImageManager.cancel();
-
-        /*
-        Log.d(TAG, "Before updateBackgroundWithDelay");
-        Log.d(TAG, "Thumbnail: " + Uri.parse(talk.getThumbnailUrl().toString()));
         mBackgroundImageManager.updateBackgroundWithDelay(talk.getThumbnailUrl());
-        Log.d(TAG, "After updateBackgroundWithDelay");
-*/
 
         // Following code doesn't crash the app
         // /mBackgroundImageManager.updateBackgroundWithDelay(Utils.getUri(getActivity(), R.drawable.conferences));
