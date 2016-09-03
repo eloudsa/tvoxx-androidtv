@@ -160,6 +160,21 @@ public class Talk extends RealmObject  {
 	}
 
 	public RealmList<RealmString> getSpeakerNames() {
+
+		if ((speakerNames == null) && ((speakers) != null) && (speakers.size() > 0)) {
+			// Retrieve the speakers name from the list of speakers
+
+			RealmList<RealmString> speakersList = new RealmList<>();
+
+			for (Speaker speaker : speakers) {
+				RealmString fullName = new RealmString();
+				fullName.value = speaker.getFirstName() + " " + speaker.getLastName();
+				speakersList.add(fullName);
+			}
+
+			return speakersList;
+		}
+
 		return speakerNames;
 	}
 
