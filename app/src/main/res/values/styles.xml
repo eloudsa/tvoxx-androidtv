@@ -2,4 +2,11 @@
 <resources>
 
     <style name="AppTheme" parent="@style/Theme.Leanback"></style>
+
+
+    <style name="RatingBar" parent="style/Theme.AppCompat">
+        <item name="colorControlNormal">@color/rating_off</item>
+        <item name="colorControlActivated">@color/rating_on</item>
+    </style>
+
 </resources>

@@ -82,13 +82,13 @@ public class TalkPresenter extends Presenter {
         };
 
 
-        customizeCarView(cardView);
+        customizeCardView(cardView);
 
         return new ViewHolder(cardView);
     }
 
 
-    private void customizeCarView(ImageCardView cardView) {
+    private void customizeCardView(ImageCardView cardView) {
 
         cardView.setCardType(BaseCardView.CARD_TYPE_INFO_UNDER_WITH_EXTRA);
         cardView.setInfoVisibility(BaseCardView.CARD_REGION_VISIBLE_ALWAYS);

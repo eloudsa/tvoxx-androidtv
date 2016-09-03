@@ -9,4 +9,8 @@
 
     <color name="spinner_color">#f5af33</color>
 
+    <color name="rating_on">#FFFF00</color>
+    <color name="rating_off">#9E9E9E</color>
+
+
 </resources>

@@ -19,6 +19,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import net.noratek.tvoxx.androidtv.R;
@@ -38,52 +39,7 @@ public class DetailDescriptionPresenter extends Presenter {
         this.mContext = context;
     }
 
-    /*
-    @Override
-    protected void onBindDescription(ViewHolder viewHolder, Object item) {
-
-        if (item == null) {
-            return;
-        }
-
-        String title = "";
-        String subTitle = "";
-        String body = "";
-
-        if (item instanceof Speaker) {
-
-            Speaker speaker = (Speaker) item;
-
-            title = speaker.getFirstName() + " " + speaker.getLastName();
-            subTitle = speaker.getCompany();
-            body = speaker.getBio();
-
-
-        } else if (item instanceof Talk) {
-
-            Talk talk = (Talk) item;
-
-            title = talk.getTitle();
-            subTitle = talk.getConferenceLabel();
-            body = talk.getSummary();
-        }
-
-
-        viewHolder.getTitle().setText(title);
-        viewHolder.getSubtitle().setText(subTitle);
-        viewHolder.getBody().setText(body);
-
-        //viewHolder.
-
-        viewHolder.getBody().setMaxLines(10);
-
-
-    }
-    */
-
-
-
-    @Override public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
+     @Override public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.detail_view_content, null);
         return new Presenter.ViewHolder(view);
     }
@@ -93,8 +49,7 @@ public class DetailDescriptionPresenter extends Presenter {
         TextView sndText1 = mResourceCache.getViewById(viewHolder.view, R.id.secondary_text_first);
         TextView sndText2 = mResourceCache.getViewById(viewHolder.view, R.id.secondary_text_second);
         TextView extraText = mResourceCache.getViewById(viewHolder.view, R.id.extra_text);
-
-
+        RatingBar ratingBar = mResourceCache.getViewById(viewHolder.view, R.id.ratingBar);
 
         if (item == null) {
             return;
@@ -112,7 +67,8 @@ public class DetailDescriptionPresenter extends Presenter {
             subTitle = speaker.getCompany();
             body = speaker.getBio();
 
-            sndText1.setVisibility(View.GONE);
+            sndText2.setVisibility(View.GONE);
+            ratingBar.setVisibility(View.GONE);
 
 
         } else if (item instanceof Talk) {
@@ -122,16 +78,22 @@ public class DetailDescriptionPresenter extends Presenter {
             title = talk.getTitle();
             subTitle = talk.getConferenceLabel();
             body = talk.getSummary();
+
+            int durationMins = talk.getDurationInSeconds() / 60;
+            sndText2.setText(durationMins + " " + mContext.getResources().getString(R.string.mins));
+
+            ratingBar.setStepSize((float) 0.1);
+            ratingBar.setRating(talk.getAverageRating());
         }
 
         primaryText.setText(title);
         sndText1.setText(subTitle);
-        sndText2.setText("Year ");
         extraText.setText(body);
     }
 
-    @Override public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        // Nothing to do here.
+    @Override
+    public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
+
     }
 
 
