@@ -24,6 +24,8 @@ android {
     }
 }
 
+def SUPPORT_LIBRARY_VERSION = "23.4.0"
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -35,22 +37,32 @@ dependencies {
     apt 'org.androidannotations:androidannotations:4.0.0'
 
 
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:leanback-v17:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'org.androidannotations:androidannotations-api:4.0.0'
-    compile 'com.annimon:stream:1.1.1'
-    compile 'org.greenrobot:eventbus:3.0.0'
+    // SDK
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:leanback-v17:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
+
+
+    compile "com.github.bumptech.glide:glide:3.7.0"
+
+    // Rest
+    compile "com.squareup.okhttp3:okhttp:3.3.1"
+    compile "com.squareup.retrofit2:converter-gson:2.1.0"
+
+
+    compile "org.androidannotations:androidannotations-api:4.0.0"
+
+    // Used for Optional in the caching mechanism
+    compile "com.annimon:stream:1.1.1"
+
+    compile "org.greenrobot:eventbus:3.0.0"
 
 
     // Youtube API
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 
     // Parceler
-    compile 'org.parceler:parceler-api:1.1.5'
-    apt 'org.parceler:parceler:1.1.5'
+    compile "org.parceler:parceler-api:1.1.5"
+    apt "org.parceler:parceler:1.1.5"
 
 }
