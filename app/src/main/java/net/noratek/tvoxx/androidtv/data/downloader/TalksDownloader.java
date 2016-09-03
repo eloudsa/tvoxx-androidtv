@@ -87,7 +87,7 @@ public class TalksDownloader {
 
             @Override
             public void onFailure(Call<List<Talk>> call, Throwable t) {
-                Log.e(TAG, "On Failure");
+                Log.e(TAG, "On Failure: " + t.getMessage());
                 EventBus.getDefault().post(new TalksEvent());
             }
         });
@@ -134,7 +134,7 @@ public class TalksDownloader {
 
             @Override
             public void onFailure(Call<Talk> call, Throwable t) {
-                Log.e(TAG, "On Failure");
+                Log.e(TAG, "On Failure: " + t.getMessage());
             }
         });
 

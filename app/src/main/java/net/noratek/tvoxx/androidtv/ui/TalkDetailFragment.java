@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -73,6 +74,9 @@ public class TalkDetailFragment extends DetailsFragment {
     WatchlistCache watchlistCache;
 
 
+    OnItemViewClickedListener onItemViewClickedListener;
+
+
     private SpinnerFragment mSpinnerFragment;
 
     private FullWidthDetailsOverviewSharedElementHelper mHelper;
@@ -86,6 +90,12 @@ public class TalkDetailFragment extends DetailsFragment {
     private BackgroundImageManager mBackgroundImageManager;
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        onItemViewClickedListener = new ItemViewClickedListener();
+    }
 
     @Override
     public void onStart() {
@@ -115,7 +125,7 @@ public class TalkDetailFragment extends DetailsFragment {
         }
 
         // When a Related item is clicked.
-        setOnItemViewClickedListener(new ItemViewClickedListener());
+        setOnItemViewClickedListener(onItemViewClickedListener);
     }
 
 
@@ -129,7 +139,9 @@ public class TalkDetailFragment extends DetailsFragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(TalkDetailFragment.this);
-        mBackgroundImageManager.cancel();
+        if (mBackgroundImageManager != null) {
+            mBackgroundImageManager.cancel();
+        }
         super.onStop();
     }
 
@@ -272,10 +284,6 @@ public class TalkDetailFragment extends DetailsFragment {
 
         // change the background image
         mBackgroundImageManager.updateBackgroundWithDelay(talk.getThumbnailUrl());
-
-        // Following code doesn't crash the app
-        // /mBackgroundImageManager.updateBackgroundWithDelay(Utils.getUri(getActivity(), R.drawable.conferences));
-
 
         final DetailsOverviewRow row = new DetailsOverviewRow(talk);
 

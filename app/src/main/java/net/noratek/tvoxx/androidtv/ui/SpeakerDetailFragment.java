@@ -72,6 +72,9 @@ public class SpeakerDetailFragment extends DetailsFragment {
     private ClassPresenterSelector mPresenterSelector;
     private ArrayObjectAdapter mAdapter;
 
+    // Background image
+    private BackgroundImageManager mBackgroundImageManager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,9 +108,21 @@ public class SpeakerDetailFragment extends DetailsFragment {
     }
 
 
+
+    @Override
+    public void onDestroy() {
+        mBackgroundImageManager = null;
+        super.onDestroy();
+    }
+
+
+
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        if (mBackgroundImageManager != null) {
+            mBackgroundImageManager.cancel();
+        }
         super.onStop();
     }
 
@@ -128,6 +143,14 @@ public class SpeakerDetailFragment extends DetailsFragment {
     }
 
     private void setupAdapter() {
+
+        // Prepare the manager that maintains the same background image between activities.
+        if (mBackgroundImageManager != null) {
+            mBackgroundImageManager.cancel();
+            mBackgroundImageManager = null;
+        }
+        mBackgroundImageManager = new BackgroundImageManager(getActivity());
+
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
                 new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(),
@@ -213,9 +236,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
     private void setupDetailsOverviewRow(Speaker speaker) {
 
         // change the background image
-        BackgroundImageManager backgroundImageManager = new BackgroundImageManager(getActivity());
-        backgroundImageManager.updateBackgroundWithDelay(Uri.parse(speaker.getAvatarUrl()));
-
+        mBackgroundImageManager.updateBackgroundWithDelay(Uri.parse(speaker.getAvatarUrl()));
 
         final DetailsOverviewRow row = new DetailsOverviewRow(speaker);
 
