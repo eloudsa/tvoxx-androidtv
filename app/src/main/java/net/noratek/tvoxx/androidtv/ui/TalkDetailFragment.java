@@ -174,7 +174,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
-                new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(),
+                new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()),
                         new detailsOverviewLogoPresenter());
 
         detailsPresenter.setBackgroundColor(

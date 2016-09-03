@@ -128,12 +128,13 @@ public class TalkPresenter extends Presenter {
         final ImageCardView cardView = (ImageCardView) viewHolder.view;
         cardView.setTitleText(talk.getTitle());
 
-        String speakerNames = "";
-        for (RealmString speakerName : talk.getSpeakerNames()) {
-            speakerNames += speakerNames.length() > 0 ? " \u2022 " + speakerName.value : speakerName.value;
+        if (talk.getSpeakerNames() != null) {
+            String speakerNames = "";
+            for (RealmString speakerName : talk.getSpeakerNames()) {
+                speakerNames += speakerNames.length() > 0 ? " \u2022 " + speakerName.value : speakerName.value;
+            }
+            cardView.setContentText(speakerNames);
         }
-        cardView.setContentText(speakerNames);
-
 
         Uri uri;
         if (talk.getThumbnailUrl() != null) {

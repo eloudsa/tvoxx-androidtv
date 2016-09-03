@@ -14,14 +14,31 @@
 
 package net.noratek.tvoxx.androidtv.ui.presenter;
 
-import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
+import android.content.Context;
+import android.support.v17.leanback.widget.Presenter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.model.Talk;
+import net.noratek.tvoxx.androidtv.utils.ResourceCache;
 
 
-public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
+public class DetailDescriptionPresenter extends Presenter {
 
+    private static final String TAG = DetailDescriptionPresenter.class.getSimpleName();
+
+    private ResourceCache mResourceCache = new ResourceCache();
+    private Context mContext;
+
+    public DetailDescriptionPresenter(Context context) {
+        this.mContext = context;
+    }
+
+    /*
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
 
@@ -29,21 +46,93 @@ public class DetailDescriptionPresenter extends AbstractDetailsDescriptionPresen
             return;
         }
 
+        String title = "";
+        String subTitle = "";
+        String body = "";
+
         if (item instanceof Speaker) {
 
             Speaker speaker = (Speaker) item;
 
-            viewHolder.getTitle().setText(speaker.getFirstName() + " " + speaker.getLastName());
-            viewHolder.getSubtitle().setText(speaker.getCompany());
-            viewHolder.getBody().setText(speaker.getBio());
+            title = speaker.getFirstName() + " " + speaker.getLastName();
+            subTitle = speaker.getCompany();
+            body = speaker.getBio();
+
+
         } else if (item instanceof Talk) {
 
             Talk talk = (Talk) item;
 
-            viewHolder.getTitle().setText(talk.getTitle());
-            viewHolder.getSubtitle().setText(talk.getConferenceLabel());
-            viewHolder.getBody().setText(talk.getSummary());
+            title = talk.getTitle();
+            subTitle = talk.getConferenceLabel();
+            body = talk.getSummary();
         }
 
+
+        viewHolder.getTitle().setText(title);
+        viewHolder.getSubtitle().setText(subTitle);
+        viewHolder.getBody().setText(body);
+
+        //viewHolder.
+
+        viewHolder.getBody().setMaxLines(10);
+
+
     }
+    */
+
+
+
+    @Override public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.detail_view_content, null);
+        return new Presenter.ViewHolder(view);
+    }
+
+    @Override public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+        TextView primaryText = mResourceCache.getViewById(viewHolder.view, R.id.primary_text);
+        TextView sndText1 = mResourceCache.getViewById(viewHolder.view, R.id.secondary_text_first);
+        TextView sndText2 = mResourceCache.getViewById(viewHolder.view, R.id.secondary_text_second);
+        TextView extraText = mResourceCache.getViewById(viewHolder.view, R.id.extra_text);
+
+
+
+        if (item == null) {
+            return;
+        }
+
+        String title = "";
+        String subTitle = "";
+        String body = "";
+
+        if (item instanceof Speaker) {
+
+            Speaker speaker = (Speaker) item;
+
+            title = speaker.getFirstName() + " " + speaker.getLastName();
+            subTitle = speaker.getCompany();
+            body = speaker.getBio();
+
+            sndText1.setVisibility(View.GONE);
+
+
+        } else if (item instanceof Talk) {
+
+            Talk talk = (Talk) item;
+
+            title = talk.getTitle();
+            subTitle = talk.getConferenceLabel();
+            body = talk.getSummary();
+        }
+
+        primaryText.setText(title);
+        sndText1.setText(subTitle);
+        sndText2.setText("Year ");
+        extraText.setText(body);
+    }
+
+    @Override public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
+        // Nothing to do here.
+    }
+
+
 }
