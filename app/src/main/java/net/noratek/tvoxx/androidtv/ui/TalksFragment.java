@@ -19,7 +19,7 @@ import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.ui.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;

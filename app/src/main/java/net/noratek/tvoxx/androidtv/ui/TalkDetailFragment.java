@@ -41,12 +41,12 @@ import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
-import net.noratek.tvoxx.androidtv.model.CardModel;
+import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
-import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
-import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
+import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
+import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
+import net.noratek.tvoxx.androidtv.presenter.DetailDescriptionPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
@@ -151,11 +151,11 @@ public class TalkDetailFragment extends DetailsFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof CardModel) {
-                CardModel cardModel = (CardModel) item;
+            if (item instanceof Card) {
+                Card card = (Card) item;
 
                 Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
-                intent.putExtra(SpeakerDetailActivity.UUID, cardModel.getId());
+                intent.putExtra(SpeakerDetailActivity.UUID, card.getId());
                 getActivity().startActivity(intent);
             }
         }
@@ -362,12 +362,12 @@ public class TalkDetailFragment extends DetailsFragment {
         if (talk.getSpeakers() != null) {
 
             for (Speaker speaker : talk.getSpeakers()) {
-                CardModel cardModel = new CardModel();
-                cardModel.setId(speaker.getUuid());
-                cardModel.setCardImageUrl(speaker.getAvatarUrl());
-                cardModel.setTitle(speaker.getFirstName() + " " + speaker.getLastName());
-                cardModel.setContent(speaker.getCompany());
-                listRowAdapter.add(cardModel);
+                Card card = new Card();
+                card.setId(speaker.getUuid());
+                card.setCardImageUrl(speaker.getAvatarUrl());
+                card.setTitle(speaker.getFirstName() + " " + speaker.getLastName());
+                card.setContent(speaker.getCompany());
+                listRowAdapter.add(card);
             }
         }
 

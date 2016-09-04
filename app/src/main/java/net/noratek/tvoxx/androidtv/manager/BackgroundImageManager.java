@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui.manager;
+package net.noratek.tvoxx.androidtv.manager;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

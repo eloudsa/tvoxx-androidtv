@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui.presenter;
+package net.noratek.tvoxx.androidtv.presenter;
 
 import android.content.Context;
 import android.content.res.Resources;

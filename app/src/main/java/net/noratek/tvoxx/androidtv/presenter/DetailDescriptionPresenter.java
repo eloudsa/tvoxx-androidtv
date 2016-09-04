@@ -12,7 +12,7 @@
  * the License.
  */
 
-package net.noratek.tvoxx.androidtv.ui.presenter;
+package net.noratek.tvoxx.androidtv.presenter;
 
 import android.content.Context;
 import android.support.v17.leanback.widget.Presenter;

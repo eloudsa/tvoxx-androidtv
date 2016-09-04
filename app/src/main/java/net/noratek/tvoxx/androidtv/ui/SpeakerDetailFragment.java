@@ -38,12 +38,12 @@ import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
-import net.noratek.tvoxx.androidtv.model.CardModel;
+import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
-import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
-import net.noratek.tvoxx.androidtv.ui.presenter.DetailDescriptionPresenter;
+import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
+import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
+import net.noratek.tvoxx.androidtv.presenter.DetailDescriptionPresenter;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.Bean;
@@ -132,11 +132,11 @@ public class SpeakerDetailFragment extends DetailsFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof CardModel) {
-                CardModel cardModel = (CardModel) item;
+            if (item instanceof Card) {
+                Card card = (Card) item;
 
                 Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
-                intent.putExtra(TalkDetailActivity.TALK_ID, cardModel.getId());
+                intent.putExtra(TalkDetailActivity.TALK_ID, card.getId());
                 getActivity().startActivity(intent);
             }
         }
@@ -294,11 +294,11 @@ public class SpeakerDetailFragment extends DetailsFragment {
         if (speaker.getTalks() != null) {
 
             for (Talk talk : speaker.getTalks()) {
-                CardModel cardModel = new CardModel();
-                cardModel.setId(talk.getTalkId());
-                cardModel.setCardImageUrl(talk.getThumbnailUrl());
-                cardModel.setTitle(talk.getTitle());
-                listRowAdapter.add(cardModel);
+                Card card = new Card();
+                card.setId(talk.getTalkId());
+                card.setCardImageUrl(talk.getThumbnailUrl());
+                card.setTitle(talk.getTitle());
+                listRowAdapter.add(card);
             }
         }
 

@@ -6,9 +6,9 @@ import java.net.URISyntaxException;
 /**
  * Created by eloudsa on 31/07/16.
  */
-public class CardModel {
+public class Card {
 
-    private static final String TAG = CardModel.class.getSimpleName();
+    private static final String TAG = Card.class.getSimpleName();
 
     private String id;
     private String title;
@@ -16,7 +16,7 @@ public class CardModel {
     private String cardImageUrl;
     private int type;
 
-    public CardModel() {
+    public Card() {
     }
 
     public String getId() {

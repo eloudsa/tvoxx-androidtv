@@ -16,8 +16,8 @@ import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
-import net.noratek.tvoxx.androidtv.ui.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
+import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 

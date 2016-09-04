@@ -1,30 +1,34 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.home;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v17.leanback.app.VerticalGridFragment;
+import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
+import android.support.v17.leanback.widget.ListRow;
+import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.support.v4.content.ContextCompat;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
-import net.noratek.tvoxx.androidtv.ui.presenter.CardPresenter;
+import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
+import net.noratek.tvoxx.androidtv.ui.SpeakersActivity_;
+import net.noratek.tvoxx.androidtv.ui.TalksActivity_;
+import net.noratek.tvoxx.androidtv.ui.WatchlistActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.EFragment;
 
 @EFragment
-public class HomeFragment extends VerticalGridFragment {
+public class HomeFragment extends BrowseFragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
 
     private static final int NUM_COLUMNS = 4;
@@ -36,53 +40,65 @@ public class HomeFragment extends VerticalGridFragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         // Prepare the manager that maintains the same background image between activities.
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
-        setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
-        setTitle(getString(R.string.app_title));
 
-        setupFragment();
+        setupUIElements();
+        setupRowAdapter();
         setupEventListeners();
     }
 
-    private void setupFragment() {
-        VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
-        gridPresenter.setNumberOfColumns(NUM_COLUMNS);
-        setGridPresenter(gridPresenter);
+    private void setupUIElements() {
+        setTitle(getString(R.string.app_title));
+        setBadgeDrawable(getResources().getDrawable(R.drawable.tvoxx_logo, null));
+        setHeadersState(HEADERS_DISABLED);
+        setHeadersTransitionOnBackEnabled(false);
+        setBrandColor(ContextCompat.getColor(getActivity(), R.color.fastlane_background));
+    }
 
-        mAdapter = new ArrayObjectAdapter(new CardPresenter());
+
+    private void setupRowAdapter() {
+        mAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+        mAdapter.add(createRows());
+        setAdapter(mAdapter);
+    }
+
+
+    private ListRow createRows() {
+
+        CardPresenter cardPresenter = new CardPresenter();
+        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
 
         Card card = new Card();
         card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.conferences).toString());
         card.setTitle(getString(R.string.talks));
         card.setType(Constants.CARD_TYPE_TALKS);
-        mAdapter.add(card);
+        listRowAdapter.add(card);
 
         card = new Card();
         card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.speakers).toString());
         card.setTitle(getString(R.string.speakers));
         card.setType(Constants.CARD_TYPE_SPEAKERS);
-        mAdapter.add(card);
+        listRowAdapter.add(card);
 
         card = new Card();
         card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.favorite).toString());
         card.setTitle(getString(R.string.watchlist));
         card.setType(Constants.CARD_TYPE_WATCHLIST);
-        mAdapter.add(card);
+        listRowAdapter.add(card);
 
         card = new Card();
         card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.about).toString());
         card.setTitle(getString(R.string.about));
         card.setType(Constants.CARD_TYPE_ABOUT);
-        mAdapter.add(card);
+        listRowAdapter.add(card);
 
-        setAdapter(mAdapter);
+        return new ListRow(listRowAdapter);
     }
-
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());

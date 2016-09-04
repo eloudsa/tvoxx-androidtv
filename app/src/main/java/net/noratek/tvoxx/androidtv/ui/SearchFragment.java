@@ -23,7 +23,7 @@ import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.ui.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 

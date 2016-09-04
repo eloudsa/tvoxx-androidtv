@@ -17,10 +17,10 @@ import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
-import net.noratek.tvoxx.androidtv.model.CardModel;
+import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
-import net.noratek.tvoxx.androidtv.ui.manager.BackgroundImageManager;
-import net.noratek.tvoxx.androidtv.ui.presenter.SpeakerPresenter;
+import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
+import net.noratek.tvoxx.androidtv.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.Bean;
@@ -143,8 +143,8 @@ public class SpeakersFragment extends VerticalGridFragment {
 
             String imageUrl = null;
 
-            if (item instanceof CardModel) {
-                imageUrl = ((CardModel) item).getCardImageUrl();
+            if (item instanceof Card) {
+                imageUrl = ((Card) item).getCardImageUrl();
 
             } else if (item instanceof Speaker) {
                 imageUrl = ((Speaker) item).getAvatarUrl();
