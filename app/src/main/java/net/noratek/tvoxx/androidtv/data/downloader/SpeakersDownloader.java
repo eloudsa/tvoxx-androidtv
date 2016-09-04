@@ -81,7 +81,7 @@ public class SpeakersDownloader {
                     }
                 } else {
                     // this condition may be reached if the HTTP code is 304 (Not modified)
-                    Log.e(TAG, response.message());
+                    Log.i(TAG, response.message());
                 }
 
                 EventBus.getDefault().post(new SpeakersEvent());
@@ -129,7 +129,7 @@ public class SpeakersDownloader {
                     }
                 } else {
                     // this condition may be reached if the HTTP code is 304 (Not modified)
-                    Log.e(TAG, response.message());
+                    Log.i(TAG, response.message());
                 }
 
                 EventBus.getDefault().post(new SpeakerEvent(uuid));

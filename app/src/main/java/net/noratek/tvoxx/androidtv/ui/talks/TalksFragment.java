@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.talks;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.ui.SearchActivity_;
+import net.noratek.tvoxx.androidtv.ui.TalkDetailActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;

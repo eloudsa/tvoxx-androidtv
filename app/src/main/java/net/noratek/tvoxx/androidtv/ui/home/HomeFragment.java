@@ -20,7 +20,7 @@ import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.SpeakersActivity_;
-import net.noratek.tvoxx.androidtv.ui.TalksActivity_;
+import net.noratek.tvoxx.androidtv.ui.talks.TalksActivity_;
 import net.noratek.tvoxx.androidtv.ui.WatchlistActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;

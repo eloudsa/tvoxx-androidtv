@@ -79,7 +79,7 @@ public class TalksDownloader {
                     }
                 } else {
                     // this condition may be reached if the HTTP code is 304 (Not modified)
-                    Log.e(TAG, response.message());
+                    Log.i(TAG, response.message());
                 }
 
                 EventBus.getDefault().post(new TalksEvent());
@@ -126,7 +126,7 @@ public class TalksDownloader {
                     }
                 } else {
                     // this condition may be reached if the HTTP code is 304 (Not modified)
-                    Log.e(TAG, response.message());
+                    Log.i(TAG, response.message());
                 }
 
                 EventBus.getDefault().post(new TalkEvent(talkId));
