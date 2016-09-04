@@ -90,8 +90,8 @@ public class SpeakerPresenter extends Presenter {
 
         // Set card size from dimension resources.
         Resources res = cardView.getResources();
-        final int width = res.getDimensionPixelSize(R.dimen.card_width);
-        final int height = res.getDimensionPixelSize(R.dimen.card_height);
+        final int width = res.getDimensionPixelSize(R.dimen.speaker_card_width);
+        final int height = res.getDimensionPixelSize(R.dimen.speaker_card_height);
         cardView.setMainImageDimensions(width, height);
 
         Glide.with(cardView.getContext())

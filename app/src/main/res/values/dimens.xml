@@ -3,8 +3,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="card_width">156dp</dimen>
-    <dimen name="card_height">88dp</dimen>
+    <dimen name="default_card_width">224dp</dimen>
+    <dimen name="default_card_height">126dp</dimen>
+
+    <dimen name="speaker_card_width">156dp</dimen>
+    <dimen name="speaker_card_height">88dp</dimen>
 
     <dimen name="talk_card_width">312dp</dimen>
     <dimen name="talk_card_height">176dp</dimen>

@@ -27,6 +27,16 @@ public class CardPresenter extends Presenter {
     private int mDefaultBackgroundColor = -1;
     private Drawable mDefaultCardImage;
 
+    private int mWidth = -1;
+    private int mHeight = -1;
+
+    public CardPresenter() {
+    }
+
+    public CardPresenter(int width, int height) {
+        this.mWidth = width;
+        this.mHeight = height;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -74,8 +84,10 @@ public class CardPresenter extends Presenter {
         if (card.getCardImageUrl() != null) {
             // Set card size from dimension resources.
             Resources res = cardView.getResources();
-            int width = res.getDimensionPixelSize(R.dimen.card_width);
-            int height = res.getDimensionPixelSize(R.dimen.card_height);
+
+            final int width = mWidth != -1 ? mWidth : res.getDimensionPixelSize(R.dimen.default_card_width);
+            final int height = mHeight != -1 ? mHeight : res.getDimensionPixelSize(R.dimen.default_card_height);
+
             cardView.setMainImageDimensions(width, height);
 
             Glide.with(cardView.getContext())

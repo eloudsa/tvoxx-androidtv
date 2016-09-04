@@ -20,8 +20,8 @@ import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.SpeakersActivity_;
-import net.noratek.tvoxx.androidtv.ui.talks.TalksActivity_;
 import net.noratek.tvoxx.androidtv.ui.WatchlistActivity_;
+import net.noratek.tvoxx.androidtv.ui.talks.TalksActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
@@ -30,8 +30,6 @@ import org.androidannotations.annotations.EFragment;
 @EFragment
 public class HomeFragment extends BrowseFragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
-
-    private static final int NUM_COLUMNS = 4;
 
     private ArrayObjectAdapter mAdapter;
 

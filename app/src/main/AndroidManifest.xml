@@ -30,7 +30,7 @@
             android:logo="@drawable/tvoxx_logo"
             android:orientation="vertical"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Leanback.VerticalGrid">
+            android:theme="@style/Theme.Tvoxx.Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
