@@ -107,7 +107,6 @@ public class TalkPresenter extends Presenter {
         contentView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         contentView.setMarqueeRepeatLimit(-1);
         contentView.setSingleLine();
-
     }
 
 

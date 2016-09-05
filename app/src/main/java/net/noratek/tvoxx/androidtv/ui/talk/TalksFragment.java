@@ -9,6 +9,7 @@ import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
+import android.support.v17.leanback.widget.PresenterSelector;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Talk;
+import net.noratek.tvoxx.androidtv.presenter.IconHeaderItemPresenter;
 import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -83,6 +85,13 @@ public class TalksFragment extends BrowseFragment {
 
         // set search icon color
         setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.search_opaque));
+
+        setHeaderPresenterSelector(new PresenterSelector() {
+            @Override
+            public Presenter getPresenter(Object o) {
+                return new IconHeaderItemPresenter();
+            }
+        });
     }
 
 
@@ -97,6 +106,37 @@ public class TalksFragment extends BrowseFragment {
             }
         });
     }
+
+    private void loadRows(TreeMap<String, List<Talk>> tracks) {
+        HeaderItem trackHeaderPresenter;
+        ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+
+        TalkPresenter talkPresenter = new TalkPresenter();
+
+        Long headerId = 0L;
+
+        for(Map.Entry<String,List<Talk>> track : tracks.entrySet()) {
+
+            List<Talk> talks = track.getValue();
+            if ((talks != null) && (talks.size() > 0)) {
+                // get the track title with its proper case
+                String trackTitle = talks.get(0).getTrackTitle();
+
+                trackHeaderPresenter = new HeaderItem(headerId++, trackTitle);
+
+                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(talkPresenter);
+
+                for (Talk talk : talks) {
+                    trackRowAdapter.add(talk);
+                }
+
+                rowsAdapter.add(new ListRow(trackHeaderPresenter, trackRowAdapter));
+            }
+        }
+
+        setAdapter(rowsAdapter);
+    }
+
 
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
@@ -128,34 +168,7 @@ public class TalksFragment extends BrowseFragment {
             return;
         }
 
-        HeaderItem trackHeaderPresenter;
-        ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-
-        TalkPresenter talkPresenter = new TalkPresenter();
-
-        Long headerId = 0L;
-
-        for(Map.Entry<String,List<Talk>> track : tracks.entrySet()) {
-
-            List<Talk> talks = track.getValue();
-            if ((talks != null) && (talks.size() > 0)) {
-                // get the track title with its proper case
-                String trackTitle = talks.get(0).getTrackTitle();
-
-                trackHeaderPresenter = new HeaderItem(headerId++, trackTitle);
-
-                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(talkPresenter);
-
-                for (Talk talk : talks) {
-                    trackRowAdapter.add(talk);
-                }
-
-                rowsAdapter.add(new ListRow(trackHeaderPresenter, trackRowAdapter));
-            }
-        }
-
-
-        setAdapter(rowsAdapter);
+        loadRows(tracks);
     }
 
 
