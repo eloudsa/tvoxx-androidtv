@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.speaker;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -24,7 +24,6 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,20 +33,20 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.google.android.youtube.player.YouTubeIntents;
 
 import net.noratek.tvoxx.androidtv.R;
-import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
-import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
-import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
-import net.noratek.tvoxx.androidtv.event.TalkEvent;
+import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
+import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
+import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.presenter.DetailDescriptionPresenter;
-import net.noratek.tvoxx.androidtv.utils.Constants;
+import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity;
+import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity_;
+import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.Bean;
@@ -59,32 +58,22 @@ import java.io.IOException;
 
 
 @EFragment
-public class TalkDetailFragment extends DetailsFragment {
+public class SpeakerDetailFragment extends DetailsFragment {
 
-    private static final String TAG = TalkDetailFragment.class.getSimpleName();
+    private static final String TAG = SpeakerDetailFragment.class.getSimpleName();
 
 
     @Bean
-    TalkCache mTalkCache;
+    SpeakerCache speakerCache;
 
     @Bean
-    TalkManager mTalkManager;
-
-    @Bean
-    WatchlistCache watchlistCache;
-
-
-    OnItemViewClickedListener onItemViewClickedListener;
-
+    SpeakerManager speakerManager;
 
     private SpinnerFragment mSpinnerFragment;
 
     private FullWidthDetailsOverviewSharedElementHelper mHelper;
     private ClassPresenterSelector mPresenterSelector;
     private ArrayObjectAdapter mAdapter;
-
-    private String mTalkId;
-    private Talk mSelectedTalk;
 
     // Background image
     private BackgroundImageManager mBackgroundImageManager;
@@ -94,39 +83,33 @@ public class TalkDetailFragment extends DetailsFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        onItemViewClickedListener = new ItemViewClickedListener();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Log.d(TAG, "+++++ REgister eventbus");
-        EventBus.getDefault().register(TalkDetailFragment.this);
+        EventBus.getDefault().register(this);
 
         mSpinnerFragment = new SpinnerFragment();
 
-        mTalkId = getActivity().getIntent().getStringExtra(TalkDetailActivity.TALK_ID);
-        if (mTalkId != null) {
-            loadDetail();
+        String uuid = getActivity().getIntent().getStringExtra(SpeakerDetailActivity.UUID);
+
+        if (uuid != null) {
+            loadSpeakerDetail(uuid);
         }
+
+        // When a Related item is clicked.
+        setOnItemViewClickedListener(new ItemViewClickedListener());
     }
 
-
-    private void loadDetail() {
+    private void loadSpeakerDetail(String uuid) {
 
         // Display the spinner
-        getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, mSpinnerFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.speaker_detail_fragment, mSpinnerFragment).commit();
 
         try {
-            mTalkManager.fetchTalk(mTalkId);
+            speakerManager.fetchSpeaker(uuid);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // When a Related item is clicked.
-        setOnItemViewClickedListener(onItemViewClickedListener);
     }
+
 
 
     @Override
@@ -136,9 +119,10 @@ public class TalkDetailFragment extends DetailsFragment {
     }
 
 
+
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(TalkDetailFragment.this);
+        EventBus.getDefault().unregister(this);
         if (mBackgroundImageManager != null) {
             mBackgroundImageManager.cancel();
         }
@@ -154,14 +138,12 @@ public class TalkDetailFragment extends DetailsFragment {
             if (item instanceof Card) {
                 Card card = (Card) item;
 
-                Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
-                intent.putExtra(SpeakerDetailActivity.UUID, card.getId());
+                Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
+                intent.putExtra(TalkDetailActivity.TALK_ID, card.getId());
                 getActivity().startActivity(intent);
             }
         }
     }
-
-
 
     private void setupAdapter() {
 
@@ -175,7 +157,7 @@ public class TalkDetailFragment extends DetailsFragment {
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
                 new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()),
-                        new detailsOverviewLogoPresenter());
+                        new SpeakerDetailsOverviewLogoPresenter());
 
         detailsPresenter.setBackgroundColor(
                 ContextCompat.getColor(getActivity(), R.color.selected_background));
@@ -193,34 +175,10 @@ public class TalkDetailFragment extends DetailsFragment {
             @Override
             public void onActionClicked(Action action) {
 
-                if (action.getId() == Constants.TALK_DETAIL_ACTION_PLAY_VIDEO) {
-                    // Check if the Android TV device has a the YouTube capabilities
-                    if (YouTubeIntents.canResolvePlayVideoIntent(getActivity())) {
-                        // open the video in fullscreen in YouTube native application
-                        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getActivity(), mSelectedTalk.getYoutubeVideoId(), true, true);
-                        startActivity(intent);
-
-                    } else {
-                        // unable to view the application
-                        ((TalkDetailActivity) getActivity()).displayErrorMessage(R.string.error_youtube_player_failed);
-                    }
-
-                } else if (action.getId() == Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST) {
-
-                    Boolean isWatchlist = watchlistCache.isExist(mTalkId);
-
-                    if (isWatchlist) {
-                        // remove from the watchlist
-                        watchlistCache.remove(mTalkId);
-                    } else {
-                        // add to the watchlist
-                        watchlistCache.upsert(mTalkId);
-                    }
-
-                    updateWatchlistAction(action);
-
-                    mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
-
+                if (action.getId() == 0) {
+                    //Intent intent = new Intent(getActivity(), PlaybackOverlayActivity.class);
+                    //intent.putExtra(VideoDetailsActivity.VIDEO, mSelectedVideo);
+                    //startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -234,9 +192,7 @@ public class TalkDetailFragment extends DetailsFragment {
         setAdapter(mAdapter);
     }
 
-
-
-    static class detailsOverviewLogoPresenter extends DetailsOverviewLogoPresenter {
+    static class SpeakerDetailsOverviewLogoPresenter extends DetailsOverviewLogoPresenter {
 
         static class ViewHolder extends DetailsOverviewLogoPresenter.ViewHolder {
             public ViewHolder(View view) {
@@ -272,38 +228,38 @@ public class TalkDetailFragment extends DetailsFragment {
             ImageView imageView = ((ImageView) viewHolder.view);
             imageView.setImageDrawable(row.getImageDrawable());
             if (isBoundToImage((ViewHolder) viewHolder, row)) {
-                detailsOverviewLogoPresenter.ViewHolder vh =
-                        (detailsOverviewLogoPresenter.ViewHolder) viewHolder;
+                SpeakerDetailsOverviewLogoPresenter.ViewHolder vh =
+                        (SpeakerDetailsOverviewLogoPresenter.ViewHolder) viewHolder;
                 vh.getParentPresenter().notifyOnBindLogo(vh.getParentViewHolder());
             }
         }
     }
 
 
-    private void setupDetailsOverviewRow(Talk talk) {
+    private void setupDetailsOverviewRow(Speaker speaker) {
 
         // change the background image
-        mBackgroundImageManager.updateBackgroundWithDelay(talk.getThumbnailUrl());
+        mBackgroundImageManager.updateBackgroundWithDelay(Uri.parse(speaker.getAvatarUrl()));
 
-        final DetailsOverviewRow row = new DetailsOverviewRow(talk);
+        final DetailsOverviewRow row = new DetailsOverviewRow(speaker);
 
         Uri uri;
-        if (talk.getThumbnailUrl() != null) {
-            uri = Uri.parse(talk.getThumbnailUrl());
+        if (speaker.getAvatarUrl() != null) {
+            uri = Uri.parse(speaker.getAvatarUrl());
         } else {
-            uri = Utils.getUri(getActivity(), R.drawable.conferences);
+            uri = Utils.getUri(getActivity(), R.drawable.ic_anonymous);
         }
 
         // Set card size from dimension resources.
         final int width = getResources().getDimensionPixelSize(R.dimen.detail_thumb_width);
         final int height = getResources().getDimensionPixelSize(R.dimen.detail_thumb_heigth);
 
-       Glide.with(this)
+        Glide.with(this)
                 .load(uri)
                 .asBitmap()
                 .dontAnimate()
                 .centerCrop()
-                .error(R.drawable.conferences)
+                .error(R.drawable.ic_anonymous)
                 .into(new SimpleTarget<Bitmap>(width, height) {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
@@ -315,8 +271,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        Log.e(TAG, e.getMessage());
-                        row.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.conferences));
+                        row.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_anonymous));
                         startEntranceTransition();
                     }
 
@@ -327,46 +282,25 @@ public class TalkDetailFragment extends DetailsFragment {
                     }
                 });
 
+
         SparseArrayObjectAdapter adapter = new SparseArrayObjectAdapter();
-
-        adapter.set(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO,
-                new Action(Constants.TALK_DETAIL_ACTION_PLAY_VIDEO, getResources()
-                        .getString(R.string.detail_header_action_play_video)));
-
-
-        Action action = new Action(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST);
-        adapter.set(Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST, updateWatchlistAction(action));
-
-        row.setActionsAdapter(adapter);
 
         mAdapter.add(row);
     }
 
-    private Action updateWatchlistAction(Action action){
 
-        Boolean isWatchlist = watchlistCache.isExist(mTalkId);
-
-        action.setLabel1(getResources().getString(isWatchlist ? R.string.detail_header_action_remove_from : R.string.detail_header_action_add_to));
-        action.setLabel2(getResources().getString(R.string.watchlist).toUpperCase());
-        action.setIcon(ContextCompat.getDrawable(getActivity(), isWatchlist ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off));
-
-        return action;
-    }
-
-
-    private void setupRelatedListRow(Talk talk) {
-        String subcategories[] = {getString(R.string.speakers)};
+    private void setupMovieListRow(Speaker speaker) {
+        String subcategories[] = {getString(R.string.related_talks)};
 
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
 
-        if (talk.getSpeakers() != null) {
+        if (speaker.getTalks() != null) {
 
-            for (Speaker speaker : talk.getSpeakers()) {
+            for (Talk talk : speaker.getTalks()) {
                 Card card = new Card();
-                card.setId(speaker.getUuid());
-                card.setCardImageUrl(speaker.getAvatarUrl());
-                card.setTitle(speaker.getFirstName() + " " + speaker.getLastName());
-                card.setContent(speaker.getCompany());
+                card.setId(talk.getTalkId());
+                card.setCardImageUrl(talk.getThumbnailUrl());
+                card.setTitle(talk.getTitle());
                 listRowAdapter.add(card);
             }
         }
@@ -377,22 +311,19 @@ public class TalkDetailFragment extends DetailsFragment {
     }
 
 
-
     @Subscribe
-    public void onMessageEvent(TalkEvent talkEvent) {
+    public void onMessageEvent(SpeakerEvent speakerEvent) {
 
-        Log.d(TAG, "Into onMessageEvent->TalkFullEvent");
-
-        mSelectedTalk = mTalkCache.getData(talkEvent.getTalkId());
-        if (mSelectedTalk == null) {
+        Speaker speaker = speakerCache.getData(speakerEvent.getUuid());
+        if (speaker == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
             return;
         }
 
 
         setupAdapter();
-        setupDetailsOverviewRow(mSelectedTalk);
-        setupRelatedListRow(mSelectedTalk);
+        setupDetailsOverviewRow(speaker);
+        setupMovieListRow(speaker);
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }

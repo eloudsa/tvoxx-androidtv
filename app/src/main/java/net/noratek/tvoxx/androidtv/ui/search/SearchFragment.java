@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.search;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,6 +24,7 @@ import android.util.Log;
 import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 

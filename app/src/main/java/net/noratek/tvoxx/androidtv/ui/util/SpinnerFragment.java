@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.util;
 
 import android.app.Fragment;
 import android.content.res.Resources;

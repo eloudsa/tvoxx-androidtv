@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.search;
 
 import android.app.Activity;
 import android.content.Intent;

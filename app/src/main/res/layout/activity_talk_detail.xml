@@ -2,8 +2,8 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/talk_detail_fragment"
-    android:name="net.noratek.tvoxx.androidtv.ui.TalkDetailFragment_"
+    android:name="net.noratek.tvoxx.androidtv.ui.talk.TalkDetailFragment_"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.TalkDetailActivity_"
+    tools:context=".ui.talk.TalkDetailActivity_"
     tools:deviceIds="tv" />

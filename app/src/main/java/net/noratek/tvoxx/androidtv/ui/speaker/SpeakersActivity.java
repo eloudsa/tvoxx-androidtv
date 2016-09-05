@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.speaker;
 
 import android.app.Activity;
 import android.os.Bundle;

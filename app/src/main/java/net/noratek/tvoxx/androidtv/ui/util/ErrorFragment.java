@@ -1,4 +1,4 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.util;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;

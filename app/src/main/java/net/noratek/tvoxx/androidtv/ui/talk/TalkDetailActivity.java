@@ -1,10 +1,11 @@
-package net.noratek.tvoxx.androidtv.ui;
+package net.noratek.tvoxx.androidtv.ui.talk;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.ui.util.ErrorFragment;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.EActivity;
