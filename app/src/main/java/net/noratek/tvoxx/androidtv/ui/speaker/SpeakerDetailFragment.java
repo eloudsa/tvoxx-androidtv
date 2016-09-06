@@ -334,9 +334,10 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     @Subscribe
     public void onMessageEvent(ErrorEvent errorEvent) {
-        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
 
-        // unable to view the application
+        // unable to retrieve the detail of a speaker
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
         ((SpeakerDetailActivity) getActivity()).displayErrorMessage(errorEvent.getErrorMessage(), true);
     }
 

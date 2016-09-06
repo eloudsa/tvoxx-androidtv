@@ -16,10 +16,11 @@ import android.view.View;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
+import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
-import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Utils;
@@ -70,12 +71,16 @@ public class SpeakersFragment extends VerticalGridFragment {
         loadRows();
     }
 
-
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         mBackgroundImageManager.cancel();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
 
@@ -181,5 +186,15 @@ public class SpeakersFragment extends VerticalGridFragment {
                 getActivity().startActivity(intent);
             }
         }
+    }
+
+
+    @Subscribe
+    public void onMessageEvent(ErrorEvent errorEvent) {
+
+        // unable to retrieve the detail of a speaker
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+        ((SpeakersActivity) getActivity()).displayErrorMessage(errorEvent.getErrorMessage(), true);
     }
 }

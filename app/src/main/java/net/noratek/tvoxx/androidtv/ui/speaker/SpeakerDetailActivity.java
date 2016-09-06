@@ -45,6 +45,8 @@ public class SpeakerDetailActivity extends Activity {
         if ((fragment != null) && (fragment.isVisible()) && mFinishOnDismiss) {
 
             finish();
+        } else {
+            super.onBackPressed();
         }
     }
 }

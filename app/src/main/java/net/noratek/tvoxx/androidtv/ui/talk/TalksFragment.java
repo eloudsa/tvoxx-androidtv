@@ -18,11 +18,13 @@ import android.view.View;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
+import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.IconHeaderItemPresenter;
 import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
 import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
+import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 
 import org.androidannotations.annotations.Bean;
@@ -45,32 +47,36 @@ public class TalksFragment extends BrowseFragment {
     @Bean
     TalkManager talkManager;
 
+    private SpinnerFragment mSpinnerFragment;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         EventBus.getDefault().register(this);
+
+        mSpinnerFragment = new SpinnerFragment();
 
         setupUIElements();
         setupEventListeners();
 
         try {
+            // Display the spinner
+            getFragmentManager().beginTransaction().add(R.id.talks_fragment, mSpinnerFragment).commit();
+
             talkManager.fetchAllTalks();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     @Override
-    public void onStop() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
+
 
     private void setupUIElements() {
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
@@ -108,6 +114,7 @@ public class TalksFragment extends BrowseFragment {
     }
 
     private void loadRows(TreeMap<String, List<Talk>> tracks) {
+
         HeaderItem trackHeaderPresenter;
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
@@ -133,6 +140,9 @@ public class TalksFragment extends BrowseFragment {
                 rowsAdapter.add(new ListRow(trackHeaderPresenter, trackRowAdapter));
             }
         }
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+
 
         setAdapter(rowsAdapter);
     }
@@ -164,6 +174,8 @@ public class TalksFragment extends BrowseFragment {
 
         TreeMap<String, List<Talk>> tracks = talksCache.getDataByTrack();
         if (tracks == null) {
+            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+
             getActivity().finish();
             return;
         }
@@ -171,5 +183,12 @@ public class TalksFragment extends BrowseFragment {
         loadRows(tracks);
     }
 
+    @Subscribe
+    public void onMessageEvent(ErrorEvent errorEvent) {
+        // unable to retrieve talks
+
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+        ((TalksActivity) getActivity()).displayErrorMessage(errorEvent.getErrorMessage(), true);
+    }
 
 }

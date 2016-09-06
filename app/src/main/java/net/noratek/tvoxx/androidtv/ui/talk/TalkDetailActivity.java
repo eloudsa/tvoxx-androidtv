@@ -50,9 +50,9 @@ public class TalkDetailActivity extends Activity {
         if ((fragment != null) && (fragment.isVisible()) && mFinishOnDismiss) {
 
             finish();
+        } else {
+            super.onBackPressed();
         }
     }
-
-
 
 }

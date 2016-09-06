@@ -90,8 +90,8 @@ public class SpeakersDownloader {
 
             @Override
             public void onFailure(Call<List<Speaker>> call, Throwable t) {
-                Log.e(TAG, "On Failure");
-                EventBus.getDefault().post(new SpeakersEvent());
+                Log.e(TAG, "On Failure: " + t.getMessage());
+                EventBus.getDefault().post(new ErrorEvent(t.getMessage()));
             }
         });
     }

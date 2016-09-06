@@ -398,9 +398,9 @@ public class TalkDetailFragment extends DetailsFragment {
 
     @Subscribe
     public void onMessageEvent(ErrorEvent errorEvent) {
-        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
 
-        // unable to view the application
+        // unable to retrieve the detail of a talk
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
         ((TalkDetailActivity) getActivity()).displayErrorMessage(errorEvent.getErrorMessage(), true);
     }
 
