@@ -85,6 +85,7 @@ public class SpeakersFragment extends VerticalGridFragment {
 
 
     private void setupUIElements() {
+        prepareEntranceTransition();
         setTitle(getString(R.string.speakers));
     }
 
@@ -136,6 +137,8 @@ public class SpeakersFragment extends VerticalGridFragment {
         for (Speaker speaker : speakers) {
             mAdapter.add(speaker);
         }
+
+        startEntranceTransition();
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }

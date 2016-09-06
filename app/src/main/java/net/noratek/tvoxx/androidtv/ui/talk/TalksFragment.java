@@ -98,6 +98,8 @@ public class TalksFragment extends BrowseFragment {
                 return new IconHeaderItemPresenter();
             }
         });
+
+        prepareEntranceTransition();
     }
 
 
@@ -145,6 +147,8 @@ public class TalksFragment extends BrowseFragment {
 
 
         setAdapter(rowsAdapter);
+
+        startEntranceTransition();
     }
 
 

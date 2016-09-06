@@ -150,6 +150,8 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     private void setupAdapter() {
 
+        prepareEntranceTransition();
+
         // Prepare the manager that maintains the same background image between activities.
         if (mBackgroundImageManager != null) {
             mBackgroundImageManager.cancel();
@@ -311,6 +313,8 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
         HeaderItem header = new HeaderItem(0, subcategories[0]);
         mAdapter.add(new ListRow(header, listRowAdapter));
+
+        startEntranceTransition();
     }
 
 
