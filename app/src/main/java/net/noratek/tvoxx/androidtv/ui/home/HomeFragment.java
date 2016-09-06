@@ -41,6 +41,8 @@ public class HomeFragment extends BrowseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        prepareEntranceTransition();
+
         // Prepare the manager that maintains the same background image between activities.
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
@@ -63,6 +65,8 @@ public class HomeFragment extends BrowseFragment {
         mAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         mAdapter.add(createRows());
         setAdapter(mAdapter);
+
+        startEntranceTransition();
     }
 
 
