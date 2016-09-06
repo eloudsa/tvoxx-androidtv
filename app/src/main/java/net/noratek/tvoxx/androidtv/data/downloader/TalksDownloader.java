@@ -7,6 +7,7 @@ import net.noratek.tvoxx.androidtv.data.RealmProvider;
 import net.noratek.tvoxx.androidtv.data.cache.EtagCache;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
+import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Etag;
@@ -135,6 +136,7 @@ public class TalksDownloader {
             @Override
             public void onFailure(Call<Talk> call, Throwable t) {
                 Log.e(TAG, "On Failure: " + t.getMessage());
+                EventBus.getDefault().post(new ErrorEvent(t.getMessage()));
             }
         });
 

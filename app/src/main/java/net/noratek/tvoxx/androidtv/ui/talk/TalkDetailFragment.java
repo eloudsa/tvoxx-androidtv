@@ -40,6 +40,7 @@ import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
+import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
@@ -93,19 +94,14 @@ public class TalkDetailFragment extends DetailsFragment {
     private BackgroundImageManager mBackgroundImageManager;
 
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        EventBus.getDefault().register(this);
 
         onItemViewClickedListener = new ItemViewClickedListener();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Log.d(TAG, "+++++ REgister eventbus");
-        EventBus.getDefault().register(TalkDetailFragment.this);
 
         mSpinnerFragment = new SpinnerFragment();
 
@@ -134,6 +130,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mBackgroundImageManager = null;
         super.onDestroy();
     }
@@ -141,13 +138,11 @@ public class TalkDetailFragment extends DetailsFragment {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(TalkDetailFragment.this);
         if (mBackgroundImageManager != null) {
             mBackgroundImageManager.cancel();
         }
         super.onStop();
     }
-
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
         @Override
@@ -205,7 +200,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
                     } else {
                         // unable to view the application
-                        ((TalkDetailActivity) getActivity()).displayErrorMessage(R.string.error_youtube_player_failed);
+                        ((TalkDetailActivity) getActivity()).displayErrorMessage(getString(R.string.error_youtube_player_failed), false);
                     }
 
                 } else if (action.getId() == Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST) {
@@ -398,6 +393,15 @@ public class TalkDetailFragment extends DetailsFragment {
         setupRelatedListRow(mSelectedTalk);
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+    }
+
+
+    @Subscribe
+    public void onMessageEvent(ErrorEvent errorEvent) {
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+
+        // unable to view the application
+        ((TalkDetailActivity) getActivity()).displayErrorMessage(errorEvent.getErrorMessage(), true);
     }
 
 }

@@ -7,6 +7,7 @@ import net.noratek.tvoxx.androidtv.data.RealmProvider;
 import net.noratek.tvoxx.androidtv.data.cache.EtagCache;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
+import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
 import net.noratek.tvoxx.androidtv.model.Etag;
@@ -137,7 +138,8 @@ public class SpeakersDownloader {
 
             @Override
             public void onFailure(Call<Speaker> call, Throwable t) {
-                Log.e(TAG, "On Failure");
+                Log.e(TAG, "On Failure: " + t.getMessage());
+                EventBus.getDefault().post(new ErrorEvent(t.getMessage()));
             }
         });
 

@@ -1,6 +1,7 @@
 package net.noratek.tvoxx.androidtv.ui.talk;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,9 +16,9 @@ public class TalkDetailActivity extends Activity {
 
     private static final String TAG = TalkDetailActivity.class.getSimpleName();
 
-
     public static final String TALK_ID = "UUID";
-    public static final String SHARED_ELEMENT_NAME = "hero";
+
+    private boolean mFinishOnDismiss;
 
 
     @Override
@@ -27,17 +28,30 @@ public class TalkDetailActivity extends Activity {
     }
 
 
-    public void displayErrorMessage(int errorId) {
+    public void displayErrorMessage(String errorMessage, boolean finishOnDismiss) {
+
+        mFinishOnDismiss = finishOnDismiss;
+
+
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.ERROR_RESOURCE_ID, errorId);
+        bundle.putString(Constants.ERROR_RESOURCE_MESSAGE, errorMessage);
+        bundle.putBoolean(Constants.ERROR_FINISH_ON_DISMISS, finishOnDismiss);
 
         ErrorFragment errorFragment = new ErrorFragment();
         errorFragment.setArguments(bundle);
 
-        getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, errorFragment).addToBackStack(null).commit();
-        //getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, errorFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.talk_detail_fragment, errorFragment, Constants.ERROR_FRAGMENT_ID).addToBackStack(null).commit();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(Constants.ERROR_FRAGMENT_ID);
+        if ((fragment != null) && (fragment.isVisible()) && mFinishOnDismiss) {
+
+            finish();
+        }
+    }
 
 
 

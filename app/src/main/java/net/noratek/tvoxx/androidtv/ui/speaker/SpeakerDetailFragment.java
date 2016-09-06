@@ -37,6 +37,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
+import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
 import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
@@ -80,8 +81,8 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         EventBus.getDefault().register(this);
 
@@ -96,6 +97,8 @@ public class SpeakerDetailFragment extends DetailsFragment {
         // When a Related item is clicked.
         setOnItemViewClickedListener(new ItemViewClickedListener());
     }
+
+
 
     private void loadSpeakerDetail(String uuid) {
 
@@ -114,6 +117,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mBackgroundImageManager = null;
         super.onDestroy();
     }
@@ -122,7 +126,6 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         if (mBackgroundImageManager != null) {
             mBackgroundImageManager.cancel();
         }
@@ -326,6 +329,15 @@ public class SpeakerDetailFragment extends DetailsFragment {
         setupMovieListRow(speaker);
 
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+    }
+
+
+    @Subscribe
+    public void onMessageEvent(ErrorEvent errorEvent) {
+        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+
+        // unable to view the application
+        ((SpeakerDetailActivity) getActivity()).displayErrorMessage(errorEvent.getErrorMessage(), true);
     }
 
 }

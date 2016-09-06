@@ -18,7 +18,8 @@ public class Constants {
     public static final int DATABASE_VERSION = 1;
 
     // REST timeout
-    public static final int CONNECTION_TIMEOUT = 60;
+    //public static final int CONNECTION_TIMEOUT = 60;
+    public static final int CONNECTION_TIMEOUT = 20;
 
     // Lifetime of data
     //public static final int CACHE_LIFE_TIME_MINS = 1440;
@@ -46,7 +47,10 @@ public class Constants {
 
     // Used in intent parameters
     public static final String TALK_ID = "UUID";
-    public static final String ERROR_RESOURCE_ID = "ERR_RESOURCE_ID";
+
+    public static final String ERROR_FRAGMENT_ID = "ERROR_FRAGMENT_ID";
+    public static final String ERROR_RESOURCE_MESSAGE = "ERR_RESOURCE_MESSAGE";
+    public static final String ERROR_FINISH_ON_DISMISS = "ERR_FINISH_ON_DISMISS";
 
 
     // Data Id

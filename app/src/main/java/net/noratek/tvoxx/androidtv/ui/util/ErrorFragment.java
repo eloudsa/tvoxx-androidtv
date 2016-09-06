@@ -18,19 +18,18 @@ public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragmen
     private static final boolean TRANSLUCENT = true;
 
     private String mErrorMessage;
+    private boolean mFinishOnDismiss;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //int errorResourceId = getActivity().getIntent().getIntExtra(Constants.ERROR_RESOURCE_ID, R.string.error_generic_message);
-        int errorResourceId = getArguments().getInt(Constants.ERROR_RESOURCE_ID);
-
-        mErrorMessage = getString(errorResourceId);
+        mErrorMessage = getArguments().getString(Constants.ERROR_RESOURCE_MESSAGE);
+        mFinishOnDismiss = getArguments().getBoolean(Constants.ERROR_FINISH_ON_DISMISS, false);
 
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
-        setTitle(getString(R.string.app_title));
+        setTitle(getString(R.string.oops));
 
         setErrorContent();
     }
@@ -44,11 +43,17 @@ public class ErrorFragment extends android.support.v17.leanback.app.ErrorFragmen
         setButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                getFragmentManager().beginTransaction().remove(ErrorFragment.this).commit();
-                getFragmentManager().popBackStack();
+                if (mFinishOnDismiss) {
+                    getActivity().finish();
+                } else {
+                    getFragmentManager().beginTransaction().remove(ErrorFragment.this).commit();
+                    getFragmentManager().popBackStack();
+                }
             }
         });
     }
+
+
 
 
 
