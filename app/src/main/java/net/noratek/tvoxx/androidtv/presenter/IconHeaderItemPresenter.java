@@ -1,7 +1,6 @@
 package net.noratek.tvoxx.androidtv.presenter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.Presenter;
@@ -9,7 +8,6 @@ import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.noratek.tvoxx.androidtv.R;
@@ -39,9 +37,11 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
         HeaderItem headerItem = ((ListRow) item).getHeaderItem();
         View rootView = viewHolder.view;
 
+        /*
         ImageView iconView = (ImageView) rootView.findViewById(R.id.header_icon);
         Drawable icon = rootView.getResources().getDrawable(R.drawable.android_header, null);
         iconView.setImageDrawable(icon);
+        */
 
         TextView label = (TextView) rootView.findViewById(R.id.header_label);
         label.setText(headerItem.getName());
