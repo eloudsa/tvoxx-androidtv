@@ -9,6 +9,7 @@ import org.parceler.ParcelPropertyConverter;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.TalkRealmProxy;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 @Parcel(implementations = { TalkRealmProxy.class },
@@ -30,6 +31,8 @@ public class Talk extends RealmObject  {
 	public float averageRating;
 	public int numberOfRatings;
 	public int durationInSeconds;
+	@Ignore
+	private boolean watchlist;
 
 	@ParcelPropertyConverter(RealmListParcelConverter.class)
 	public RealmList<RealmString> speakerNames;
@@ -180,5 +183,13 @@ public class Talk extends RealmObject  {
 
 	public void setSpeakerNames(RealmList<RealmString> speakerNames) {
 		this.speakerNames = speakerNames;
+	}
+
+	public boolean isWatchlist() {
+		return watchlist;
+	}
+
+	public void setWatchlist(boolean watchlist) {
+		this.watchlist = watchlist;
 	}
 }

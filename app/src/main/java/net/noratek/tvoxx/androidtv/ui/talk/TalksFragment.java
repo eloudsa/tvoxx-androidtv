@@ -149,6 +149,9 @@ public class TalksFragment extends BrowseFragment {
                 ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(talkPresenter);
 
                 for (Talk talk : talks) {
+
+                    talk.setWatchlist(watchlistCache.isExist(talk.getTalkId()));
+
                     trackRowAdapter.add(talk);
                 }
 

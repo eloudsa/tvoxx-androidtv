@@ -49,7 +49,7 @@
                 android:textSize="@dimen/lb_basic_card_title_text_size" />
 
             <ImageView
-                android:id="@+id/fav_image"
+                android:id="@+id/watchlist_image"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_alignParentBottom="true"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/lb_basic_card_info_text_margin"
-                android:layout_toEndOf="@+id/fav_image"
+                android:layout_toEndOf="@+id/watchlist_image"
                 android:layout_toStartOf="@+id/ratingBar"
                 android:ellipsize="marquee"
                 android:fontFamily="sans-serif-condensed"

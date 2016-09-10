@@ -63,14 +63,14 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
     @Override
     public void onBindViewHolder(final Talk talk, final TalkCardView cardView) {
 
-        final ImageView imageView = (ImageView) cardView.findViewById(R.id.main_image);
 
+        // Talk's title
         final TextView primaryText = (TextView) cardView.findViewById(R.id.title_text);
-        final TextView secondaryText = (TextView) cardView.findViewById(R.id.content_text);
-        final RatingBar ratingBar = (RatingBar) cardView.findViewById(R.id.ratingBar);
-
         primaryText.setText(talk.getTitle());
 
+
+        // List of speakers
+        final TextView secondaryText = (TextView) cardView.findViewById(R.id.content_text);
         if (talk.getSpeakerNames() != null) {
             String speakerNames = "";
             for (RealmString speakerName : talk.getSpeakerNames()) {
@@ -79,7 +79,22 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
             secondaryText.setText(speakerNames);
         }
 
+        // Rating
+        final RatingBar ratingBar = (RatingBar) cardView.findViewById(R.id.ratingBar);
         ratingBar.setRating(talk.getAverageRating());
+
+        // Watchlist
+        final ImageView watchListImageView = (ImageView) cardView.findViewById(R.id.watchlist_image);
+        watchListImageView.setImageDrawable(getContext().getResources().getDrawable(talk.isWatchlist() ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
+
+
+        // Talk's image
+        final ImageView imageView = (ImageView) cardView.findViewById(R.id.main_image);
+
+        // Set card size from dimension resources.
+        Resources res = cardView.getResources();
+        final int width = res.getDimensionPixelSize(R.dimen.talk_card_width);
+        final int height = res.getDimensionPixelSize(R.dimen.talk_card_height);
 
         Uri uri;
         if (talk.getThumbnailUrl() != null) {
@@ -87,12 +102,6 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
         } else {
             uri = Utils.getUri(getContext(), R.drawable.conferences);
         }
-
-        // Set card size from dimension resources.
-        Resources res = cardView.getResources();
-        final int width = res.getDimensionPixelSize(R.dimen.talk_card_width);
-        final int height = res.getDimensionPixelSize(R.dimen.talk_card_height);
-        //cardView.setD(width, height);
 
         Glide.with(cardView.getContext())
                 .load(uri)
