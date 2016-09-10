@@ -174,7 +174,7 @@ public class TalkDetailFragment extends DetailsFragment {
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         // Set detail background and style.
-        FullWidthDetailsOverviewRowPresenter detailsPresenter =
+        final FullWidthDetailsOverviewRowPresenter detailsPresenter =
                 new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()),
                         new detailsOverviewLogoPresenter());
 

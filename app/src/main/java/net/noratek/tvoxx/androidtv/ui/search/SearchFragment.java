@@ -23,7 +23,7 @@ import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
 import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
@@ -207,7 +207,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
             @Override
             protected ListRow doInBackground(Void... params) {
 
-                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new TalkPresenter());
+                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new TalkCardPresenter(getActivity()));
                 listRowAdapter.addAll(0, mTalks);
                 HeaderItem header = new HeaderItem("Search Results");
                 return new ListRow(header, listRowAdapter);

@@ -27,6 +27,7 @@ import net.noratek.tvoxx.androidtv.model.RealmString;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
+import java.util.List;
 
 public class TalkPresenter extends Presenter {
 
@@ -40,6 +41,8 @@ public class TalkPresenter extends Presenter {
 
     private int mWidth = -1;
     private int mHeight = -1;
+
+    private List<String> mWatchList;
 
 
 /*
@@ -62,6 +65,10 @@ public class TalkPresenter extends Presenter {
     }
 
     public TalkPresenter() {
+    }
+
+    public TalkPresenter(final List<String> watchList) {
+        mWatchList = watchList;
     }
 
     @Override

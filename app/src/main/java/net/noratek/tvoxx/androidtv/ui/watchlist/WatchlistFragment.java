@@ -17,7 +17,7 @@ import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Talk;
-import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
 import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity_;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -64,7 +64,7 @@ public class WatchlistFragment extends VerticalGridFragment {
         int width = getResources().getDimensionPixelSize(R.dimen.watchlist_width);
         int height = getResources().getDimensionPixelSize(R.dimen.watchlist_height);
 
-        mAdapter = new ArrayObjectAdapter(new TalkPresenter(width, height));
+        mAdapter = new ArrayObjectAdapter(new TalkCardPresenter(getActivity()));
 
         setupUIElements();
         setupEventListeners();

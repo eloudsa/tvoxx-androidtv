@@ -8,6 +8,7 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
+import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.PresenterSelector;
 import android.support.v17.leanback.widget.Row;
@@ -17,12 +18,13 @@ import android.view.View;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalksCache;
+import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.IconHeaderItemPresenter;
-import net.noratek.tvoxx.androidtv.presenter.TalkPresenter;
+import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
 import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -47,6 +49,9 @@ public class TalksFragment extends BrowseFragment {
     @Bean
     TalkManager talkManager;
 
+    @Bean
+    WatchlistCache watchlistCache;
+
     private SpinnerFragment mSpinnerFragment;
 
 
@@ -69,6 +74,12 @@ public class TalksFragment extends BrowseFragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -105,6 +116,8 @@ public class TalksFragment extends BrowseFragment {
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
+        setOnItemViewSelectedListener(new ItemViewSelectedListener());
+
 
         setOnSearchClickedListener(new View.OnClickListener() {
             @Override
@@ -120,7 +133,7 @@ public class TalksFragment extends BrowseFragment {
         HeaderItem trackHeaderPresenter;
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        TalkPresenter talkPresenter = new TalkPresenter();
+        TalkCardPresenter talkPresenter = new TalkCardPresenter(getActivity());
 
         Long headerId = 0L;
 
@@ -161,10 +174,24 @@ public class TalksFragment extends BrowseFragment {
             if (item instanceof Talk) {
                 Talk talk = (Talk) item;
 
+
+               // TalkPresenter talkPresenter = (TalkPresenter) itemViewHolder;
+               // ((ImageCardView) itemViewHolder.view).setTitleText("Selected!");
+                //talk.setTitle("Selected !!!!");
+
                 Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
                 intent.putExtra(Constants.TALK_ID, talk.getTalkId());
                 getActivity().startActivity(intent);
             }
+        }
+    }
+
+    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
+        @Override
+        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
+                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
+
+            return;
         }
     }
 
