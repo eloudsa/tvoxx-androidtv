@@ -18,13 +18,17 @@ package net.noratek.tvoxx.androidtv.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * A collection of utility methods, all static.
  */
 public class Utils {
+
+    private static final String TAG = Utils.class.getSimpleName();
 
     /*
      * Making sure public utility methods remain static
@@ -72,6 +76,22 @@ public class Utils {
 
         return duration;
 
+    }
+
+
+    public static String getVersionInfo(Context context) {
+        String versionName = "";
+        int versionCode = -1;
+
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+            versionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        return String.format("Version %s (%d)", versionName, versionCode);
     }
 
 }
