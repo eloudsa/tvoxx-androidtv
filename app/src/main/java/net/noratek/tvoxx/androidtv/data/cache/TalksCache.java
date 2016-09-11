@@ -85,8 +85,13 @@ public class TalksCache implements DataCache<List<Talk>, String> {
 
     @Override
     public void clearCache(String query) {
-        baseCache.clearCache(Constants.TALKS_KEY);
+        baseCache.clearCache(query);
     }
+
+    public void clearCache() {
+        clearCache(Constants.TALKS_KEY);
+    }
+
 
     @Override
     public void upsert(String rawData, String query) {

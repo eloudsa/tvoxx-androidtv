@@ -7,7 +7,7 @@ public class Constants {
 
     // location of the TVoxx Rest API server
     //public static final String TVOXX_API_URL = "http://devoxx-proxy.cfapps.io/api/";
-    public static final String TVOXX_API_URL = "http://192.168.1.24:8080/api/";
+    public static final String TVOXX_API_URL = "http://192.168.1.39:8080/api/";
 
     // location of the fallback JSON data files
     public static final String SPEAKERS_JSON_DATA_FILE = "data/speakers.json";

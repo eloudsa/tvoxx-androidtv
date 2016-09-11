@@ -52,4 +52,16 @@
     <string name="settings_key_about_screen">settings_key_about_screen</string>
     <string name="settings_key_about_author">settings_key_about_author</string>
 
+    <string name="settings_key_cache">settings_key_cache</string>
+
+    <string name="settings_cache">Clear local cache</string>
+    <string name="settings_cache_question">Do you want to clear your local cache?</string>
+    <string name="settings_cache_title_clear">Clear the cache</string>
+    <string name="settings_cache_title_cancel">Cancel</string>
+    <string name="settings_cache_value_clear">clear</string>
+    <string name="settings_cache_value_cancel">cancel</string>
+    <string name="settings_cache_info_clear">The local cache is cleared.</string>
+
+
+
 </resources>

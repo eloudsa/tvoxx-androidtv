@@ -51,8 +51,13 @@ public class SpeakersCache implements DataCache<List<Speaker>, String> {
 
     @Override
     public void clearCache(String query) {
-        baseCache.clearCache(Constants.SPEAKERS_KEY);
+        baseCache.clearCache(query);
     }
+
+    public void clearCache() {
+        clearCache(Constants.SPEAKERS_KEY);
+    }
+
 
     @Override
     public void upsert(String rawData, String query) {

@@ -4,6 +4,17 @@
                   android:summary="These settings are used to change the properties of the application."
                   android:title="Settings TVoxx">
 
+    <ListPreference
+        android:defaultValue="@string/settings_cache_value_cancel"
+        android:icon="@drawable/ic_settings_cache"
+        android:entries="@array/pref_clear_cache_entries"
+        android:entryValues="@array/pref_clear_cache_entries_values"
+        android:key="@string/settings_key_cache"
+        android:dialogMessage="@string/settings_cache_question"
+        android:title="@string/settings_cache">
+    </ListPreference>
+
+
     <PreferenceScreen
         android:icon="@drawable/ic_settings_about"
         android:key="@string/settings_key_about"

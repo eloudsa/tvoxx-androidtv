@@ -22,22 +22,28 @@ import android.support.v14.preference.PreferenceFragment;
 import android.support.v17.preference.LeanbackPreferenceFragment;
 import android.support.v17.preference.LeanbackSettingsFragment;
 import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import net.noratek.tvoxx.androidtv.R;
+import net.noratek.tvoxx.androidtv.data.cache.BaseCache;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 
-import java.util.Arrays;
 import java.util.Stack;
 
 @EFragment
 public class SettingsFragment extends LeanbackSettingsFragment implements DialogPreference.TargetFragment {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
+
+    @Bean
+    BaseCache baseCache;
+
 
     private final Stack<Fragment> fragments = new Stack<Fragment>();
 
@@ -95,12 +101,27 @@ public class SettingsFragment extends LeanbackSettingsFragment implements Dialog
 
         @Override
         public boolean onPreferenceTreeClick(Preference preference) {
-            final String[] keys = {"@string/settings_about"};
 
-            if (Arrays.asList(keys).contains(preference.getKey())) {
-                Toast.makeText(getActivity(), "Implement your own action handler.", Toast.LENGTH_SHORT).show();
-                return true;
+            if (preference.getKey().equalsIgnoreCase(getString(R.string.settings_key_cache))) {
+
+                final ListPreference list = (ListPreference) preference;
+                list.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                        if (newValue.toString().equalsIgnoreCase(getString(R.string.settings_cache_value_clear))) {
+
+                            // Clear the local cache
+                            baseCache.clearAllCache();
+
+                            Toast.makeText(getActivity(), getString(R.string.settings_cache_info_clear), Toast.LENGTH_SHORT).show();
+                        }
+
+                        return true;
+                    }
+                });
             }
+
             return super.onPreferenceTreeClick(preference);
         }
 
