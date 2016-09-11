@@ -37,6 +37,8 @@ import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.ui.cards.TalkCardView;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
+import java.util.List;
+
 
 /**
  * The Presenter displays a card consisting of text as a replacement for a big image. The footer is
@@ -48,9 +50,18 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
 
     private Drawable mDefaultCardImage;
 
+    private List<String> mWatchList;
+
+
     public TalkCardPresenter(Context context) {
         super(context);
     }
+
+    public TalkCardPresenter(Context context, List<String> watchList) {
+        super(context);
+        mWatchList = watchList;
+    }
+
 
     @Override
     protected TalkCardView onCreateView() {
@@ -85,8 +96,8 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
 
         // Watchlist
         final ImageView watchListImageView = (ImageView) cardView.findViewById(R.id.watchlist_image);
-        watchListImageView.setImageDrawable(getContext().getResources().getDrawable(talk.isWatchlist() ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
-
+        boolean watchList = mWatchList != null ? mWatchList.contains(talk.getTalkId()) : false;
+        watchListImageView.setImageDrawable(getContext().getResources().getDrawable(watchList ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
 
         // Talk's image
         final ImageView imageView = (ImageView) cardView.findViewById(R.id.main_image);
@@ -171,5 +182,9 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
         // Free up memory.
         final ImageView imageView = (ImageView) cardView.findViewById(R.id.main_image);
         imageView.setImageBitmap(null);
+    }
+
+    public void setWatchList(List<String> mWatchList) {
+        this.mWatchList = mWatchList;
     }
 }

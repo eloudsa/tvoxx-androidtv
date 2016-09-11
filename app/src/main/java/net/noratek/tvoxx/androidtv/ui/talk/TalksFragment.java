@@ -8,7 +8,6 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.PresenterSelector;
 import android.support.v17.leanback.widget.Row;
@@ -25,6 +24,7 @@ import net.noratek.tvoxx.androidtv.event.TalksEvent;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.IconHeaderItemPresenter;
 import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
+import net.noratek.tvoxx.androidtv.ui.cards.TalkCardView;
 import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Constants;
@@ -54,6 +54,14 @@ public class TalksFragment extends BrowseFragment {
 
     private SpinnerFragment mSpinnerFragment;
 
+    TreeMap<String, List<Talk>> mTracks;
+
+    TalkCardPresenter mTalkPresenter;
+
+    // selected talk
+    TalkCardView mSelectedCardView;
+    String mSelectedTalkId;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -80,6 +88,15 @@ public class TalksFragment extends BrowseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        if (mTalkPresenter != null) {
+            mTalkPresenter.setWatchList(watchlistCache.getData());
+        }
+
+        if (mSelectedCardView != null) {
+            List<String> watchList = watchlistCache.getData();
+            mSelectedCardView.updateWatchList(watchList.contains(mSelectedTalkId));
+        }
     }
 
     @Override
@@ -116,8 +133,6 @@ public class TalksFragment extends BrowseFragment {
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
-        setOnItemViewSelectedListener(new ItemViewSelectedListener());
-
 
         setOnSearchClickedListener(new View.OnClickListener() {
             @Override
@@ -128,16 +143,22 @@ public class TalksFragment extends BrowseFragment {
         });
     }
 
-    private void loadRows(TreeMap<String, List<Talk>> tracks) {
+    private void loadRows() {
+
+        if (mTracks == null) {
+            return;
+        }
+
+        List<String> watchList = watchlistCache.getData();
 
         HeaderItem trackHeaderPresenter;
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        TalkCardPresenter talkPresenter = new TalkCardPresenter(getActivity());
+        mTalkPresenter = new TalkCardPresenter(getActivity(), watchlistCache.getData());
 
         Long headerId = 0L;
 
-        for(Map.Entry<String,List<Talk>> track : tracks.entrySet()) {
+        for(Map.Entry<String,List<Talk>> track : mTracks.entrySet()) {
 
             List<Talk> talks = track.getValue();
             if ((talks != null) && (talks.size() > 0)) {
@@ -146,11 +167,13 @@ public class TalksFragment extends BrowseFragment {
 
                 trackHeaderPresenter = new HeaderItem(headerId++, trackTitle);
 
-                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(talkPresenter);
+                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(mTalkPresenter);
 
                 for (Talk talk : talks) {
 
-                    talk.setWatchlist(watchlistCache.isExist(talk.getTalkId()));
+                    if (watchList != null) {
+                        talk.setWatchlist(watchList.contains(talk.getTalkId()));
+                    }
 
                     trackRowAdapter.add(talk);
                 }
@@ -177,6 +200,8 @@ public class TalksFragment extends BrowseFragment {
             if (item instanceof Talk) {
                 Talk talk = (Talk) item;
 
+                mSelectedCardView = (TalkCardView) itemViewHolder.view;
+                mSelectedTalkId = talk.getTalkId();
 
                // TalkPresenter talkPresenter = (TalkPresenter) itemViewHolder;
                // ((ImageCardView) itemViewHolder.view).setTitleText("Selected!");
@@ -189,15 +214,6 @@ public class TalksFragment extends BrowseFragment {
         }
     }
 
-    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
-        @Override
-        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
-                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-
-            return;
-        }
-    }
-
 
     //
     // Events
@@ -206,15 +222,14 @@ public class TalksFragment extends BrowseFragment {
     @Subscribe
     public void onMessageEvent(TalksEvent talksEvent) {
 
-        TreeMap<String, List<Talk>> tracks = talksCache.getDataByTrack();
-        if (tracks == null) {
+        mTracks = talksCache.getDataByTrack();
+        if (mTracks == null) {
             getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
-
             getActivity().finish();
             return;
         }
 
-        loadRows(tracks);
+        loadRows();
     }
 
     @Subscribe
