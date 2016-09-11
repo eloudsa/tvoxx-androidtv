@@ -13,12 +13,14 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
+import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
 import net.noratek.tvoxx.androidtv.ui.speaker.SpeakersActivity_;
 import net.noratek.tvoxx.androidtv.ui.talk.TalksActivity_;
 import net.noratek.tvoxx.androidtv.ui.watchlist.WatchlistActivity_;
@@ -58,6 +60,9 @@ public class HomeFragment extends BrowseFragment {
         setHeadersState(HEADERS_DISABLED);
         setHeadersTransitionOnBackEnabled(false);
         setBrandColor(ContextCompat.getColor(getActivity(), R.color.fastlane_background));
+
+        // set search icon color
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.search_opaque));
     }
 
 
@@ -105,6 +110,14 @@ public class HomeFragment extends BrowseFragment {
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
+
+        setOnSearchClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchActivity_.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

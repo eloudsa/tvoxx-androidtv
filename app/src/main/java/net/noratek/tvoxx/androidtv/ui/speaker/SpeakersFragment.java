@@ -11,6 +11,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import net.noratek.tvoxx.androidtv.R;
@@ -22,6 +23,7 @@ import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.presenter.SpeakerPresenter;
+import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Utils;
 
@@ -87,6 +89,9 @@ public class SpeakersFragment extends VerticalGridFragment {
     private void setupUIElements() {
         prepareEntranceTransition();
         setTitle(getString(R.string.speakers));
+
+        // set search icon color
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.search_opaque));
     }
 
 
@@ -117,7 +122,8 @@ public class SpeakersFragment extends VerticalGridFragment {
         setOnSearchClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), SearchActivity_.class);
+                startActivity(intent);
             }
         });
     }

@@ -22,8 +22,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.connection.Connection;
+import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
+import net.noratek.tvoxx.androidtv.ui.cards.TalkCardView;
 import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity_;
 import net.noratek.tvoxx.androidtv.utils.Constants;
 import net.noratek.tvoxx.androidtv.utils.Utils;
@@ -47,6 +49,8 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     @Bean
     Connection connection;
 
+    @Bean
+    WatchlistCache watchlistCache;
 
     private static final int REQUEST_SPEECH = 0x00000010;
     private static final long SEARCH_DELAY_MS = 1000L;
@@ -55,6 +59,12 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     private AsyncTask<Void, Void, ListRow> mLoadRowsAsync;
 
     private List<Talk> mTalks;
+
+    TalkCardPresenter mTalkPresenter;
+
+    // selected talk
+    TalkCardView mSelectedCardView;
+    String mSelectedTalkId;
 
 
     private ArrayObjectAdapter mRowsAdapter;
@@ -94,6 +104,21 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
             });
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mTalkPresenter != null) {
+            mTalkPresenter.setWatchList(watchlistCache.getData());
+        }
+
+        if (mSelectedCardView != null) {
+            List<String> watchList = watchlistCache.getData();
+            mSelectedCardView.updateWatchList(watchList.contains(mSelectedTalkId));
+        }
+    }
+
 
     public boolean hasResults() {
         return mRowsAdapter.size() > 0;
@@ -207,7 +232,9 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
             @Override
             protected ListRow doInBackground(Void... params) {
 
-                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new TalkCardPresenter(getActivity()));
+                mTalkPresenter = new TalkCardPresenter(getActivity(), watchlistCache.getData());
+
+                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(mTalkPresenter);
                 listRowAdapter.addAll(0, mTalks);
                 HeaderItem header = new HeaderItem("Search Results");
                 return new ListRow(header, listRowAdapter);
@@ -227,6 +254,9 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
 
             if (item instanceof Talk) {
                 Talk talk = (Talk) item;
+
+                mSelectedCardView = (TalkCardView) itemViewHolder.view;
+                mSelectedTalkId = talk.getTalkId();
 
                 Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
                 intent.putExtra(Constants.TALK_ID, talk.getTalkId());

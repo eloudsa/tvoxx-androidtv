@@ -1,12 +1,10 @@
 package net.noratek.tvoxx.androidtv.ui.watchlist;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v17.leanback.app.VerticalGridFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
@@ -41,7 +39,7 @@ public class WatchlistFragment extends VerticalGridFragment {
     @Bean
     TalkCache talkCache;
 
-
+    TalkCardPresenter mTalkPresenter;
 
     private ArrayObjectAdapter mAdapter;
 
@@ -61,15 +59,24 @@ public class WatchlistFragment extends VerticalGridFragment {
 
         mSpinnerFragment = new SpinnerFragment();
 
-        int width = getResources().getDimensionPixelSize(R.dimen.watchlist_width);
-        int height = getResources().getDimensionPixelSize(R.dimen.watchlist_height);
+        mTalkPresenter = new TalkCardPresenter(getActivity(), watchlistCache.getData());
 
-        mAdapter = new ArrayObjectAdapter(new TalkCardPresenter(getActivity()));
+        mAdapter = new ArrayObjectAdapter(mTalkPresenter);
 
         setupUIElements();
         setupEventListeners();
         loadRows();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mTalkPresenter != null) {
+            mTalkPresenter.setWatchList(watchlistCache.getData());
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -123,32 +130,8 @@ public class WatchlistFragment extends VerticalGridFragment {
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
-        //setOnItemViewSelectedListener(new ItemViewSelectedListener());
     }
 
-
-    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
-        @Override
-        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
-                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-
-            String imageUrl = null;
-
-            if (item instanceof Talk) {
-                imageUrl = ((Talk) item).getThumbnailUrl();
-            }
-
-            Uri backgroundURI;
-
-            if (imageUrl != null) {
-                backgroundURI = Uri.parse(imageUrl);
-            } else {
-                backgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
-            }
-
-            mBackgroundImageManager.updateBackgroundWithDelay(backgroundURI);
-        }
-    }
 
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
