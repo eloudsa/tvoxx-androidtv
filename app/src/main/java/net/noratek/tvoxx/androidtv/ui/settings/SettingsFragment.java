@@ -17,6 +17,8 @@ package net.noratek.tvoxx.androidtv.ui.settings;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v17.preference.LeanbackPreferenceFragment;
@@ -24,6 +26,7 @@ import android.support.v17.preference.LeanbackSettingsFragment;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.noratek.tvoxx.androidtv.R;
@@ -35,6 +38,8 @@ import java.util.Stack;
 
 @EFragment
 public class SettingsFragment extends LeanbackSettingsFragment implements DialogPreference.TargetFragment {
+
+    private static final String TAG = SettingsFragment.class.getSimpleName();
 
     private final Stack<Fragment> fragments = new Stack<Fragment>();
 
@@ -83,6 +88,11 @@ public class SettingsFragment extends LeanbackSettingsFragment implements Dialog
             } else {
                 setPreferencesFromResource(prefResId, root);
             }
+
+            Preference prefApp = findPreference("settings_key_about_app");
+            if (prefApp != null) {
+                prefApp.setSummary(getVersionInfo());
+            }
         }
 
         @Override
@@ -107,5 +117,21 @@ public class SettingsFragment extends LeanbackSettingsFragment implements Dialog
             fragments.pop();
             super.onDetach();
         }
+    }
+
+
+    private String getVersionInfo() {
+        String versionName = "";
+        int versionCode = -1;
+
+        try {
+            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            versionName = packageInfo.versionName;
+            versionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        return String.format("Version %s (%d)", versionName, versionCode);
     }
 }

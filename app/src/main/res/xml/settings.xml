@@ -9,12 +9,20 @@
         android:key="@string/settings_key_about"
         android:title="@string/settings_about">
             <Preference
+                android:key="@string/settings_key_about_app"
                 android:icon="@mipmap/tvoxx_logo"
-                android:summary="45.5 MB"
+                android:summary=""
                 android:selectable="false"
                 android:title="@string/app_name"></Preference>
             <Preference
+                android:key="@string/settings_key_about_desc"
                 android:selectable="false"
                 android:summary="@string/app_description"></Preference>
+            <Preference
+                android:key="@string/settings_key_about_author"
+                android:icon="@drawable/eloudsa"
+                android:summary="@string/app_author_company"
+                android:selectable="false"
+                android:title="@string/app_author_twitter"></Preference>
     </PreferenceScreen>
 </PreferenceScreen>
