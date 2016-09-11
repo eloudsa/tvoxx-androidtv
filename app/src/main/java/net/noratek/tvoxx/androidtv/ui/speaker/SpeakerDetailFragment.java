@@ -24,6 +24,7 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -332,7 +333,13 @@ public class SpeakerDetailFragment extends DetailsFragment {
         setupDetailsOverviewRow(speaker);
         setupMovieListRow(speaker);
 
-        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+
+        try {
+            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "Cannot remove spinner after onSaveInstanceState has been called");
+        }
+
     }
 
 

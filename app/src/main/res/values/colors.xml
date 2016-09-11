@@ -17,4 +17,7 @@
 
     <color name="default_card_footer_background_color">#37474F</color>
 
+    <color name="settings_background">#00695C</color>
+
+
 </resources>

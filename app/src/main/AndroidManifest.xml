@@ -68,6 +68,11 @@
             android:name=".ui.watchlist.WatchlistActivity_"
             android:exported="true" />
 
+        <activity
+            android:name=".ui.settings.SettingsActivity_"
+            android:exported="true"
+            android:theme="@style/Theme.Tvoxx.LeanbackPreferences"/>
+
 
     </application>
 

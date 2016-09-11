@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:summary="These settings are used to change the properties of the application."
+                  android:title="Settings TVoxx">
+
+    <PreferenceScreen
+        android:icon="@drawable/ic_settings_about"
+        android:key="@string/settings_key_about"
+        android:title="@string/settings_about">
+            <Preference
+                android:icon="@mipmap/tvoxx_logo"
+                android:summary="45.5 MB"
+                android:selectable="false"
+                android:title="@string/app_name"></Preference>
+            <Preference
+                android:selectable="false"
+                android:summary="@string/app_description"></Preference>
+    </PreferenceScreen>
+</PreferenceScreen>

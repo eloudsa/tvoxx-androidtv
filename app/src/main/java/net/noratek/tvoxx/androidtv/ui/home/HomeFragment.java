@@ -21,6 +21,7 @@ import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.presenter.CardPresenter;
 import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
+import net.noratek.tvoxx.androidtv.ui.settings.SettingsActivity_;
 import net.noratek.tvoxx.androidtv.ui.speaker.SpeakersActivity_;
 import net.noratek.tvoxx.androidtv.ui.talk.TalksActivity_;
 import net.noratek.tvoxx.androidtv.ui.watchlist.WatchlistActivity_;
@@ -169,6 +170,10 @@ public class HomeFragment extends BrowseFragment {
 
                     case Constants.CARD_TYPE_WATCHLIST:
                         intent = new Intent(getActivity(), WatchlistActivity_.class);
+                        break;
+
+                    case Constants.CARD_TYPE_ABOUT:
+                        intent = new Intent(getActivity(), SettingsActivity_.class);
                         break;
                 }
 

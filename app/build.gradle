@@ -6,15 +6,16 @@ apply plugin: 'realm-android'
 def PACKAGE_NAME = "net.noratek.tvoxx.androidtv"
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId PACKAGE_NAME
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "0.1"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -24,7 +25,7 @@ android {
     }
 }
 
-def SUPPORT_LIBRARY_VERSION = "23.4.0"
+def SUPPORT_LIBRARY_VERSION = "24.2.0"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -42,6 +43,10 @@ dependencies {
     compile "com.android.support:leanback-v17:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+
+    compile "com.android.support:preference-v7:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:preference-leanback-v17:${SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:preference-v14:${SUPPORT_LIBRARY_VERSION}"
 
 
     compile "com.github.bumptech.glide:glide:3.7.0"

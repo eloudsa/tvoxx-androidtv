@@ -112,6 +112,11 @@ public class TalkDetailFragment extends DetailsFragment {
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+    }
+
     private void loadDetail() {
 
         // Display the spinner
@@ -397,7 +402,14 @@ public class TalkDetailFragment extends DetailsFragment {
         setupDetailsOverviewRow(mSelectedTalk);
         setupRelatedListRow(mSelectedTalk);
 
-        getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+
+        try {
+            getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "Cannot remove spinner after onSaveInstanceState has been called");
+        }
+
+
     }
 
 

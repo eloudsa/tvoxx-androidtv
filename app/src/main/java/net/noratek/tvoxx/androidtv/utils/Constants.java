@@ -22,8 +22,8 @@ public class Constants {
     public static final int CONNECTION_TIMEOUT = 20;
 
     // Lifetime of data
-    //public static final int CACHE_LIFE_TIME_MINS = 1440;
-    public static final int CACHE_LIFE_TIME_MINS = 1;
+    public static final int CACHE_LIFE_TIME_MINS = 1440;
+    //public static final int CACHE_LIFE_TIME_MINS = 1;
 
 
     // Header position
