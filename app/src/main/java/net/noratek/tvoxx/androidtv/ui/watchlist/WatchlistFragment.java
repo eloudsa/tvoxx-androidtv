@@ -9,10 +9,13 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.R;
 import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
+import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
+import net.noratek.tvoxx.androidtv.event.TalkEvent;
 import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
@@ -24,7 +27,9 @@ import net.noratek.tvoxx.androidtv.utils.Utils;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.List;
 
 @EFragment
@@ -38,6 +43,10 @@ public class WatchlistFragment extends VerticalGridFragment {
 
     @Bean
     TalkCache talkCache;
+
+    @Bean
+    TalkManager talkManager;
+
 
     TalkCardPresenter mTalkPresenter;
 
@@ -53,6 +62,8 @@ public class WatchlistFragment extends VerticalGridFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+
+        EventBus.getDefault().register(this);
 
         // Prepare the manager that maintains the same background image between activities.
         mBackgroundImageManager = new BackgroundImageManager(getActivity());
@@ -75,13 +86,20 @@ public class WatchlistFragment extends VerticalGridFragment {
         if (mTalkPresenter != null) {
             mTalkPresenter.setWatchList(watchlistCache.getData());
         }
+
+        loadRows();
     }
 
 
     @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        loadRows();
     }
 
     @Override
@@ -120,6 +138,12 @@ public class WatchlistFragment extends VerticalGridFragment {
             Talk talk = talkCache.getData(talkId);
             if (talk != null) {
                 mAdapter.add(talk);
+            } else {
+                try {
+                    talkManager.fetchTalk(talkId);
+                } catch (IOException e) {
+                    Log.e(TAG, e.getMessage());
+                }
             }
         }
 
@@ -146,6 +170,27 @@ public class WatchlistFragment extends VerticalGridFragment {
                 intent.putExtra(Constants.TALK_ID, talk.getTalkId());
                 getActivity().startActivity(intent);
             }
+        }
+    }
+
+
+    @Subscribe
+    public void onMessageEvent(TalkEvent talkEvent) {
+
+        Log.d(TAG, "Into onMessageEvent->TalkFullEvent: " + talkEvent.getTalkId());
+
+        Talk talk = talkCache.getData(talkEvent.getTalkId());
+        if (talk != null) {
+            for (int i = 0; i < mAdapter.size(); i++) {
+
+                Talk currentTalk = (Talk) mAdapter.get(i);
+
+                if (currentTalk.getTalkId().equalsIgnoreCase(talk.getTalkId())) {
+                    return;
+                }
+            }
+
+            mAdapter.add(talk);
         }
     }
 
