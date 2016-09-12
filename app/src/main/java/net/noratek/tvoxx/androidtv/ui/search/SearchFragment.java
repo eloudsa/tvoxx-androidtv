@@ -109,12 +109,13 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     public void onStart() {
         super.onStart();
 
+        List<String> watchList = watchlistCache.getData();
+
         if (mTalkPresenter != null) {
-            mTalkPresenter.setWatchList(watchlistCache.getData());
+            mTalkPresenter.setWatchList(watchList);
         }
 
-        if (mSelectedCardView != null) {
-            List<String> watchList = watchlistCache.getData();
+        if ((mSelectedCardView != null) && (watchList != null)) {
             mSelectedCardView.updateWatchList(watchList.contains(mSelectedTalkId));
         }
     }

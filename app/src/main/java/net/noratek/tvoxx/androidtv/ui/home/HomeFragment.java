@@ -101,8 +101,8 @@ public class HomeFragment extends BrowseFragment {
 
         card = new Card();
         card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.about).toString());
-        card.setTitle(getString(R.string.about));
-        card.setType(Constants.CARD_TYPE_ABOUT);
+        card.setTitle(getString(R.string.settings));
+        card.setType(Constants.CARD_TYPE_SETTINGS);
         listRowAdapter.add(card);
 
         return new ListRow(listRowAdapter);
@@ -172,7 +172,7 @@ public class HomeFragment extends BrowseFragment {
                         intent = new Intent(getActivity(), WatchlistActivity_.class);
                         break;
 
-                    case Constants.CARD_TYPE_ABOUT:
+                    case Constants.CARD_TYPE_SETTINGS:
                         intent = new Intent(getActivity(), SettingsActivity_.class);
                         break;
                 }

@@ -36,7 +36,7 @@ public class Constants {
     public static final int CARD_TYPE_TALKS = 1;
     public static final int CARD_TYPE_SPEAKERS = 2;
     public static final int CARD_TYPE_WATCHLIST = 3;
-    public static final int CARD_TYPE_ABOUT = 4;
+    public static final int CARD_TYPE_SETTINGS = 4;
     public static final int CARD_TYPE_RELATED_TALK = 5;
     public static final int CARD_TYPE_RELATED_SPEAKER = 6;
 
