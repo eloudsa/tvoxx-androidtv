@@ -82,8 +82,12 @@ public class DetailDescriptionPresenter extends Presenter {
             int durationMins = talk.getDurationInSeconds() / 60;
             sndText2.setText(durationMins + " " + mContext.getResources().getString(R.string.mins));
 
-            ratingBar.setStepSize((float) 0.1);
-            ratingBar.setRating(talk.getAverageRating());
+            if (talk.getAverageRating() > 0f) {
+                ratingBar.setStepSize((float) 0.1);
+                ratingBar.setRating(talk.getAverageRating());
+            } else {
+                ratingBar.setVisibility(View.GONE);
+            }
         }
 
         primaryText.setText(title);

@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -92,7 +93,11 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
 
         // Rating
         final RatingBar ratingBar = (RatingBar) cardView.findViewById(R.id.ratingBar);
-        ratingBar.setRating(talk.getAverageRating());
+        if (talk.getAverageRating() > 0f) {
+            ratingBar.setRating(talk.getAverageRating());
+        } else {
+            ratingBar.setVisibility(View.GONE);
+        }
 
         // Watchlist
         final ImageView watchListImageView = (ImageView) cardView.findViewById(R.id.watchlist_image);
