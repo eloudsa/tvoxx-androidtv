@@ -52,6 +52,7 @@ public class TalksFragment extends BrowseFragment {
     @Bean
     WatchlistCache watchlistCache;
 
+
     private SpinnerFragment mSpinnerFragment;
 
     TreeMap<String, List<Talk>> mTracks;
@@ -89,6 +90,7 @@ public class TalksFragment extends BrowseFragment {
     public void onStart() {
         super.onStart();
 
+        // Retrieve the existing watchlist
         List<String> watchList = watchlistCache.getData();
 
         if (mTalkPresenter != null) {
@@ -150,12 +152,15 @@ public class TalksFragment extends BrowseFragment {
             return;
         }
 
+        //List<String> watchList = watchlistCache.getData();
+        // Retrieve the existing watchlist
         List<String> watchList = watchlistCache.getData();
+
 
         HeaderItem trackHeaderPresenter;
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        mTalkPresenter = new TalkCardPresenter(getActivity(), watchlistCache.getData());
+        mTalkPresenter = new TalkCardPresenter(getActivity(),  watchList);
 
         Long headerId = 0L;
 

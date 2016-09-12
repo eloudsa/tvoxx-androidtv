@@ -75,7 +75,6 @@ public class Utils {
         }
 
         return duration;
-
     }
 
 

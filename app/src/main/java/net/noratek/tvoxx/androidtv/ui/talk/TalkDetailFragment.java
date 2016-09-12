@@ -77,7 +77,6 @@ public class TalkDetailFragment extends DetailsFragment {
     @Bean
     WatchlistCache watchlistCache;
 
-
     OnItemViewClickedListener onItemViewClickedListener;
 
 
@@ -213,14 +212,18 @@ public class TalkDetailFragment extends DetailsFragment {
 
                 } else if (action.getId() == Constants.TALK_DETAIL_ACTION_ADD_WATCHLIST) {
 
+
                     Boolean isWatchlist = watchlistCache.isExist(mTalkId);
 
                     if (isWatchlist) {
                         // remove from the watchlist
                         watchlistCache.remove(mTalkId);
+
+
                     } else {
                         // add to the watchlist
-                        watchlistCache.upsert(mTalkId);
+                        watchlistCache.add(mTalkId);
+
                     }
 
                     updateWatchlistAction(action);

@@ -1,136 +1,122 @@
 package net.noratek.tvoxx.androidtv.data.cache;
 
-import com.annimon.stream.Optional;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import android.util.Log;
 
-import net.noratek.tvoxx.androidtv.utils.Constants;
+import net.noratek.tvoxx.androidtv.data.Settings_;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.json.JSONArray;
+import org.json.JSONException;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Created by eloudsa on 01/08/16.
+ * Created by eloudsa on 12/09/16.
  */
+
 @EBean
-public class WatchlistCache implements DataCache<List<String>, String> {
+public class WatchlistCache {
 
-    public static final long CACHE_LIFE_TIME_MS =
-            TimeUnit.MINUTES.toMillis(Constants.CACHE_LIFE_TIME_MINS);
+    private static final String TAG = WatchlistCache.class.getSimpleName();
 
-    @Bean
-    BaseCache baseCache;
+    @Pref
+    Settings_ settings;
 
-    public String upsert(String talkId) {
-        List<String> watchlist = getData(Constants.WATCHLIST_KEY);
-        if (watchlist == null) {
-            watchlist = new ArrayList<>();
+
+
+    public List<String> getData() {
+
+        // Retrieve the existing watchlist
+        List<String> watchList = null;
+        try {
+            watchList = jsonToArray(new JSONArray(settings.watchList().get()));
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
         }
 
-        if (!watchlist.contains(talkId)) {
-            watchlist.add(talkId);
-        }
-
-        String favoriteJSON = serializeData(watchlist);
-        baseCache.upsert(favoriteJSON, Constants.WATCHLIST_KEY);
-        return favoriteJSON;
+        return watchList;
     }
 
 
     public void remove(String talkId) {
-        List<String> watchlist = getData(Constants.WATCHLIST_KEY);
-        if (watchlist == null) {
+
+        List<String> watchList = getData();
+        if (watchList == null) {
             return;
         }
 
         // search and remove the talk
         int index = 0;
-        for (String currTalkId : watchlist) {
+        for (String currTalkId : watchList) {
             if (currTalkId.equalsIgnoreCase(talkId)) {
-                watchlist.remove(index);
+                watchList.remove(index);
                 break;
             }
             index++;
         }
 
-        if (watchlist.size() == 0) {
-            // no more talks in wathclist -> remove the list
-            clearCache(Constants.WATCHLIST_KEY);
-        } else {
-            // save the new list
-            upsert(watchlist);
-        }
+        // update the list
+
+        settings.watchList().put(new JSONArray(watchList).toString());
     }
 
 
+    public void add(String talkId) {
 
-    @Override
-    public String upsert(List<String> watchlist) {
-        String speakersJSON = serializeData(watchlist);
-        baseCache.upsert(serializeData(watchlist), Constants.WATCHLIST_KEY);
-        return speakersJSON;
-    }
-
-
-    @Override
-    public List<String> getData() {
-        final Optional<String> optionalCache = baseCache.getData(Constants.WATCHLIST_KEY);
-        return deserializeData(optionalCache.orElse(null));
-    }
-
-
-    @Override
-    public List<String> getData(String query) {
-        final Optional<String> optionalData = baseCache.getData(query);
-        return optionalData.isPresent() ? deserializeData(optionalData.get()) : null;
-    }
-
-
-    public Boolean isExist(String talkId) {
-        List<String> watchlist = getData(Constants.WATCHLIST_KEY);
-        if (watchlist == null) {
-            watchlist = new ArrayList<>();
+        List<String> watchList = getData();
+        if (watchList == null) {
+            watchList = new ArrayList<String>();
         }
 
-        return watchlist.contains(talkId);
-    }
+        // avoid duplicates
+        if (watchList.contains(talkId) == false) {
+            watchList.add(talkId);
+        }
 
-    @Override
-    public boolean isValid(String query) {
-        return baseCache.isValid(query, CACHE_LIFE_TIME_MS);
-    }
-
-    @Override
-    public void clearCache(String query) {
-        baseCache.clearCache(query);
-    }
-
-    @Override
-    public void upsert(String rawData, String query) {
-        baseCache.upsert(rawData, query);
-    }
-
-    @Override
-    public boolean isValid() {
-        throw new IllegalStateException("Not needed here!");
+        // update the list
+        settings.watchList().put(new JSONArray(watchList).toString());
     }
 
 
-    private List<String> deserializeData(String fromCache) {
-        return new Gson().fromJson(fromCache, getType());
+    public boolean isExist(String talkId) {
+        List<String> watchList = getData();
+        if (watchList == null) {
+            return false;
+        }
+
+        // search and remove the talk
+        for (String currTalkId : watchList) {
+            if (currTalkId.equalsIgnoreCase(talkId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    private String serializeData(List<String> data) {
-        return new Gson().toJson(data);
+
+    private List<String> jsonToArray(JSONArray jsonArray) {
+
+        if (jsonArray == null) {
+            return null;
+        }
+
+        List<String> list = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++){
+
+            try {
+                list.add(jsonArray.get(i).toString());
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+        }
+
+        return list;
     }
 
-    private Type getType() {
-        return new TypeToken<List<String>>() {
-        }.getType();
-    }
+
 }
