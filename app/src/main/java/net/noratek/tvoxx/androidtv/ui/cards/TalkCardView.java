@@ -17,6 +17,7 @@ package net.noratek.tvoxx.androidtv.ui.cards;
 import android.content.Context;
 import android.support.v17.leanback.widget.BaseCardView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 
 import net.noratek.tvoxx.androidtv.R;
@@ -32,8 +33,8 @@ public class TalkCardView extends BaseCardView {
 
     public void updateWatchList(boolean watchlist) {
         // Watchlist
-        ImageView watchListImageView = (ImageView) findViewById(R.id.watchlist_image);
-        watchListImageView.setImageDrawable(getContext().getResources().getDrawable(watchlist ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
+        final ImageView watchlistImage = (ImageView) findViewById(R.id.watchlist);
+        watchlistImage.setVisibility(watchlist ? View.VISIBLE : View.GONE);
     }
 
 }

@@ -13,14 +13,49 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:lb="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/main_image"
+
+    <RelativeLayout
+        android:id="@+id/image_layout"
         android:layout_width="312dp"
-        android:layout_height="176dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop"
-        lb:layout_viewType="main" />
+        android:layout_height="176dp">
+
+        <ImageView
+            android:id="@+id/main_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            lb:layout_viewType="main" />
+
+        <ImageView
+            android:id="@+id/watchlist"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_watchlist_on"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:padding="2dp"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:alpha="0.5"/>
+
+
+    </RelativeLayout>
+
 
     <android.support.v17.leanback.widget.NonOverlappingFrameLayout
         android:layout_width="312dp"
@@ -48,26 +83,12 @@
                 android:textColor="@color/lb_basic_card_title_text_color"
                 android:textSize="@dimen/lb_basic_card_title_text_size" />
 
-            <ImageView
-                android:id="@+id/watchlist_image"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_watchlist_off" />
-
-
             <TextView
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/lb_basic_card_info_text_margin"
-                android:layout_toEndOf="@+id/watchlist_image"
                 android:layout_toStartOf="@+id/ratingBar"
                 android:ellipsize="marquee"
                 android:fontFamily="sans-serif-condensed"

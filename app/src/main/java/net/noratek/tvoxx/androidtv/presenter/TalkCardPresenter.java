@@ -21,6 +21,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
@@ -100,9 +101,15 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
         }
 
         // Watchlist
-        final ImageView watchListImageView = (ImageView) cardView.findViewById(R.id.watchlist_image);
-        boolean watchList = mWatchList != null ? mWatchList.contains(talk.getTalkId()) : false;
-        watchListImageView.setImageDrawable(getContext().getResources().getDrawable(watchList ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
+        final ImageView watchlistImage = (ImageView) cardView.findViewById(R.id.watchlist);
+        final boolean watchList = mWatchList != null ? mWatchList.contains(talk.getTalkId()) : false;
+        watchlistImage.setVisibility(watchList ? View.VISIBLE : View.GONE);
+
+        // Duration
+        final TextView textDuration = (TextView) cardView.findViewById(R.id.duration);
+        textDuration.setText(Utils.formatVideoDuration(talk.getDurationInSeconds()));
+
+        //watchListImageView.setImageDrawable(getContext().getResources().getDrawable(watchList ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
 
         // Talk's image
         final ImageView imageView = (ImageView) cardView.findViewById(R.id.main_image);
@@ -131,7 +138,7 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
 
 
                         // display the duration over the image
-                        showDuration(resource, cardView, talk.getDurationInSeconds());
+                        //showExtraInformation(resource, talk.getDurationInSeconds(), watchList);
 
                         imageView.setImageBitmap(resource);
 
@@ -145,7 +152,7 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
     }
 
 
-    private void showDuration(Bitmap resource, TalkCardView cardView, int durationInSeconds) {
+    private void showExtraInformation(Bitmap resource, int durationInSeconds, boolean watchlist) {
 
         // format the duration
         String text = Utils.formatVideoDuration(durationInSeconds);
@@ -164,23 +171,35 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
         // get the text size
         Rect bounds = new Rect();
         txtPaint.getTextBounds(text, 0, text.length(), bounds);
-        int width = bounds.left + bounds.width();
+        int textWidth = bounds.left + bounds.width();
 
         txtPaint.getTextBounds(text, 0, text.length(), bounds);
-        int height = bounds.bottom + bounds.height();
+        int textHeight = bounds.bottom + bounds.height();
 
         int margin = 10;
 
-        float top = cardView.getTop();
-        float right = cardView.getRight();
+        float width = resource.getWidth();
+        float height = resource.getHeight();
 
         Canvas canvas = new Canvas(resource);
 
-        // draw the duration over the image
-        canvas.drawRect(right - width - margin, top, right, top + height + margin, rectPaint);
-        canvas.drawText(text, right - width - (margin / 2), top + height + (margin / 2), txtPaint);
+        // Show duration
+        canvas.drawRect(width - textWidth - margin, height - textHeight - margin, width, height , rectPaint);
+        canvas.drawText(text, width - textWidth - (margin / 2), height - textHeight + (margin  * 2), txtPaint);
 
+
+        if (watchlist) {
+            // show watchlist icon
+
+            Bitmap bitmap = ((BitmapDrawable) getContext().getResources().getDrawable(R.drawable.ic_watchlist_on, null)).getBitmap();
+
+            canvas.drawBitmap(bitmap, 0, height - bitmap.getHeight(), null);
+            bitmap.recycle();
+        }
     }
+
+
+
 
     @Override
     public void onUnbindViewHolder(TalkCardView cardView) {
