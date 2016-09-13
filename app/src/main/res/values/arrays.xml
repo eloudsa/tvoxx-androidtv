@@ -2,13 +2,13 @@
 <resources>
 
     <array name="pref_clear_cache_entries">
-        <item>@string/settings_cache_title_clear</item>
-        <item>@string/settings_cache_title_cancel</item>
+        <item>@string/settings_yes</item>
+        <item>@string/settings_no</item>
     </array>
 
     <array name="pref_clear_cache_entries_values">
-        <item>@string/settings_cache_value_clear</item>
-        <item>@string/settings_cache_value_cancel</item>
+        <item>@string/settings_value_yes</item>
+        <item>@string/settings_value_no</item>
     </array>
 
 

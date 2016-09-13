@@ -35,13 +35,13 @@
 
     <string name="settings_key_cache">settings_key_cache</string>
     <string name="settings_cache">Clear local cache</string>
-    <string name="settings_cache_question">Do you want to clear your local cache?</string>
-    <string name="settings_cache_title_clear">Clear the cache</string>
-    <string name="settings_cache_title_cancel">Cancel</string>
-    <string name="settings_cache_value_clear">clear</string>
-    <string name="settings_cache_value_cancel">cancel</string>
+    <string name="settings_cache_question">The local cache is used to improve the responsiveness of the application. If you have problems, you can delete this cache. It will be rebuilt automatically.\n\nWould you like to delete the local cache?</string>
+    <string name="settings_yes">Yes</string>
+    <string name="settings_no">No</string>
     <string name="settings_cache_info_clear">The local cache is cleared.</string>
 
+    <string name="settings_value_yes">yes</string>
+    <string name="settings_value_no">no</string>
 
 
 </resources>

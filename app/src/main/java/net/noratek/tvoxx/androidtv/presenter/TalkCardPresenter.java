@@ -17,11 +17,6 @@ package net.noratek.tvoxx.androidtv.presenter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
@@ -109,8 +104,6 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
         final TextView textDuration = (TextView) cardView.findViewById(R.id.duration);
         textDuration.setText(Utils.formatVideoDuration(talk.getDurationInSeconds()));
 
-        //watchListImageView.setImageDrawable(getContext().getResources().getDrawable(watchList ? R.drawable.ic_watchlist_on : R.drawable.ic_watchlist_off, null));
-
         // Talk's image
         final ImageView imageView = (ImageView) cardView.findViewById(R.id.main_image);
 
@@ -136,10 +129,6 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
                             glideAnimation) {
 
-
-                        // display the duration over the image
-                        //showExtraInformation(resource, talk.getDurationInSeconds(), watchList);
-
                         imageView.setImageBitmap(resource);
 
                     }
@@ -149,53 +138,6 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
                         imageView.setImageBitmap(null);
                     }
                 });
-    }
-
-
-    private void showExtraInformation(Bitmap resource, int durationInSeconds, boolean watchlist) {
-
-        // format the duration
-        String text = Utils.formatVideoDuration(durationInSeconds);
-
-        // prepare the background
-        Paint rectPaint = new Paint();
-        rectPaint.setColor(Color.BLACK);
-        rectPaint.setStyle(Paint.Style.FILL);
-        rectPaint.setAlpha(100);
-
-        // prepare the text
-        Paint txtPaint = new Paint();
-        txtPaint.setColor(Color.WHITE);
-        txtPaint.setTextSize(30);  //set text size
-
-        // get the text size
-        Rect bounds = new Rect();
-        txtPaint.getTextBounds(text, 0, text.length(), bounds);
-        int textWidth = bounds.left + bounds.width();
-
-        txtPaint.getTextBounds(text, 0, text.length(), bounds);
-        int textHeight = bounds.bottom + bounds.height();
-
-        int margin = 10;
-
-        float width = resource.getWidth();
-        float height = resource.getHeight();
-
-        Canvas canvas = new Canvas(resource);
-
-        // Show duration
-        canvas.drawRect(width - textWidth - margin, height - textHeight - margin, width, height , rectPaint);
-        canvas.drawText(text, width - textWidth - (margin / 2), height - textHeight + (margin  * 2), txtPaint);
-
-
-        if (watchlist) {
-            // show watchlist icon
-
-            Bitmap bitmap = ((BitmapDrawable) getContext().getResources().getDrawable(R.drawable.ic_watchlist_on, null)).getBitmap();
-
-            canvas.drawBitmap(bitmap, 0, height - bitmap.getHeight(), null);
-            bitmap.recycle();
-        }
     }
 
 

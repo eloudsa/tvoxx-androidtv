@@ -5,7 +5,7 @@
                   android:title="Settings TVoxx">
 
     <ListPreference
-        android:defaultValue="@string/settings_cache_value_cancel"
+        android:defaultValue="@string/settings_value_no"
         android:icon="@drawable/ic_settings_cache"
         android:entries="@array/pref_clear_cache_entries"
         android:entryValues="@array/pref_clear_cache_entries_values"

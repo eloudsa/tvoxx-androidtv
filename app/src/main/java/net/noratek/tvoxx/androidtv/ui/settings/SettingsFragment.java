@@ -109,7 +109,7 @@ public class SettingsFragment extends LeanbackSettingsFragment implements Dialog
 
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                        if (newValue.toString().equalsIgnoreCase(getString(R.string.settings_cache_value_clear))) {
+                        if (newValue.toString().equalsIgnoreCase(getString(R.string.settings_value_yes))) {
 
                             // Clear the local cache
                             baseCache.clearAllCache();
