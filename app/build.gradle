@@ -6,13 +6,13 @@ apply plugin: 'realm-android'
 def PACKAGE_NAME = "net.noratek.tvoxx.androidtv"
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId PACKAGE_NAME
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 1
         versionName "0.1"
         multiDexEnabled true
@@ -44,11 +44,13 @@ dependencies {
     compile "com.android.support:support-v4:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
 
+    // SDK -> Settings page
     compile "com.android.support:preference-v7:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:preference-leanback-v17:${SUPPORT_LIBRARY_VERSION}"
     compile "com.android.support:preference-v14:${SUPPORT_LIBRARY_VERSION}"
 
 
+    // Image processing
     compile "com.github.bumptech.glide:glide:3.7.0"
 
     // Rest
@@ -56,13 +58,14 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:2.1.0"
 
 
+    // Injection
     compile "org.androidannotations:androidannotations-api:4.0.0"
 
     // Used for Optional in the caching mechanism
     compile "com.annimon:stream:1.1.1"
 
+    // Event driven process
     compile "org.greenrobot:eventbus:3.0.0"
-
 
     // Youtube API
     compile files('libs/YouTubeAndroidPlayerApi.jar')

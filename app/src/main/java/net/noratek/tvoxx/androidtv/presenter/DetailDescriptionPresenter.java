@@ -15,6 +15,9 @@
 package net.noratek.tvoxx.androidtv.presenter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v17.leanback.widget.Presenter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +53,12 @@ public class DetailDescriptionPresenter extends Presenter {
         TextView sndText2 = mResourceCache.getViewById(viewHolder.view, R.id.secondary_text_second);
         TextView extraText = mResourceCache.getViewById(viewHolder.view, R.id.extra_text);
         RatingBar ratingBar = mResourceCache.getViewById(viewHolder.view, R.id.ratingBar);
+
+        // set the color of the rating bar
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
 
         if (item == null) {
             return;

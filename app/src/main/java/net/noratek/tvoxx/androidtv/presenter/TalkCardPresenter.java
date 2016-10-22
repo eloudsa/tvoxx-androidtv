@@ -17,7 +17,10 @@ package net.noratek.tvoxx.androidtv.presenter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
@@ -89,6 +92,13 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
 
         // Rating
         final RatingBar ratingBar = (RatingBar) cardView.findViewById(R.id.ratingBar);
+
+        // set the color of the rating bar
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+
         if (talk.getAverageRating() > 0f) {
             ratingBar.setRating(talk.getAverageRating());
         } else {

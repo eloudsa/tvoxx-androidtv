@@ -10,14 +10,13 @@
 
     <color name="selected_background">#f5af33</color>
 
-    <color name="spinner_color">#f5af33</color>
+    <color name="talk_detail_background">#0E3B5D</color>
 
-    <color name="rating_on">#FFFF00</color>
-    <color name="rating_off">#3d3d3d</color>
+    <color name="spinner_color">#f5af33</color>
 
     <color name="default_card_footer_background_color">#37474F</color>
 
-    <color name="settings_background">#00695C</color>
+    <color name="settings_background">#0E3B5D</color>
 
 
 </resources>

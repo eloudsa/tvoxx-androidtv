@@ -2,6 +2,7 @@ package net.noratek.tvoxx.androidtv.ui.talk;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -63,6 +64,9 @@ public class TalksFragment extends BrowseFragment {
     TalkCardView mSelectedCardView;
     String mSelectedTalkId;
 
+    // Background image
+    BackgroundManager mBackgroundManager;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -100,11 +104,13 @@ public class TalksFragment extends BrowseFragment {
         if ((mSelectedCardView != null) && (watchList != null)) {
             mSelectedCardView.updateWatchList(watchList.contains(mSelectedTalkId));
         }
+
     }
 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        mBackgroundManager.release();
         super.onDestroy();
     }
 
@@ -113,7 +119,6 @@ public class TalksFragment extends BrowseFragment {
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tvoxx_logo));
         setTitle(getString(R.string.app_title)); // Badge, when set, takes precedent
 
-        // over title
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 
@@ -129,6 +134,11 @@ public class TalksFragment extends BrowseFragment {
                 return new IconHeaderItemPresenter();
             }
         });
+
+        // change background image
+        mBackgroundManager = BackgroundManager.getInstance(getActivity());
+        mBackgroundManager.attach(getActivity().getWindow());
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
 
         prepareEntranceTransition();
     }
@@ -208,10 +218,6 @@ public class TalksFragment extends BrowseFragment {
 
                 mSelectedCardView = (TalkCardView) itemViewHolder.view;
                 mSelectedTalkId = talk.getTalkId();
-
-               // TalkPresenter talkPresenter = (TalkPresenter) itemViewHolder;
-               // ((ImageCardView) itemViewHolder.view).setTitleText("Selected!");
-                //talk.setTitle("Selected !!!!");
 
                 Intent intent = new Intent(getActivity(), TalkDetailActivity_.class);
                 intent.putExtra(Constants.TALK_ID, talk.getTalkId());

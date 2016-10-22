@@ -183,7 +183,7 @@ public class TalkDetailFragment extends DetailsFragment {
                         new detailsOverviewLogoPresenter());
 
         detailsPresenter.setBackgroundColor(
-                ContextCompat.getColor(getActivity(), R.color.selected_background));
+                ContextCompat.getColor(getActivity(), R.color.talk_detail_background));
         detailsPresenter.setInitialState(FullWidthDetailsOverviewRowPresenter.STATE_HALF);
 
         // Hook up transition element.
@@ -192,7 +192,6 @@ public class TalkDetailFragment extends DetailsFragment {
                 SpeakerDetailActivity.SHARED_ELEMENT_NAME);
         detailsPresenter.setListener(mHelper);
         detailsPresenter.setParticipatingEntranceTransition(false);
-        prepareEntranceTransition();
 
         detailsPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             @Override
