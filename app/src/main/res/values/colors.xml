@@ -11,6 +11,7 @@
     <color name="selected_background">#f5af33</color>
 
     <color name="talk_detail_background">#0E3B5D</color>
+    <color name="speaker_detail_background">#0E3B5D</color>
 
     <color name="spinner_color">#f5af33</color>
 
