@@ -123,7 +123,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
         super.onStart();
 
         // change background image
-        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.default_background));
     }
 
     @Override

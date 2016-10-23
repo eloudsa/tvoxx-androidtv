@@ -85,7 +85,7 @@ public class WatchlistFragment extends VerticalGridFragment {
         }
 
         // change background image
-        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.default_background));
 
         loadRows();
     }

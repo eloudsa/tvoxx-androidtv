@@ -141,7 +141,7 @@ public class HomeFragment extends BrowseFragment {
             if (imageUrl != null) {
                 backgroundURI = Uri.parse(imageUrl);
             } else {
-                backgroundURI = Utils.getUri(getContext(), R.drawable.footer_lodyas);
+                backgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
             }
 
             mBackgroundImageManager.updateBackgroundWithDelay(backgroundURI);

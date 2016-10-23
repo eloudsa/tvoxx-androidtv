@@ -76,7 +76,7 @@ public class SpeakersFragment extends VerticalGridFragment {
         super.onStart();
 
         // change background image
-        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.default_background));
     }
 
 
