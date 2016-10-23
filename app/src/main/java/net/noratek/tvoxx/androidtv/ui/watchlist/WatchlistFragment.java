@@ -2,6 +2,7 @@ package net.noratek.tvoxx.androidtv.ui.watchlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.VerticalGridFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
@@ -9,6 +10,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import net.noratek.tvoxx.androidtv.R;
@@ -16,13 +18,11 @@ import net.noratek.tvoxx.androidtv.data.cache.TalkCache;
 import net.noratek.tvoxx.androidtv.data.cache.WatchlistCache;
 import net.noratek.tvoxx.androidtv.data.manager.TalkManager;
 import net.noratek.tvoxx.androidtv.event.TalkEvent;
-import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Talk;
 import net.noratek.tvoxx.androidtv.presenter.TalkCardPresenter;
 import net.noratek.tvoxx.androidtv.ui.talk.TalkDetailActivity_;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
 import net.noratek.tvoxx.androidtv.utils.Constants;
-import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
@@ -53,7 +53,7 @@ public class WatchlistFragment extends VerticalGridFragment {
     private ArrayObjectAdapter mAdapter;
 
     // Background image
-    private BackgroundImageManager mBackgroundImageManager;
+    BackgroundManager mBackgroundManager;
 
 
     private SpinnerFragment mSpinnerFragment;
@@ -64,9 +64,6 @@ public class WatchlistFragment extends VerticalGridFragment {
         super.onCreate(null);
 
         EventBus.getDefault().register(this);
-
-        // Prepare the manager that maintains the same background image between activities.
-        mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         mSpinnerFragment = new SpinnerFragment();
 
@@ -87,6 +84,9 @@ public class WatchlistFragment extends VerticalGridFragment {
             mTalkPresenter.setWatchList(watchlistCache.getData());
         }
 
+        // change background image
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
+
         loadRows();
     }
 
@@ -105,13 +105,17 @@ public class WatchlistFragment extends VerticalGridFragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        mBackgroundManager.release();
         super.onStop();
     }
 
 
     private void setupUIElements() {
         setTitle(getString(R.string.watchlist));
-        mBackgroundImageManager.updateBackgroundWithDelay(Utils.getUri(getActivity(), R.drawable.default_background));
+
+        // prepare the background image
+        mBackgroundManager = BackgroundManager.getInstance(getActivity());
+        mBackgroundManager.attach(getActivity().getWindow());
     }
 
 

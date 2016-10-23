@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -40,7 +41,6 @@ import net.noratek.tvoxx.androidtv.data.cache.SpeakerCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakerEvent;
-import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
 import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.model.Talk;
@@ -78,7 +78,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
     private ArrayObjectAdapter mAdapter;
 
     // Background image
-    private BackgroundImageManager mBackgroundImageManager;
+    BackgroundManager mBackgroundManager;
 
 
     @Override
@@ -90,6 +90,10 @@ public class SpeakerDetailFragment extends DetailsFragment {
         mSpinnerFragment = new SpinnerFragment();
 
         String uuid = getActivity().getIntent().getStringExtra(SpeakerDetailActivity.UUID);
+
+        // prepare the background image
+        mBackgroundManager = BackgroundManager.getInstance(getActivity());
+        mBackgroundManager.attach(getActivity().getWindow());
 
         if (uuid != null) {
             loadSpeakerDetail(uuid);
@@ -114,12 +118,17 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
 
+        // change background image
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
+    }
 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        mBackgroundImageManager = null;
         super.onDestroy();
     }
 
@@ -127,9 +136,7 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
     @Override
     public void onStop() {
-        if (mBackgroundImageManager != null) {
-            mBackgroundImageManager.cancel();
-        }
+        mBackgroundManager.release();
         super.onStop();
     }
 
@@ -152,13 +159,6 @@ public class SpeakerDetailFragment extends DetailsFragment {
     private void setupAdapter() {
 
         prepareEntranceTransition();
-
-        // Prepare the manager that maintains the same background image between activities.
-        if (mBackgroundImageManager != null) {
-            mBackgroundImageManager.cancel();
-            mBackgroundImageManager = null;
-        }
-        mBackgroundImageManager = new BackgroundImageManager(getActivity());
 
         // Set detail background and style.
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
@@ -243,9 +243,6 @@ public class SpeakerDetailFragment extends DetailsFragment {
 
 
     private void setupDetailsOverviewRow(Speaker speaker) {
-
-        // change the background image
-        mBackgroundImageManager.updateBackgroundWithDelay(Uri.parse(speaker.getAvatarUrl()));
 
         final DetailsOverviewRow row = new DetailsOverviewRow(speaker);
 

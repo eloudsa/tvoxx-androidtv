@@ -1,12 +1,11 @@
 package net.noratek.tvoxx.androidtv.ui.speaker;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.VerticalGridFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
@@ -19,13 +18,10 @@ import net.noratek.tvoxx.androidtv.data.cache.SpeakersCache;
 import net.noratek.tvoxx.androidtv.data.manager.SpeakerManager;
 import net.noratek.tvoxx.androidtv.event.ErrorEvent;
 import net.noratek.tvoxx.androidtv.event.SpeakersEvent;
-import net.noratek.tvoxx.androidtv.manager.BackgroundImageManager;
-import net.noratek.tvoxx.androidtv.model.Card;
 import net.noratek.tvoxx.androidtv.model.Speaker;
 import net.noratek.tvoxx.androidtv.presenter.SpeakerPresenter;
 import net.noratek.tvoxx.androidtv.ui.search.SearchActivity_;
 import net.noratek.tvoxx.androidtv.ui.util.SpinnerFragment;
-import net.noratek.tvoxx.androidtv.utils.Utils;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
@@ -51,7 +47,7 @@ public class SpeakersFragment extends VerticalGridFragment {
     private ArrayObjectAdapter mAdapter;
 
     // Background image
-    private BackgroundImageManager mBackgroundImageManager;
+    BackgroundManager mBackgroundManager;
 
 
     private SpinnerFragment mSpinnerFragment;
@@ -63,8 +59,9 @@ public class SpeakersFragment extends VerticalGridFragment {
 
         EventBus.getDefault().register(this);
 
-        // Prepare the manager that maintains the same background image between activities.
-        mBackgroundImageManager = new BackgroundImageManager(getActivity());
+        // prepare the background image
+        mBackgroundManager = BackgroundManager.getInstance(getActivity());
+        mBackgroundManager.attach(getActivity().getWindow());
 
         mSpinnerFragment = new SpinnerFragment();
 
@@ -73,9 +70,19 @@ public class SpeakersFragment extends VerticalGridFragment {
         loadRows();
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // change background image
+        mBackgroundManager.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.footer_lodyas));
+    }
+
+
     @Override
     public void onStop() {
-        mBackgroundImageManager.cancel();
+        mBackgroundManager.release();
         super.onStop();
     }
 
@@ -89,6 +96,7 @@ public class SpeakersFragment extends VerticalGridFragment {
     private void setupUIElements() {
         prepareEntranceTransition();
         setTitle(getString(R.string.speakers));
+
 
         // set search icon color
         setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.search_opaque));
@@ -117,7 +125,6 @@ public class SpeakersFragment extends VerticalGridFragment {
 
     private void setupEventListeners() {
         setOnItemViewClickedListener(new ItemViewClickedListener());
-        setOnItemViewSelectedListener(new ItemViewSelectedListener());
 
         setOnSearchClickedListener(new View.OnClickListener() {
             @Override
@@ -149,34 +156,6 @@ public class SpeakersFragment extends VerticalGridFragment {
         getFragmentManager().beginTransaction().remove(mSpinnerFragment).commit();
     }
 
-    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
-        @Override
-        public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
-                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-
-            mBackgroundImageManager.cancel();
-
-            String imageUrl = null;
-
-            if (item instanceof Card) {
-                imageUrl = ((Card) item).getCardImageUrl();
-
-            } else if (item instanceof Speaker) {
-                imageUrl = ((Speaker) item).getAvatarUrl();
-            }
-
-            Uri backgroundURI;
-
-            if (imageUrl != null) {
-                backgroundURI = Uri.parse(imageUrl);
-            } else {
-                backgroundURI = Utils.getUri(getContext(), R.drawable.default_background);
-            }
-
-            mBackgroundImageManager.updateBackgroundWithDelay(backgroundURI);
-        }
-    }
-
 
     // Events
 
@@ -189,7 +168,6 @@ public class SpeakersFragment extends VerticalGridFragment {
 
                 Speaker speaker = (Speaker) item;
 
-                mBackgroundImageManager.cancel();
                 Intent intent = new Intent(getActivity(), SpeakerDetailActivity_.class);
                 intent.putExtra(SpeakerDetailActivity.UUID, speaker.getUuid());
                 getActivity().startActivity(intent);

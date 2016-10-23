@@ -180,7 +180,7 @@ public class TalkDetailFragment extends DetailsFragment {
         // Set detail background and style.
         final FullWidthDetailsOverviewRowPresenter detailsPresenter =
                 new FullWidthDetailsOverviewRowPresenter(new DetailDescriptionPresenter(getActivity()),
-                        new detailsOverviewLogoPresenter());
+                        new DetailsOverviewPresenter());
 
         detailsPresenter.setBackgroundColor(
                 ContextCompat.getColor(getActivity(), R.color.talk_detail_background));
@@ -244,7 +244,7 @@ public class TalkDetailFragment extends DetailsFragment {
 
 
 
-    static class detailsOverviewLogoPresenter extends DetailsOverviewLogoPresenter {
+    static class DetailsOverviewPresenter extends DetailsOverviewLogoPresenter {
 
         static class ViewHolder extends DetailsOverviewLogoPresenter.ViewHolder {
             public ViewHolder(View view) {
@@ -280,8 +280,8 @@ public class TalkDetailFragment extends DetailsFragment {
             ImageView imageView = ((ImageView) viewHolder.view);
             imageView.setImageDrawable(row.getImageDrawable());
             if (isBoundToImage((ViewHolder) viewHolder, row)) {
-                detailsOverviewLogoPresenter.ViewHolder vh =
-                        (detailsOverviewLogoPresenter.ViewHolder) viewHolder;
+                DetailsOverviewPresenter.ViewHolder vh =
+                        (DetailsOverviewPresenter.ViewHolder) viewHolder;
                 vh.getParentPresenter().notifyOnBindLogo(vh.getParentViewHolder());
             }
         }

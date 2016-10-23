@@ -38,7 +38,7 @@ public class BackgroundImageManager {
         mActivity = activity;
         mBackgroundManager = BackgroundManager.getInstance(mActivity);
         mBackgroundManager.attach(mActivity.getWindow());
-        mDefaultBackground = mActivity.getResources().getDrawable(R.drawable.default_background, null);
+        mDefaultBackground = mActivity.getResources().getDrawable(R.drawable.footer_lodyas, null);
         mMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
     }
