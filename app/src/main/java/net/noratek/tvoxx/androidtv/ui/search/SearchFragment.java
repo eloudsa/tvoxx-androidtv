@@ -156,7 +156,6 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Log.i(TAG, String.format("Search Query Text Submit %s", query));
         // No need to delay(wait) loadQuery, since the query typing has completed.
         loadQueryWithDelay(query, 0);
         return true;
