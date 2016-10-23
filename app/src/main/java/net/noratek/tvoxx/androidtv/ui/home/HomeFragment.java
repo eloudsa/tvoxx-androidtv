@@ -100,7 +100,7 @@ public class HomeFragment extends BrowseFragment {
         listRowAdapter.add(card);
 
         card = new Card();
-        card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.about).toString());
+        card.setCardImageUrl(Utils.getUri(getActivity(), R.drawable.tv_test).toString());
         card.setTitle(getString(R.string.settings));
         card.setType(Constants.CARD_TYPE_SETTINGS);
         listRowAdapter.add(card);
