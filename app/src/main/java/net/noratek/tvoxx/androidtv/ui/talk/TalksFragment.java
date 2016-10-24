@@ -58,7 +58,7 @@ public class TalksFragment extends BrowseFragment {
 
     TreeMap<String, List<Talk>> mTracks;
 
-    TalkCardPresenter mTalkPresenter;
+    TalkCardPresenter mTalkCardPresenter;
 
     // selected talk
     TalkCardView mSelectedCardView;
@@ -97,8 +97,8 @@ public class TalksFragment extends BrowseFragment {
         // Retrieve the existing watchlist
         List<String> watchList = watchlistCache.getData();
 
-        if (mTalkPresenter != null) {
-            mTalkPresenter.setWatchList(watchList);
+        if (mTalkCardPresenter != null) {
+            mTalkCardPresenter.setWatchList(watchList);
         }
 
         if ((mSelectedCardView != null) && (watchList != null)) {
@@ -162,15 +162,13 @@ public class TalksFragment extends BrowseFragment {
             return;
         }
 
-        //List<String> watchList = watchlistCache.getData();
         // Retrieve the existing watchlist
         List<String> watchList = watchlistCache.getData();
 
-
-        HeaderItem trackHeaderPresenter;
+        HeaderItem trackHeader;
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        mTalkPresenter = new TalkCardPresenter(getActivity(),  watchList);
+        mTalkCardPresenter = new TalkCardPresenter(getActivity(), watchList);
 
         Long headerId = 0L;
 
@@ -181,9 +179,9 @@ public class TalksFragment extends BrowseFragment {
                 // get the track title with its proper case
                 String trackTitle = talks.get(0).getTrackTitle();
 
-                trackHeaderPresenter = new HeaderItem(headerId++, trackTitle);
+                trackHeader = new HeaderItem(headerId++, trackTitle);
 
-                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(mTalkPresenter);
+                ArrayObjectAdapter trackRowAdapter = new ArrayObjectAdapter(mTalkCardPresenter);
 
                 for (Talk talk : talks) {
 
@@ -194,7 +192,7 @@ public class TalksFragment extends BrowseFragment {
                     trackRowAdapter.add(talk);
                 }
 
-                rowsAdapter.add(new ListRow(trackHeaderPresenter, trackRowAdapter));
+                rowsAdapter.add(new ListRow(trackHeader, trackRowAdapter));
             }
         }
 
