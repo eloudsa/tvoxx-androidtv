@@ -101,6 +101,7 @@ public class TalkCardPresenter extends AbstractTalkCardPresenter<TalkCardView> {
 
         if (talk.getAverageRating() > 0f) {
             ratingBar.setRating(talk.getAverageRating());
+            ratingBar.setVisibility(View.VISIBLE);
         } else {
             ratingBar.setVisibility(View.GONE);
         }
