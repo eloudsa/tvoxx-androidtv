@@ -18,6 +18,6 @@ This application has been built using the following sources of information:
 * Vineyard — Creating an Android TV Vine App: 
  * https://medium.com/exploring-android/vineyard-creating-an-android-tv-vine-app-e1480708b0a3#.b2jql9odf
  
-* TVoxx for TVos:
+* TVoxx for tvOS:
  * https://github.com/devoxx/tvoxx-ios
  * https://itunes.apple.com/us/app/tvoxx/id1097323734?mt=8
